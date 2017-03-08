@@ -39,7 +39,7 @@ export default class PivotGrid extends PureComponent {
     return (
       <section className='pivot-grid'>
         <ContentBox>
-        <ScrollSync ref="ScrollSync">
+        <ScrollSync>
           {({ clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth }) => {
             const x = scrollLeft / (scrollWidth - clientWidth);
             const y = scrollTop / (scrollHeight - clientHeight);
@@ -59,7 +59,7 @@ export default class PivotGrid extends PureComponent {
                   }}
                 >
                   <Grid
-                    ref="Header"
+                    ref={(input) => { this.header = input; }}
                     cellRenderer={this.renderLeftHeaderCell}
                     className={'HeaderGrid'}
                     width={columnWidth}
@@ -80,7 +80,7 @@ export default class PivotGrid extends PureComponent {
                   }}
                 >
                   <Grid
-                    ref="LeftHeader"
+                    ref={(input) => { this.leftHeader = input; }}
                     overscanColumnCount={overscanColumnCount}
                     overscanRowCount={overscanRowCount}
                     cellRenderer={this.renderLeftSideCell}
@@ -97,7 +97,6 @@ export default class PivotGrid extends PureComponent {
                 <div className="GridColumn">
                   <AutoSizer
                     disableHeight
-                    ref="AutoSizer"
                   >
                     {({ width }) => (
                       <div>
@@ -109,7 +108,7 @@ export default class PivotGrid extends PureComponent {
                           }}
                         >
                           <Grid
-                            ref="Grid"
+                            ref={(input) => { this.grid = input; }}
                             className="HeaderGrid"
                             columnWidth={columnWidth}
                             columnCount={columnCount}
@@ -130,7 +129,7 @@ export default class PivotGrid extends PureComponent {
                           }}
                         >
                           <Grid
-                            ref="BodyGrid"
+                            ref={(input) => { this.bodyGrid = input; }}
                             className="BodyGrid"
                             columnWidth={columnWidth}
                             columnCount={columnCount}
@@ -164,16 +163,16 @@ export default class PivotGrid extends PureComponent {
         rowCount: nextProps.data.length,
       })
 
-      this.refs.ScrollSync.refs.LeftHeader.recomputeGridSize(
+      this.header.recomputeGridSize(
         {columnIndex: 0, rowIndex: 0},
       )
-      this.refs.ScrollSync.refs.Header.recomputeGridSize(
+      this.leftHeader.recomputeGridSize(
         {columnIndex: 0, rowIndex: 0},
       )
-      this.refs.ScrollSync.refs.AutoSizer.refs.Grid.recomputeGridSize(
+      this.grid.recomputeGridSize(
         {columnIndex: 0, rowIndex: 0},
-      )
-      this.refs.ScrollSync.refs.AutoSizer.refs.BodyGrid.recomputeGridSize(
+      )      
+      this.bodyGrid.recomputeGridSize(
         {columnIndex: 0, rowIndex: 0},
       )
     }
