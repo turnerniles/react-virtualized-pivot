@@ -157,24 +157,30 @@ export default class PivotGrid extends PureComponent {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (this.props.data !== nextProps.data) {
-      this.setState({
-        columnCount: nextProps.data.length ? nextProps.data[0].value.length : 0,
-        rowCount: nextProps.data.length,
-      })
+    this.setState({
+      columnCount: nextProps.data.length ? nextProps.data[0].value.length : 0,
+      rowCount: nextProps.data.length,
+    })
 
+    if(this.header){
       this.header.recomputeGridSize(
         {columnIndex: 0, rowIndex: 0},
-      )
+      );
+    }
+    if(this.leftHeader){
       this.leftHeader.recomputeGridSize(
         {columnIndex: 0, rowIndex: 0},
-      )
+      );
+    }
+    if(this.grid){
       this.grid.recomputeGridSize(
         {columnIndex: 0, rowIndex: 0},
-      )      
+      );
+    }
+    if(this.bodyGrid){
       this.bodyGrid.recomputeGridSize(
         {columnIndex: 0, rowIndex: 0},
-      )
+      );
     }
   }
 
@@ -182,6 +188,9 @@ export default class PivotGrid extends PureComponent {
     if (columnIndex < 1) {
       return
     }
+
+    //Change so this does not use the renderLeftSideCell and has it's own
+    //Renderer
     return this.renderLeftSideCell ({ columnIndex, key, rowIndex, style })
   }
 
@@ -206,17 +215,37 @@ export default class PivotGrid extends PureComponent {
   }
 
   renderLeftSideCell ({ columnIndex, key, rowIndex, style }) {
+    // if (rowIndex < 1 ) {
+    //   return
+    // }
+    // add indentation class
     const rowClass = rowIndex % 2 === 0
       ? columnIndex % 2 === 0 ? 'evenRow' : 'oddRow'
       : columnIndex % 2 !== 0 ? 'evenRow' : 'oddRow'
     const classNames = cn(rowClass, 'cell');
+
+    const arrowStyle = () => {
+      if(this.props.checkIfInCollapsed(rowIndex)){
+        console.log('in collapsed')
+        return '▶';
+      }
+      if (this.props.data[rowIndex].depth < this.props.rowFieldsLength - 1) {
+        return '▼';
+      }
+      if (this.props.data[rowIndex].depth === 0 && this.props.rowFieldsLength > 1) {
+        return '▶';
+      }
+      else return '';
+    }
 
     return (
       <div
         className={classNames}
         key={key}
         style={style}
+        onClick={this.props.toggleRow.bind(this, rowIndex)}
       >
+        { columnIndex === 0 ? arrowStyle() : ''}
         {`${this.props.data.length ?
           this.props.data[rowIndex].value[columnIndex] : ''}`}
       </div>

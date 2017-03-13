@@ -6,6 +6,10 @@ section.quick-pivot{
 		margin-bottom: 8px;
 	}
 
+	.sortable-container{
+		overflow: scroll;
+	}
+
 	.select-container{
 		width: 200px;
 		display: inline-block;

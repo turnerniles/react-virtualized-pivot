@@ -15,7 +15,7 @@ export default class PivotMenu extends React.Component{
 					return {value: item, label: item}
 				}),
 				colFields: [],
-				data: [],
+				pivot: {},
 				dataArray: this.props.data,
 				fields: this.props.data[0],
 				rowFields: [],
@@ -26,12 +26,26 @@ export default class PivotMenu extends React.Component{
 		this.onSelectAggregationDimension = this.onSelectAggregationDimension.bind(this);
 		this.onSelectAggregationType = this.onSelectAggregationType.bind(this);
 		this.onAddUpdateField = this.onAddUpdateField.bind(this);
+		this.onToggleRow = this.onToggleRow.bind(this);
+		this.checkIfInCollapsed = this.checkIfInCollapsed.bind(this);
 	}
+
+	componentWillReceiveProps (nextProps) {
+    this.setState({
+			aggregationDimensions: nextProps.data[0].map((item, index) => {
+				return {value: item, label: item}
+			}),
+			data: nextProps.data,
+			dataArray: nextProps.data,
+			fields: nextProps.data[0],
+			selectedAggregationDimension: ''
+		})
+  }
 
 	render() {
 		const {
 			aggregationDimensions,
-			data,
+			pivot,
 			selectedAggregationType,
 			selectedAggregationDimension,
 		} = this.state;
@@ -41,6 +55,8 @@ export default class PivotMenu extends React.Component{
 	    { value: 'count', label: 'count' },
 		];
 
+		//We are not using deconstructed state consts here due to
+		// react-sortablejs bug
 		const fields = this.state.fields.map((field, index) =>
 			(<li key={index} data-id={field}>{field}</li>));
 		const rowFieldsRender = this.state.rowFields.map((field, index) =>
@@ -124,7 +140,13 @@ export default class PivotMenu extends React.Component{
         </div>
 
 				<div className="pivot-grid">
-					<PivotGrid data={data}></PivotGrid>
+					<PivotGrid
+						toggleRow={this.onToggleRow}
+						rowFieldsLength={this.state.rowFields.length}
+						data={Object.keys(pivot).length ? pivot.data.table : []}
+						checkIfInCollapsed={this.checkIfInCollapsed}
+					>
+					</PivotGrid>
 				</div>
 			</section>
 		);
@@ -147,7 +169,7 @@ export default class PivotMenu extends React.Component{
 		);
 
 		this.setState({
-			data: pivotedData.data.table,
+			pivot: pivotedData,
 			selectedAggregationType: selectedAggregationType.value,
 		})
 	}
@@ -169,7 +191,7 @@ export default class PivotMenu extends React.Component{
 		);
 
 		this.setState({
-			data: pivotedData.data.table,
+			pivot: pivotedData,
 			selectedAggregationDimension: selectedAggregationDimension.value,
 		})
 	}
@@ -191,6 +213,16 @@ export default class PivotMenu extends React.Component{
 			selectedAggregationType,
 		);
 
-		this.setState({data: pivotedData.data.table});
+		this.setState({pivot: pivotedData});
+	}
+
+	onToggleRow(rowIndex) {
+		const newPivot = this.state.pivot.toggle(rowIndex);
+
+		this.setState({pivot: newPivot});
+	}
+
+	checkIfInCollapsed(rowIndex){
+		return (rowIndex in this.state.pivot.collapsedRows) ? true : false
 	}
 }

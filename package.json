@@ -18,7 +18,8 @@
   "homepage": "https://github.com/turnerniles/react-quick-pivot-ui#readme",
   "dependencies": {
     "node-sass": "^4.3.0",
-    "quick-pivot": "^2.0.2",
+    "papaparse": "^4.1.4",
+    "quick-pivot": "^2.1.1",
     "react": "15.4.2",
     "react-dom": "15.4.2",
     "react-select-plus": "^1.0.0-rc.3.patch1",
