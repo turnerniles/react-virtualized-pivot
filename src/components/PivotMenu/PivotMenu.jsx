@@ -38,7 +38,9 @@ export default class PivotMenu extends React.Component{
 			data: nextProps.data,
 			dataArray: nextProps.data,
 			fields: nextProps.data[0],
-			selectedAggregationDimension: ''
+			selectedAggregationDimension: '',
+			colFields: [],
+			rowFields: [],
 		})
   }
 

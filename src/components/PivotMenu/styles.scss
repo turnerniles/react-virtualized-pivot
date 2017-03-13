@@ -6,10 +6,6 @@ section.quick-pivot{
 		margin-bottom: 8px;
 	}
 
-	.sortable-container{
-		overflow: scroll;
-	}
-
 	.select-container{
 		width: 200px;
 		display: inline-block;
@@ -52,7 +48,7 @@ section.quick-pivot{
 
 	.block__list {
 		height: 76px;
-	  padding: 20px 0;
+	  // padding: 20px 0;
 	  margin-top: -8px;
 	  margin-left: 10px;
 	  background-color: #fff;
@@ -72,10 +68,6 @@ section.quick-pivot{
 	.block__list_words .sortable-ghost {
 	  opacity: 0.4;
 	  background-color: #F4E2C9;
-	}
-
-	.block__list_tags {
-	  padding-left: 30px;
 	}
 
 	.block__list_tags {

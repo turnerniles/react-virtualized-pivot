@@ -11,7 +11,7 @@ export default class PivotGrid extends PureComponent {
     this.state = {
       columnWidth: 75,
       columnCount: this.props.data.length || 0,
-      height: 300,
+      height: (window.innerHeight - 240),
       overscanColumnCount: 0,
       overscanRowCount: 5,
       rowHeight: 40,
@@ -226,7 +226,6 @@ export default class PivotGrid extends PureComponent {
 
     const arrowStyle = () => {
       if(this.props.checkIfInCollapsed(rowIndex)){
-        console.log('in collapsed')
         return '▶';
       }
       if (this.props.data[rowIndex].depth < this.props.rowFieldsLength - 1) {

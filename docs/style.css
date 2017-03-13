@@ -107,10 +107,6 @@ section.quick-pivot .Select {
   margin-bottom: 8px;
 }
 
-section.quick-pivot .sortable-container {
-  overflow: scroll;
-}
-
 section.quick-pivot .select-container {
   width: 200px;
   display: inline-block;
@@ -153,7 +149,6 @@ section.quick-pivot .title {
 
 section.quick-pivot .block__list {
   height: 76px;
-  padding: 20px 0;
   margin-top: -8px;
   margin-left: 10px;
   background-color: #fff;
@@ -178,10 +173,6 @@ section.quick-pivot .block__list_words li {
 section.quick-pivot .block__list_words .sortable-ghost {
   opacity: 0.4;
   background-color: #F4E2C9;
-}
-
-section.quick-pivot .block__list_tags {
-  padding-left: 30px;
 }
 
 section.quick-pivot .block__list_tags {
