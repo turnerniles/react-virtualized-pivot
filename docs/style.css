@@ -107,6 +107,10 @@ section.quick-pivot .Select {
   margin-bottom: 8px;
 }
 
+section.quick-pivot .sortable-container {
+  overflow: scroll;
+}
+
 section.quick-pivot .select-container {
   width: 200px;
   display: inline-block;
