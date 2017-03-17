@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { PureComponent } from 'react'
+import { Grid, AutoSizer, ScrollSync } from 'react-virtualized'
+import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../ContentBox/ContentBox.jsx'
+import cn from 'classnames'
+import scrollbarSize from 'dom-helpers/util/scrollbarSize'
 import Pivot from 'quick-pivot';
 import Select from 'react-select-plus';
 import Sortable from 'react-sortablejs';
-import PivotGrid from '../PivotGrid/PivotGrid.jsx';
+// import PivotGrid from '../PivotGrid/PivotGrid.jsx';
+
 import 'react-select-plus/dist/react-select-plus.css';
 import './styles.scss';
 
-export default class PivotMenu extends React.Component{
+export default class PivotMenu extends PureComponent{
 	constructor(props){
 		super(props);
 
@@ -21,6 +26,17 @@ export default class PivotMenu extends React.Component{
 				rowFields: [],
 				selectedAggregationType: 'sum',
 				selectedAggregationDimension: 'age',
+
+				columnWidth: 75,
+	      columnCount: 0,
+	      height: (window.innerHeight - 240),
+	      overscanColumnCount: 0,
+	      overscanRowCount: 5,
+	      rowHeight: 40,
+	      rowCount: 0,
+
+				data:{},
+				header:{},
     };
 
 		this.onSelectAggregationDimension = this.onSelectAggregationDimension.bind(this);
@@ -28,6 +44,11 @@ export default class PivotMenu extends React.Component{
 		this.onAddUpdateField = this.onAddUpdateField.bind(this);
 		this.onToggleRow = this.onToggleRow.bind(this);
 		this.checkIfInCollapsed = this.checkIfInCollapsed.bind(this);
+
+		this.renderBodyCell = this.renderBodyCell.bind(this);
+    this.renderHeaderCell = this.renderHeaderCell.bind(this);
+    this.renderLeftHeaderCell = this.renderLeftHeaderCell.bind(this);
+    this.renderLeftSideCell = this.renderLeftSideCell.bind(this);
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -35,8 +56,9 @@ export default class PivotMenu extends React.Component{
 			aggregationDimensions: nextProps.data[0].map((item, index) => {
 				return {value: item, label: item}
 			}),
-			data: nextProps.data,
 			dataArray: nextProps.data,
+			data: [],
+			headers: [],
 			fields: nextProps.data[0],
 			selectedAggregationDimension: '',
 			colFields: [],
@@ -44,12 +66,179 @@ export default class PivotMenu extends React.Component{
 		})
   }
 
+	onSelectAggregationType (selectedAggregationType) {
+		const {
+			colFields,
+			dataArray,
+			rowFields,
+			selectedAggregationDimension,
+		} = this.state;
+
+		const pivotedData = new Pivot(
+			dataArray,
+			rowFields,
+			colFields,
+			selectedAggregationDimension,
+			selectedAggregationType.value,
+		);
+
+		this.setState({
+			pivot: pivotedData,
+			selectedAggregationType: selectedAggregationType.value,
+			columnCount: pivotedData.data.length || 0,
+			rowCount: (pivotedData.data.length && pivotedData.data[0].value.length) ?
+				pivotedData.data[0].value.length : 0,
+			data: pivotedData.data.table,
+		})
+	}
+
+	onSelectAggregationDimension (selectedAggregationDimension) {
+		const {
+			colFields,
+			dataArray,
+			rowFields,
+			selectedAggregationType,
+		} = this.state;
+
+		const pivotedData = new Pivot(
+			dataArray,
+			rowFields,
+			colFields,
+			selectedAggregationDimension.value,
+			selectedAggregationType,
+		);
+
+		this.setState({
+			pivot: pivotedData,
+			selectedAggregationDimension: selectedAggregationDimension.value,
+			columnCount: pivotedData.data.length || 0,
+			rowCount: (pivotedData.data.length && pivotedData.data[0].value.length) ?
+				pivotedData.data[0].value.length : 0,
+			data: pivotedData.data.table,
+		})
+	}
+
+	onAddUpdateField (event) {
+		const {
+			dataArray,
+			rowFields,
+			colFields,
+			selectedAggregationDimension,
+			selectedAggregationType,
+		} = this.state;
+
+		const pivotedData = new Pivot(
+			dataArray,
+			rowFields,
+			colFields,
+			selectedAggregationDimension,
+			selectedAggregationType,
+		);
+
+		this.setState({
+			pivot: pivotedData,
+			columnCount: pivotedData.data.length || 0,
+			rowCount: (pivotedData.data.length && pivotedData.data[0].value.length) ?
+				pivotedData.data[0].value.length : 0,
+			data: pivotedData.data.table,
+		});
+	}
+
+	onToggleRow(rowIndex) {
+		const newPivot = this.state.pivot.toggle(rowIndex);
+
+		this.setState({pivot: newPivot});
+	}
+
+	checkIfInCollapsed(rowIndex){
+		return (rowIndex in this.state.pivot.collapsedRows) ? true : false
+	}
+
+//Grid logic
+
+	renderBodyCell ({ columnIndex, key, rowIndex, style }) {
+		if (columnIndex < 1) {
+			return
+		}
+
+	//Change so this does not use the renderLeftSideCell and has it's own
+	//Renderer
+		return this.renderLeftSideCell ({ columnIndex, key, rowIndex, style })
+	}
+
+	renderHeaderCell ({ columnIndex, key, rowIndex, style }) {
+		if (columnIndex < 1) {
+			return
+		}
+		return this.renderLeftHeaderCell ({ columnIndex, key, rowIndex, style })
+	}
+
+	renderLeftHeaderCell ({ columnIndex, key, rowIndex, style }) {
+		return (
+			<div
+				className={'headerCell'}
+				key={key}
+				style={style}
+			>
+				{`${this.state.data.length ?
+					this.state.data[0].value[columnIndex] : ''}`}
+			</div>
+		)
+	}
+
+	renderLeftSideCell ({ columnIndex, key, rowIndex, style }) {
+
+		const rowClass = rowIndex % 2 === 0
+			? columnIndex % 2 === 0 ? 'evenRow' : 'oddRow'
+			: columnIndex % 2 !== 0 ? 'evenRow' : 'oddRow'
+		const classNames = cn(rowClass, 'cell');
+
+		const firstColumnStyle = {};
+			if (columnIndex === 0) {
+				firstColumnStyle['paddingLeft'] = `${20*this.state.data[rowIndex].depth}px`
+			}
+			if (this.state.rowFields.length === 1 || this.state.data[rowIndex].depth < this.state.rowFields.length - 1){
+				firstColumnStyle['fontWeight'] = 'bold';
+			}
+
+		const arrowStyle = () => {
+			if(this.checkIfInCollapsed(rowIndex)){
+				return '▶';
+			}
+			if (this.state.data[rowIndex].depth < this.state.rowFields.length - 1) {
+				return '▼';
+			}
+			return '';
+		}
+
+	return (
+		<div
+			className={classNames}
+			key={key}
+			style={Object.assign({}, firstColumnStyle, style)}
+			onClick={this.toggleRow.bind(this, rowIndex)}
+		>
+			{ columnIndex === 0 ? arrowStyle() : ''}
+			{`${this.state.data.length ?
+				this.state.data[rowIndex].value[columnIndex] : ''}`}
+		</div>
+	)
+}
+
 	render() {
 		const {
 			aggregationDimensions,
 			pivot,
 			selectedAggregationType,
 			selectedAggregationDimension,
+
+			columnCount,
+      columnWidth,
+      height,
+      overscanColumnCount,
+      overscanRowCount,
+      rowHeight,
+      rowCount,
 		} = this.state;
 
 		const aggregationTypes = [
@@ -142,89 +331,133 @@ export default class PivotMenu extends React.Component{
         </div>
 
 				<div className="pivot-grid">
-					<PivotGrid
+
+					<section className='pivot-grid'>
+		        <ContentBox>
+		        <ScrollSync>
+		          {({ clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth }) => {
+		            const x = scrollLeft / (scrollWidth - clientWidth);
+		            const y = scrollTop / (scrollHeight - clientHeight);
+		            const leftColor = '#ffffff';
+		            const topColor = '#ffffff';
+		            const middleColor = '#ffffff';
+
+		            return (
+		              <div className="GridRow">
+		                <div
+		                  className="LeftSideGridContainer"
+		                  style={{
+		                    position: 'absolute',
+		                    left: 0,
+		                    top: 0,
+		                    color: leftColor,
+		                  }}
+		                >
+		                  <Grid
+		                    ref={(input) => { this.header = input; }}
+		                    cellRenderer={this.renderLeftHeaderCell}
+		                    className={'HeaderGrid'}
+		                    width={columnWidth}
+		                    height={rowHeight}
+		                    rowHeight={rowHeight}
+		                    columnWidth={columnWidth}
+		                    rowCount={1}
+		                    columnCount={1}
+		                  />
+		                </div>
+		                <div
+		                  className="LeftSideGridContainer"
+		                  style={{
+		                    position: 'absolute',
+		                    left: 0,
+		                    top: rowHeight,
+		                    color: leftColor,
+		                  }}
+		                >
+		                  <Grid
+		                    ref={(input) => { this.leftHeader = input; }}
+		                    overscanColumnCount={overscanColumnCount}
+		                    overscanRowCount={overscanRowCount}
+		                    cellRenderer={this.renderLeftSideCell}
+		                    columnWidth={columnWidth}
+		                    columnCount={1}
+		                    className={'LeftSideGrid'}
+		                    height={height - scrollbarSize()}
+		                    rowHeight={rowHeight}
+		                    rowCount={rowCount}
+		                    scrollTop={scrollTop}
+		                    width={columnWidth}
+		                  />
+		                </div>
+		                <div className="GridColumn">
+		                  <AutoSizer
+		                    disableHeight
+		                  >
+		                    {({ width }) => (
+		                      <div>
+		                        <div
+		                          style={{
+		                            color: topColor,
+		                            height: rowHeight,
+		                            width: width - scrollbarSize(),
+		                          }}
+		                        >
+		                          <Grid
+		                            ref={(input) => { this.grid = input; }}
+		                            className="HeaderGrid"
+		                            columnWidth={columnWidth}
+		                            columnCount={columnCount}
+		                            height={rowHeight}
+		                            overscanColumnCount={overscanColumnCount}
+		                            cellRenderer={this.renderHeaderCell}
+		                            rowHeight={rowHeight}
+		                            rowCount={1}
+		                            scrollLeft={scrollLeft}
+		                            width={width - scrollbarSize()}
+		                          />
+		                        </div>
+		                        <div
+		                          style={{
+		                            color: middleColor,
+		                            height,
+		                            width,
+		                          }}
+		                        >
+		                          <Grid
+		                            ref={(input) => { this.bodyGrid = input; }}
+		                            className="BodyGrid"
+		                            columnWidth={columnWidth}
+		                            columnCount={columnCount}
+		                            height={height}
+		                            onScroll={onScroll}
+		                            overscanColumnCount={overscanColumnCount}
+		                            overscanRowCount={overscanRowCount}
+		                            cellRenderer={this.renderBodyCell}
+		                            rowHeight={rowHeight}
+		                            rowCount={rowCount}
+		                            width={width}
+		                          />
+		                        </div>
+		                      </div>
+		                    )}
+		                  </AutoSizer>
+		                </div>
+		              </div>
+		            )
+		          }}
+		        </ScrollSync>
+		      </ContentBox>
+		    </section>
+					{/* <PivotGrid
 						toggleRow={this.onToggleRow}
 						rowFieldsLength={this.state.rowFields.length}
 						data={Object.keys(pivot).length ? pivot.data.table : []}
 						checkIfInCollapsed={this.checkIfInCollapsed}
 					>
-					</PivotGrid>
+					</PivotGrid> */}
+
 				</div>
 			</section>
 		);
-	}
-
-	onSelectAggregationType (selectedAggregationType) {
-		const {
-			colFields,
-			dataArray,
-			rowFields,
-			selectedAggregationDimension,
-		} = this.state;
-
-		const pivotedData = new Pivot(
-			dataArray,
-			rowFields,
-			colFields,
-			selectedAggregationDimension,
-			selectedAggregationType.value,
-		);
-
-		this.setState({
-			pivot: pivotedData,
-			selectedAggregationType: selectedAggregationType.value,
-		})
-	}
-
-	onSelectAggregationDimension (selectedAggregationDimension) {
-		const {
-			colFields,
-			dataArray,
-			rowFields,
-			selectedAggregationType,
-		} = this.state;
-
-		const pivotedData = new Pivot(
-			dataArray,
-			rowFields,
-			colFields,
-			selectedAggregationDimension.value,
-			selectedAggregationType,
-		);
-
-		this.setState({
-			pivot: pivotedData,
-			selectedAggregationDimension: selectedAggregationDimension.value,
-		})
-	}
-
-	onAddUpdateField (event) {
-		const {
-			dataArray,
-			rowFields,
-			colFields,
-			selectedAggregationDimension,
-			selectedAggregationType,
-		} = this.state;
-
-		const pivotedData = new Pivot(
-			dataArray,
-			rowFields,
-			colFields,
-			selectedAggregationDimension,
-			selectedAggregationType,
-		);
-
-		this.setState({pivot: pivotedData});
-	}
-
-	onToggleRow(rowIndex) {
-		const newPivot = this.state.pivot.toggle(rowIndex);
-
-		this.setState({pivot: newPivot});
-	}
-
-	checkIfInCollapsed(rowIndex){
-		return (rowIndex in this.state.pivot.collapsedRows) ? true : false
 	}
 }
