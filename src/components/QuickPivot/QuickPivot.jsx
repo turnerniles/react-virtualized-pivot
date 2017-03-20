@@ -6,12 +6,11 @@ import scrollbarSize from 'dom-helpers/util/scrollbarSize'
 import Pivot from 'quick-pivot';
 import Select from 'react-select-plus';
 import Sortable from 'react-sortablejs';
-// import PivotGrid from '../PivotGrid/PivotGrid.jsx';
 
 import 'react-select-plus/dist/react-select-plus.css';
 import './styles.scss';
 
-export default class PivotMenu extends PureComponent{
+export default class QuickPivot extends PureComponent{
 	constructor(props){
 		super(props);
 
@@ -45,6 +44,7 @@ export default class PivotMenu extends PureComponent{
 		this.onToggleRow = this.onToggleRow.bind(this);
 		this.checkIfInCollapsed = this.checkIfInCollapsed.bind(this);
 
+		this.forceRenderGrid = this.forceRenderGrid.bind(this);
 		this.renderBodyCell = this.renderBodyCell.bind(this);
     this.renderHeaderCell = this.renderHeaderCell.bind(this);
     this.renderLeftHeaderCell = this.renderLeftHeaderCell.bind(this);
@@ -85,11 +85,13 @@ export default class PivotMenu extends PureComponent{
 		this.setState({
 			pivot: pivotedData,
 			selectedAggregationType: selectedAggregationType.value,
-			columnCount: pivotedData.data.length || 0,
-			rowCount: (pivotedData.data.length && pivotedData.data[0].value.length) ?
-				pivotedData.data[0].value.length : 0,
+			columnCount: (pivotedData.data.table.length && pivotedData.data.table[0].value.length) ?
+				pivotedData.data.table[0].value.length : 0,
+			rowCount: pivotedData.data.table.length || 0,
 			data: pivotedData.data.table,
 		})
+
+		this.forceRenderGrid();
 	}
 
 	onSelectAggregationDimension (selectedAggregationDimension) {
@@ -111,11 +113,13 @@ export default class PivotMenu extends PureComponent{
 		this.setState({
 			pivot: pivotedData,
 			selectedAggregationDimension: selectedAggregationDimension.value,
-			columnCount: pivotedData.data.length || 0,
-			rowCount: (pivotedData.data.length && pivotedData.data[0].value.length) ?
-				pivotedData.data[0].value.length : 0,
+			columnCount: (pivotedData.data.table.length && pivotedData.data.table[0].value.length) ?
+				pivotedData.data.table[0].value.length : 0,
+			rowCount: pivotedData.data.table.length || 0,
 			data: pivotedData.data.table,
 		})
+
+		this.forceRenderGrid();
 	}
 
 	onAddUpdateField (event) {
@@ -137,17 +141,19 @@ export default class PivotMenu extends PureComponent{
 
 		this.setState({
 			pivot: pivotedData,
-			columnCount: pivotedData.data.length || 0,
-			rowCount: (pivotedData.data.length && pivotedData.data[0].value.length) ?
-				pivotedData.data[0].value.length : 0,
+			columnCount: (pivotedData.data.table.length && pivotedData.data.table[0].value.length) ?
+				pivotedData.data.table[0].value.length : 0,
+			rowCount: pivotedData.data.table.length || 0,
 			data: pivotedData.data.table,
 		});
+
+		this.forceRenderGrid();
 	}
 
 	onToggleRow(rowIndex) {
 		const newPivot = this.state.pivot.toggle(rowIndex);
-
 		this.setState({pivot: newPivot});
+		this.forceRenderGrid();
 	}
 
 	checkIfInCollapsed(rowIndex){
@@ -155,14 +161,34 @@ export default class PivotMenu extends PureComponent{
 	}
 
 //Grid logic
+	forceRenderGrid(){
+		if (this.header) {
+			this.header.recomputeGridSize(
+				{columnIndex: 0, rowIndex: 0},
+			);
+		}
+		if (this.leftHeader) {
+			this.leftHeader.recomputeGridSize(
+				{columnIndex: 0, rowIndex: 0},
+			);
+		}
+		if (this.grid) {
+			this.grid.recomputeGridSize(
+				{columnIndex: 0, rowIndex: 0},
+			);
+		}
+		if (this.bodyGrid) {
+			this.bodyGrid.recomputeGridSize(
+				{columnIndex: 0, rowIndex: 0},
+			);
+		}
+	}
 
 	renderBodyCell ({ columnIndex, key, rowIndex, style }) {
 		if (columnIndex < 1) {
 			return
 		}
 
-	//Change so this does not use the renderLeftSideCell and has it's own
-	//Renderer
 		return this.renderLeftSideCell ({ columnIndex, key, rowIndex, style })
 	}
 
@@ -187,7 +213,6 @@ export default class PivotMenu extends PureComponent{
 	}
 
 	renderLeftSideCell ({ columnIndex, key, rowIndex, style }) {
-
 		const rowClass = rowIndex % 2 === 0
 			? columnIndex % 2 === 0 ? 'evenRow' : 'oddRow'
 			: columnIndex % 2 !== 0 ? 'evenRow' : 'oddRow'
@@ -216,7 +241,7 @@ export default class PivotMenu extends PureComponent{
 			className={classNames}
 			key={key}
 			style={Object.assign({}, firstColumnStyle, style)}
-			onClick={this.toggleRow.bind(this, rowIndex)}
+			onClick={this.onToggleRow.bind(this, rowIndex)}
 		>
 			{ columnIndex === 0 ? arrowStyle() : ''}
 			{`${this.state.data.length ?
@@ -448,14 +473,6 @@ export default class PivotMenu extends PureComponent{
 		        </ScrollSync>
 		      </ContentBox>
 		    </section>
-					{/* <PivotGrid
-						toggleRow={this.onToggleRow}
-						rowFieldsLength={this.state.rowFields.length}
-						data={Object.keys(pivot).length ? pivot.data.table : []}
-						checkIfInCollapsed={this.checkIfInCollapsed}
-					>
-					</PivotGrid> */}
-
 				</div>
 			</section>
 		);

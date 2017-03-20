@@ -1,5 +1,5 @@
 import React from 'react';
-import PivotMenu from './components/PivotMenu/PivotMenu.jsx';
+import QuickPivot from './components/QuickPivot/QuickPivot.jsx';
 import Papa from 'papaparse/papaparse.js';
 import '../styles/index.scss';
 
@@ -39,7 +39,7 @@ handleFileSelect(evt) {
     return (
       <div>
         <input style={{padding: '5px'}} type="file" onChange={this.handleFileSelect}/>
-        <PivotMenu data={this.state.data}></PivotMenu>
+        <QuickPivot data={this.state.data}></QuickPivot>
       </div>
     )
   }
