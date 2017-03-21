@@ -5,9 +5,10 @@ quick-pivot-ui
 
 quick-pivot-ui is a React pivot UI built on top of the [quick-pivot](https://github.com/pat310/quick-pivot) pivot library.
 
+## Demo
+https://turnerniles.github.io/react-quick-pivot-ui/
 
-Getting started
----------------
+##Getting started
 
 Install `quick-pivot-ui` using npm.
 
@@ -16,12 +17,11 @@ npm install quick-pivot-ui --save
 ```
 
 ## Usage
-
 ```jsx
 import React from 'react';
 import QuickPivot from 'quick-pivot-ui';
 
-<QuickPivot 
+<QuickPivot
   data = [
     ['name', 'gender', 'house', 'age'],
     ['Jon', 'm', 'Stark', 14],
@@ -38,5 +38,5 @@ import QuickPivot from 'quick-pivot-ui';
 </QuickPivot>
 ```
 
-### Contribute
+## Contribute
 Please contribute to the project, including this README.
