@@ -2,10 +2,13 @@ import React from 'react';
 import QuickPivot from './components/QuickPivot/QuickPivot.jsx';
 import Papa from 'papaparse/papaparse.js';
 import '../styles/index.scss';
+import demoData from './demodata.jsx'
 
 export default class App extends React.Component {
   constructor (props, context) {
     super(props, context)
+
+    console.log(demoData.data)
 
     this.state = {
 				data: [
@@ -39,7 +42,7 @@ handleFileSelect(evt) {
     return (
       <div>
         <input style={{padding: '5px'}} type="file" onChange={this.handleFileSelect}/>
-        <QuickPivot data={this.state.data}></QuickPivot>
+        <QuickPivot data={demoData.data}></QuickPivot>
       </div>
     )
   }
