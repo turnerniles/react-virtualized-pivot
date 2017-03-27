@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import { Grid, AutoSizer, ScrollSync } from 'react-virtualized'
-import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../ContentBox/ContentBox.jsx'
+import { ContentBox, ContentBoxHeader, ContentBoxParagraph }
+	from '../ContentBox/ContentBox.jsx'
 import cn from 'classnames'
 import scrollbarSize from 'dom-helpers/util/scrollbarSize'
 import Pivot from 'quick-pivot';
@@ -24,7 +25,7 @@ export default class QuickPivot extends PureComponent{
 				fields: this.props.data[0],
 				rowFields: [],
 				selectedAggregationType: 'sum',
-				selectedAggregationDimension: 'age',
+				selectedAggregationDimension: this.props.selectedAggregationDimension || '',
 
 				columnWidth: 75,
 	      columnCount: 0,
@@ -33,13 +34,12 @@ export default class QuickPivot extends PureComponent{
 	      overscanRowCount: 5,
 	      rowHeight: 40,
 	      rowCount: 0,
-				newRowCount: 0,
-
 				data:{},
 				header:{},
     };
 
-		this.onSelectAggregationDimension = this.onSelectAggregationDimension.bind(this);
+		this.onSelectAggregationDimension =
+			this.onSelectAggregationDimension.bind(this);
 		this.onSelectAggregationType = this.onSelectAggregationType.bind(this);
 		this.onAddUpdateField = this.onAddUpdateField.bind(this);
 		this.onToggleRow = this.onToggleRow.bind(this);
@@ -86,10 +86,10 @@ export default class QuickPivot extends PureComponent{
 		this.setState({
 			pivot: pivotedData,
 			selectedAggregationType: selectedAggregationType.value,
-			columnCount: (pivotedData.data.table.length && pivotedData.data.table[0].value.length) ?
+			columnCount: (pivotedData.data.table.length &&
+				pivotedData.data.table[0].value.length) ?
 				pivotedData.data.table[0].value.length : 0,
 			rowCount: pivotedData.data.table.length || 0,
-			newRowCount: pivotedData.data.table.length - 1 || 0,
 			data: pivotedData.data.table,
 			header: pivotedData.data.table[0]
 		})
@@ -116,10 +116,10 @@ export default class QuickPivot extends PureComponent{
 		this.setState({
 			pivot: pivotedData,
 			selectedAggregationDimension: selectedAggregationDimension.value,
-			columnCount: (pivotedData.data.table.length && pivotedData.data.table[0].value.length) ?
+			columnCount: (pivotedData.data.table.length &&
+				pivotedData.data.table[0].value.length) ?
 				pivotedData.data.table[0].value.length : 0,
 			rowCount: pivotedData.data.table.length || 0,
-			newRowCount: pivotedData.data.table.length - 1 || 0,
 			data: pivotedData.data.table,
 			header: pivotedData.data.table[0]
 		})
@@ -146,31 +146,49 @@ export default class QuickPivot extends PureComponent{
 
 		this.setState({
 			pivot: pivotedData,
-			columnCount: (pivotedData.data.table.length && pivotedData.data.table[0].value.length) ?
+			columnCount: (pivotedData.data.table.length &&
+					pivotedData.data.table[0].value.length) ?
 				pivotedData.data.table[0].value.length : 0,
 			rowCount: pivotedData.data.table.length || 0,
-			newRowCount: pivotedData.data.table.length - 1 || 0,
 			data: pivotedData.data.table,
-			header: pivotedData.data.table[0]
+			header: pivotedData.data.table[0],
 		});
 
 		this.forceRenderGrid();
 	}
 
 	onToggleRow(rowIndex) {
-		console.log('toggling', rowIndex+1)
-		//Row index +1 because we remove/slice the header off the data we render in the renderBodyCell
+		console.log(
+			rowIndex,
+				this.state.data[rowIndex].row,
+			this.state.pivot.collapsedRows,
+			(this.state.data[rowIndex].row in this.state.pivot.collapsedRows)
+		)
+		//row index +1 because we remove/slice the header row off the data we render
+		//in the renderBodyCell
 		const newPivot = this.state.pivot.toggle(rowIndex+1);
-		console.log(newPivot)
-		this.setState({pivot: newPivot});
+		this.setState(
+		{
+			pivot: newPivot,
+			columnCount: (newPivot.data.table.length &&
+				newPivot.data.table[0].value.length) ?
+			newPivot.data.table[0].value.length : 0,
+			rowCount: newPivot.data.table.length || 0,
+			data: newPivot.data.table,
+			header: newPivot.data.table[0],
+		});
 		this.forceRenderGrid();
 	}
 
 	checkIfInCollapsed(rowIndex){
-		return (rowIndex in this.state.pivot.collapsedRows) ? true : false
+		//add 1 to rowIndex because the row index clicked on is 1 less than the
+		//pivot it's being compared to (contains the header).
+		if (rowIndex in this.state.pivot.collapsedRows){
+			console.log('truthy?', rowIndex in Object.keys(this.state.pivot.collapsedRows))
+		}
+		return ((rowIndex.toString()) in Object.keys(this.state.pivot.collapsedRows))
 	}
 
-//Grid logic
 	forceRenderGrid() {
 		if (this.header) {
 			this.header.recomputeGridSize(
@@ -231,17 +249,22 @@ export default class QuickPivot extends PureComponent{
 
 		const firstColumnStyle = {};
 			if (columnIndex === 0) {
-				firstColumnStyle['paddingLeft'] = `${20*this.state.data.slice(1)[rowIndex].depth}px`
+				firstColumnStyle['paddingLeft'] =
+					`${20*this.state.data.slice(1)[rowIndex].depth}px`
 			}
-			if (this.state.rowFields.length === 1 || this.state.data.slice(1)[rowIndex].depth < this.state.rowFields.length - 1){
-				firstColumnStyle['fontWeight'] = 'bold';
+			if (this.state.rowFields.length === 1 ||
+					this.state.data.slice(1)[rowIndex].depth <
+						this.state.rowFields.length - 1) {
+					firstColumnStyle['fontWeight'] = 'bold';
 			}
 
-		const arrowStyle = () => {
-			if(this.checkIfInCollapsed(rowIndex)){
+		const arrowStyle = (rowIndex) => {
+			//rowIndex - 1 because we are checking against the pivot data
+			if(this.checkIfInCollapsed(this.state.data[rowIndex].row)){
 				return '▶';
 			}
-			if (this.state.data.slice(1)[rowIndex].depth < this.state.rowFields.length - 1) {
+			if (this.state.data.slice(1)[rowIndex].depth <
+				this.state.rowFields.length - 1) {
 				return '▼';
 			}
 			return '';
@@ -254,7 +277,7 @@ export default class QuickPivot extends PureComponent{
 			style={Object.assign({}, firstColumnStyle, style)}
 			onClick={this.onToggleRow.bind(this, rowIndex)}
 		>
-			{ columnIndex === 0 ? arrowStyle() : ''}
+			{ columnIndex === 0 ? arrowStyle(rowIndex) : ''}
 			{`${this.state.data.slice(1).length ?
 				this.state.data.slice(1)[rowIndex].value[columnIndex] : ''}`}
 		</div>
@@ -275,7 +298,6 @@ export default class QuickPivot extends PureComponent{
       overscanRowCount,
       rowHeight,
       rowCount,
-			newRowCount,
 		} = this.state;
 
 		const aggregationTypes = [
@@ -372,7 +394,15 @@ export default class QuickPivot extends PureComponent{
 					<section className='pivot-grid'>
 		        <ContentBox>
 		        <ScrollSync>
-		          {({ clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth }) => {
+		          {({
+								clientHeight,
+								clientWidth,
+								onScroll,
+								scrollHeight,
+								scrollLeft,
+								scrollTop,
+								scrollWidth
+							}) => {
 		            const x = scrollLeft / (scrollWidth - clientWidth);
 		            const y = scrollTop / (scrollHeight - clientHeight);
 		            const leftColor = '#ffffff';
@@ -421,7 +451,7 @@ export default class QuickPivot extends PureComponent{
 		                    className={'LeftSideGrid'}
 		                    height={height - scrollbarSize()}
 		                    rowHeight={rowHeight}
-		                    rowCount={newRowCount}
+		                    rowCount={rowCount === 0 ? 0 : (rowCount - 1)}
 		                    scrollTop={scrollTop}
 		                    width={columnWidth}
 		                  />
@@ -471,7 +501,7 @@ export default class QuickPivot extends PureComponent{
 		                            overscanRowCount={overscanRowCount}
 		                            cellRenderer={this.renderBodyCell}
 		                            rowHeight={rowHeight}
-		                            rowCount={newRowCount}
+		                            rowCount={rowCount === 0 ? 0 : (rowCount - 1)}
 		                            width={width}
 		                          />
 		                        </div>

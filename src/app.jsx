@@ -40,7 +40,7 @@ handleFileSelect(evt) {
     return (
       <div>
         <input style={{padding: '5px'}} type="file" onChange={this.handleFileSelect}/>
-        <QuickPivot data={this.state.data}></QuickPivot>
+        <QuickPivot data={this.state.data} selectedAggregationDimension={'age'}></QuickPivot>
       </div>
     )
   }

@@ -1,6 +1,6 @@
 {
   "name": "quick-pivot-ui",
-  "version": "0.0.0",
+  "version": "0.0.0-alpha",
   "description": "React Quick Pivot UI",
   "main": "''",
   "scripts": {
@@ -19,7 +19,7 @@
   "dependencies": {
     "node-sass": "^4.3.0",
     "papaparse": "^4.1.4",
-    "quick-pivot": "^2.1.1",
+    "quick-pivot": "^2.2.0",
     "react": "15.4.2",
     "react-dom": "15.4.2",
     "react-select-plus": "^1.0.0-rc.3.patch1",
