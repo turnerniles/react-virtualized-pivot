@@ -8,8 +8,6 @@ export default class App extends React.Component {
   constructor (props, context) {
     super(props, context)
 
-    console.log(demoData.data)
-
     this.state = {
 				data: [
          ['name', 'gender', 'house', 'age'],
@@ -42,7 +40,7 @@ handleFileSelect(evt) {
     return (
       <div>
         <input style={{padding: '5px'}} type="file" onChange={this.handleFileSelect}/>
-        <QuickPivot data={demoData.data}></QuickPivot>
+        <QuickPivot data={this.state.data}></QuickPivot>
       </div>
     )
   }
