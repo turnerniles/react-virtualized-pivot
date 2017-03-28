@@ -2,13 +2,12 @@ quick-pivot-ui
 ============
 
 ## About
-
-quick-pivot-ui is a React pivot UI built on top of the [quick-pivot](https://github.com/pat310/quick-pivot) pivot library.
+quick-pivot-ui is a React.js pivot UI built on top of the [quick-pivot](https://github.com/pat310/quick-pivot) pivot library.
 
 ## Demo
 https://turnerniles.github.io/react-quick-pivot-ui/
 
-##Getting started
+## Getting started
 
 Install `quick-pivot-ui` using npm.
 

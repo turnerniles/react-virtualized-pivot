@@ -158,12 +158,6 @@ export default class QuickPivot extends PureComponent{
 	}
 
 	onToggleRow(rowIndex) {
-		console.log(
-			rowIndex,
-				this.state.data[rowIndex].row,
-			this.state.pivot.collapsedRows,
-			(this.state.data[rowIndex].row in this.state.pivot.collapsedRows)
-		)
 		//row index +1 because we remove/slice the header row off the data we render
 		//in the renderBodyCell
 		const newPivot = this.state.pivot.toggle(rowIndex+1);
@@ -180,13 +174,8 @@ export default class QuickPivot extends PureComponent{
 		this.forceRenderGrid();
 	}
 
-	checkIfInCollapsed(rowIndex){
-		//add 1 to rowIndex because the row index clicked on is 1 less than the
-		//pivot it's being compared to (contains the header).
-		if (rowIndex in this.state.pivot.collapsedRows){
-			console.log('truthy?', rowIndex in Object.keys(this.state.pivot.collapsedRows))
-		}
-		return ((rowIndex.toString()) in Object.keys(this.state.pivot.collapsedRows))
+	checkIfInCollapsed(rowIndex) {
+		return this.state.pivot.data.table[rowIndex + 1].row in this.state.pivot.collapsedRows
 	}
 
 	forceRenderGrid() {
@@ -260,7 +249,7 @@ export default class QuickPivot extends PureComponent{
 
 		const arrowStyle = (rowIndex) => {
 			//rowIndex - 1 because we are checking against the pivot data
-			if(this.checkIfInCollapsed(this.state.data[rowIndex].row)){
+			if(this.checkIfInCollapsed(rowIndex)){
 				return '▶';
 			}
 			if (this.state.data.slice(1)[rowIndex].depth <
