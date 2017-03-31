@@ -2,7 +2,6 @@ import React from 'react';
 import QuickPivot from './components/QuickPivot/QuickPivot.jsx';
 import Papa from 'papaparse/papaparse.js';
 import '../styles/index.scss';
-import demoData from './demodata.jsx'
 
 export default class App extends React.Component {
   constructor (props, context) {
@@ -21,6 +20,7 @@ export default class App extends React.Component {
          ['Jaime', 'm', 'Lannister', 32],
          ['Sansa', 'f', 'Stark', 12],
        ],
+       selectedDataset: '',
     };
 
     this.handleFileSelect = this.handleFileSelect.bind(this);
@@ -37,9 +37,16 @@ handleFileSelect(evt) {
 }
 
   render () {
+    const datasets = [{ value: 'Wisconsin_Data.csv', label: 'Wisconsin_Data.csv' }];
     return (
       <div>
-        <input style={{padding: '5px'}} type="file" onChange={this.handleFileSelect}/>
+        <div className="app-menu" style={{'width': '100%', height: '50px'}}>
+          <input
+            type="file"
+            onChange={this.handleFileSelect}
+            style={{padding: '5px', width: '200px', display: 'inline-block', float: 'left'}}
+          />
+        </div>
         <QuickPivot data={this.state.data} selectedAggregationDimension={'age'}></QuickPivot>
       </div>
     )
