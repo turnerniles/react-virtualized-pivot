@@ -95,7 +95,6 @@ export default class QuickPivot extends PureComponent{
 				}
 			}
 		}
-		console.log('headerCounter', headerCounter)
 
 		this.setState({
 			headerCounter,
@@ -139,7 +138,6 @@ export default class QuickPivot extends PureComponent{
 				}
 			}
 		}
-		console.log('headerCounter', headerCounter)
 
 		this.setState({
 			headerCounter,
@@ -184,7 +182,6 @@ export default class QuickPivot extends PureComponent{
 				}
 			}
 		}
-		console.log('headerCounter', headerCounter)
 
 		this.setState({
 			headerCounter,
@@ -201,9 +198,12 @@ export default class QuickPivot extends PureComponent{
 	}
 
 	onToggleRow(rowIndex) {
+		const {
+			pivot
+		} = this.state;
 		//row index +1 because we remove/slice the header row off the data we render
 		//in the renderBodyCell
-		const newPivot = this.state.pivot.toggle(rowIndex+1);
+		const newPivot = pivot.toggle(rowIndex+1);
 		this.setState(
 		{
 			pivot: newPivot,
@@ -218,7 +218,11 @@ export default class QuickPivot extends PureComponent{
 	}
 
 	checkIfInCollapsed(rowIndex) {
-		return this.state.pivot.data.table[rowIndex + 1].row in this.state.pivot.collapsedRows
+		const {
+			pivot,
+		} = this.state;
+
+		return pivot.data.table[rowIndex + 1].row in pivot.collapsedRows
 	}
 
 	forceRenderGrid() {
@@ -256,37 +260,46 @@ export default class QuickPivot extends PureComponent{
 		if (columnIndex < 1) {
 			return
 		}
-		console.log(rowIndex)
 		return this.renderLeftHeaderCell({ columnIndex, key, rowIndex, style })
 	}
 
 	renderLeftHeaderCell({ columnIndex, key, rowIndex, style }) {
+		const {
+			data,
+			headerCounter
+		} = this.state;
+
 		return (
 			<div
 				className={'headerCell'}
 				key={key}
 				style={style}
 			>
-				{`${this.state.data.length ?
-					this.state.data[0].value[columnIndex] : ''}`}
+				{`${data.length ?
+					data[rowIndex].value[columnIndex] : ''}`}
 			</div>
 		)
 	}
 
 	renderLeftSideCell ({ columnIndex, key, rowIndex, style }) {
+		const {
+			data,
+			headerCounter,
+			rowFields,
+		} = this.state;
+
 		const rowClass = rowIndex % 2 === 0
 			? columnIndex % 2 === 0 ? 'evenRow' : 'oddRow'
-			: columnIndex % 2 !== 0 ? 'evenRow' : 'oddRow'
+			: columnIndex % 2 !== 0 ? 'evenRow' : 'oddRow';
 		const classNames = cn(rowClass, 'cell');
-
 		const firstColumnStyle = {};
 			if (columnIndex === 0) {
 				firstColumnStyle['paddingLeft'] =
-					`${20*this.state.data.slice(this.state.headerCounter)[rowIndex].depth}px`
+					`${20*data.slice(headerCounter)[rowIndex].depth}px`
 			}
-			if (this.state.rowFields.length === 1 ||
-					this.state.data.slice(this.state.headerCounter)[rowIndex].depth <
-						this.state.rowFields.length - 1) {
+			if (rowFields.length === 1 ||
+					data.slice(headerCounter)[rowIndex].depth <
+						rowFields.length - 1) {
 					firstColumnStyle['fontWeight'] = 'bold';
 			}
 
@@ -295,8 +308,7 @@ export default class QuickPivot extends PureComponent{
 			if(this.checkIfInCollapsed(rowIndex)){
 				return '▶';
 			}
-			if (this.state.data.slice(this.state.headerCounter)[rowIndex].depth <
-				this.state.rowFields.length - 1) {
+			if (data.slice(headerCounter)[rowIndex].depth < rowFields.length - 1) {
 				return '▼';
 			}
 			return '';
@@ -310,8 +322,8 @@ export default class QuickPivot extends PureComponent{
 			onClick={this.onToggleRow.bind(this, rowIndex)}
 		>
 			{ columnIndex === 0 ? arrowStyle(rowIndex) : ''}
-			{`${this.state.data.slice().length ?
-				this.state.data.slice(this.state.headerCounter)[rowIndex].value[columnIndex] : ''}`}
+			{`${data.length ?
+				data.slice(headerCounter)[rowIndex].value[columnIndex] : ''}`}
 		</div>
 	)
 }
@@ -355,7 +367,7 @@ export default class QuickPivot extends PureComponent{
 	          <div className="title">Aggregation Type</div>
 							<Select
 							    name="Aggregation Type"
-									value={this.state.selectedAggregationType}
+									value={selectedAggregationType}
 							    options={aggregationTypes}
 							    onChange={this.onSelectAggregationType}
 									menuContainerStyle={{ zIndex: 2000 }}
@@ -366,7 +378,7 @@ export default class QuickPivot extends PureComponent{
 	          <div className="title">Aggregation Dimension</div>
 							<Select
 									name="Aggregation Type"
-									value={this.state.selectedAggregationDimension}
+									value={selectedAggregationDimension}
 									options={aggregationDimensions}
 									onChange={this.onSelectAggregationDimension}
 									menuContainerStyle={{ zIndex: 2000 }}
@@ -451,6 +463,8 @@ export default class QuickPivot extends PureComponent{
 		                    left: 0,
 		                    top: 0,
 		                    color: leftColor,
+												height: rowHeight * headerCounter,
+												width: columnWidth,
 		                  }}
 		                >
 		                  <Grid
@@ -458,7 +472,7 @@ export default class QuickPivot extends PureComponent{
 		                    cellRenderer={this.renderLeftHeaderCell}
 		                    className={'HeaderGrid'}
 		                    width={columnWidth}
-		                    height={rowHeight}
+		                    height={rowHeight * headerCounter}
 		                    rowHeight={rowHeight}
 		                    columnWidth={columnWidth}
 		                    rowCount={headerCounter}
@@ -470,7 +484,7 @@ export default class QuickPivot extends PureComponent{
 		                  style={{
 		                    position: 'absolute',
 		                    left: 0,
-		                    top: rowHeight,
+		                    top: rowHeight * headerCounter,
 		                    color: leftColor,
 		                  }}
 		                >
@@ -498,7 +512,7 @@ export default class QuickPivot extends PureComponent{
 		                        <div
 		                          style={{
 		                            color: topColor,
-		                            height: rowHeight,
+		                            height: rowHeight * headerCounter,
 		                            width: width - scrollbarSize(),
 		                          }}
 		                        >
@@ -507,7 +521,7 @@ export default class QuickPivot extends PureComponent{
 		                            className="HeaderGrid"
 		                            columnWidth={columnWidth}
 		                            columnCount={columnCount}
-		                            height={rowHeight}
+		                            height={rowHeight * headerCounter}
 		                            overscanColumnCount={overscanColumnCount}
 		                            cellRenderer={this.renderHeaderCell}
 		                            rowHeight={rowHeight}

@@ -2,7 +2,6 @@ import React from 'react';
 import QuickPivot from './components/QuickPivot/QuickPivot.jsx';
 import Papa from 'papaparse/papaparse.js';
 import '../styles/index.scss';
-import Select from 'react-select-plus';
 
 export default class App extends React.Component {
   constructor (props, context) {
@@ -21,11 +20,10 @@ export default class App extends React.Component {
          ['Jaime', 'm', 'Lannister', 32],
          ['Sansa', 'f', 'Stark', 12],
        ],
-       selectedDataset: ''
+       selectedDataset: '',
     };
 
     this.handleFileSelect = this.handleFileSelect.bind(this);
-    this.onSelectDataset = this.onSelectDataset.bind(this);
   }
 
 handleFileSelect(evt) {
@@ -38,21 +36,6 @@ handleFileSelect(evt) {
   });
 }
 
-onSelectDataset(selectedDataset){
-  console.log(selectedDataset)
-  console.log(`./sampleData/${selectedDataset.value}`)
-
-  Papa.parse('./sampleData/Wisconsin_Data.csv', {
-    download: true,
-    complete: (results) => {
-      console.log(results)
-      this.setState({data: results.data})
-    }
-  });
-
-  this.setState({selectedDataset})
-}
-
   render () {
     const datasets = [{ value: 'Wisconsin_Data.csv', label: 'Wisconsin_Data.csv' }];
     return (
@@ -62,14 +45,6 @@ onSelectDataset(selectedDataset){
             type="file"
             onChange={this.handleFileSelect}
             style={{padding: '5px', width: '200px', display: 'inline-block', float: 'left'}}
-          />
-          <Select
-              name="Dataset Select"
-              value={this.state.selectedDataset}
-              options={datasets}
-              onChange={this.onSelectDataset}
-              menuContainerStyle={{ zIndex: 2000 }}
-              style={{padding: '5px', width: '200px', display: 'inline-block', float: 'left'}}
           />
         </div>
         <QuickPivot data={this.state.data} selectedAggregationDimension={'age'}></QuickPivot>
