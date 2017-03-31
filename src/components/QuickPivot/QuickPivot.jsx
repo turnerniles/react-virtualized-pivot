@@ -36,6 +36,7 @@ export default class QuickPivot extends PureComponent{
 	      rowCount: 0,
 				data:{},
 				header:{},
+				headerCounter: 0,
     };
 
 		this.onSelectAggregationDimension =
@@ -52,7 +53,7 @@ export default class QuickPivot extends PureComponent{
     this.renderLeftSideCell = this.renderLeftSideCell.bind(this);
 	}
 
-	componentWillReceiveProps (nextProps) {
+	componentWillReceiveProps(nextProps) {
     this.setState({
 			aggregationDimensions: nextProps.data[0].map((item, index) => {
 				return {value: item, label: item}
@@ -67,7 +68,7 @@ export default class QuickPivot extends PureComponent{
 		})
   }
 
-	onSelectAggregationType (selectedAggregationType) {
+	onSelectAggregationType(selectedAggregationType) {
 		const {
 			colFields,
 			dataArray,
@@ -83,7 +84,21 @@ export default class QuickPivot extends PureComponent{
 			selectedAggregationType.value,
 		);
 
+		let headerCounter = 0;
+
+		if(pivotedData.data){
+			while(true) {
+				if (pivotedData.data.table[headerCounter].type === 'colHeader') {
+					headerCounter += 1;
+				} else {
+					break
+				}
+			}
+		}
+		console.log('headerCounter', headerCounter)
+
 		this.setState({
+			headerCounter,
 			pivot: pivotedData,
 			selectedAggregationType: selectedAggregationType.value,
 			columnCount: (pivotedData.data.table.length &&
@@ -113,7 +128,21 @@ export default class QuickPivot extends PureComponent{
 			selectedAggregationType,
 		);
 
+		let headerCounter = 0;
+
+		if(pivotedData.data){
+			while(true) {
+				if (pivotedData.data.table[headerCounter].type === 'colHeader') {
+					headerCounter += 1;
+				} else {
+					break
+				}
+			}
+		}
+		console.log('headerCounter', headerCounter)
+
 		this.setState({
+			headerCounter,
 			pivot: pivotedData,
 			selectedAggregationDimension: selectedAggregationDimension.value,
 			columnCount: (pivotedData.data.table.length &&
@@ -144,7 +173,21 @@ export default class QuickPivot extends PureComponent{
 			selectedAggregationType,
 		);
 
+		let headerCounter = 0;
+
+		if(pivotedData.data){
+			while(true) {
+				if (pivotedData.data.table[headerCounter].type === 'colHeader') {
+					headerCounter += 1;
+				} else {
+					break
+				}
+			}
+		}
+		console.log('headerCounter', headerCounter)
+
 		this.setState({
+			headerCounter,
 			pivot: pivotedData,
 			columnCount: (pivotedData.data.table.length &&
 					pivotedData.data.table[0].value.length) ?
@@ -201,23 +244,23 @@ export default class QuickPivot extends PureComponent{
 		}
 	}
 
-	renderBodyCell ({ columnIndex, key, rowIndex, style }) {
+	renderBodyCell({ columnIndex, key, rowIndex, style }) {
 		if (columnIndex < 1) {
 			return
 		}
 
-		return this.renderLeftSideCell ({ columnIndex, key, rowIndex, style })
+		return this.renderLeftSideCell({ columnIndex, key, rowIndex, style })
 	}
 
-	renderHeaderCell ({ columnIndex, key, rowIndex, style }) {
+	renderHeaderCell({ columnIndex, key, rowIndex, style }) {
 		if (columnIndex < 1) {
 			return
 		}
-
-		return this.renderLeftHeaderCell ({ columnIndex, key, rowIndex, style })
+		console.log(rowIndex)
+		return this.renderLeftHeaderCell({ columnIndex, key, rowIndex, style })
 	}
 
-	renderLeftHeaderCell ({ columnIndex, key, rowIndex, style }) {
+	renderLeftHeaderCell({ columnIndex, key, rowIndex, style }) {
 		return (
 			<div
 				className={'headerCell'}
@@ -239,10 +282,10 @@ export default class QuickPivot extends PureComponent{
 		const firstColumnStyle = {};
 			if (columnIndex === 0) {
 				firstColumnStyle['paddingLeft'] =
-					`${20*this.state.data.slice(1)[rowIndex].depth}px`
+					`${20*this.state.data.slice(this.state.headerCounter)[rowIndex].depth}px`
 			}
 			if (this.state.rowFields.length === 1 ||
-					this.state.data.slice(1)[rowIndex].depth <
+					this.state.data.slice(this.state.headerCounter)[rowIndex].depth <
 						this.state.rowFields.length - 1) {
 					firstColumnStyle['fontWeight'] = 'bold';
 			}
@@ -252,7 +295,7 @@ export default class QuickPivot extends PureComponent{
 			if(this.checkIfInCollapsed(rowIndex)){
 				return '▶';
 			}
-			if (this.state.data.slice(1)[rowIndex].depth <
+			if (this.state.data.slice(this.state.headerCounter)[rowIndex].depth <
 				this.state.rowFields.length - 1) {
 				return '▼';
 			}
@@ -267,8 +310,8 @@ export default class QuickPivot extends PureComponent{
 			onClick={this.onToggleRow.bind(this, rowIndex)}
 		>
 			{ columnIndex === 0 ? arrowStyle(rowIndex) : ''}
-			{`${this.state.data.slice(1).length ?
-				this.state.data.slice(1)[rowIndex].value[columnIndex] : ''}`}
+			{`${this.state.data.slice().length ?
+				this.state.data.slice(this.state.headerCounter)[rowIndex].value[columnIndex] : ''}`}
 		</div>
 	)
 }
@@ -282,6 +325,7 @@ export default class QuickPivot extends PureComponent{
 
 			columnCount,
       columnWidth,
+			headerCounter,
       height,
       overscanColumnCount,
       overscanRowCount,
@@ -417,7 +461,7 @@ export default class QuickPivot extends PureComponent{
 		                    height={rowHeight}
 		                    rowHeight={rowHeight}
 		                    columnWidth={columnWidth}
-		                    rowCount={1}
+		                    rowCount={headerCounter}
 		                    columnCount={1}
 		                  />
 		                </div>
@@ -440,7 +484,7 @@ export default class QuickPivot extends PureComponent{
 		                    className={'LeftSideGrid'}
 		                    height={height - scrollbarSize()}
 		                    rowHeight={rowHeight}
-		                    rowCount={rowCount === 0 ? 0 : (rowCount - 1)}
+		                    rowCount={rowCount === 0 ? 0 : (rowCount - headerCounter)}
 		                    scrollTop={scrollTop}
 		                    width={columnWidth}
 		                  />
@@ -467,7 +511,7 @@ export default class QuickPivot extends PureComponent{
 		                            overscanColumnCount={overscanColumnCount}
 		                            cellRenderer={this.renderHeaderCell}
 		                            rowHeight={rowHeight}
-		                            rowCount={1}
+		                            rowCount={headerCounter}
 		                            scrollLeft={scrollLeft}
 		                            width={width - scrollbarSize()}
 		                          />
@@ -490,7 +534,7 @@ export default class QuickPivot extends PureComponent{
 		                            overscanRowCount={overscanRowCount}
 		                            cellRenderer={this.renderBodyCell}
 		                            rowHeight={rowHeight}
-		                            rowCount={rowCount === 0 ? 0 : (rowCount - 1)}
+		                            rowCount={rowCount === 0 ? 0 : (rowCount - headerCounter)}
 		                            width={width}
 		                          />
 		                        </div>
