@@ -91,7 +91,7 @@ export default class QuickPivot extends PureComponent{
 				if (pivotedData.data.table[headerCounter].type === 'colHeader') {
 					headerCounter += 1;
 				} else {
-					break
+					break;
 				}
 			}
 		}
@@ -450,9 +450,10 @@ export default class QuickPivot extends PureComponent{
 							}) => {
 		            const x = scrollLeft / (scrollWidth - clientWidth);
 		            const y = scrollTop / (scrollHeight - clientHeight);
-		            const leftColor = '#ffffff';
-		            const topColor = '#ffffff';
-		            const middleColor = '#ffffff';
+								const leftHeaderCellTextColor = '#ffffff';
+		            const headerGridTextColor = '#ffffff';
+								const leftSideGridTextColor = '#ffffff';
+		            const bodyGridTextColor = '#ffffff';
 
 		            return (
 		              <div className="GridRow">
@@ -462,7 +463,7 @@ export default class QuickPivot extends PureComponent{
 		                    position: 'absolute',
 		                    left: 0,
 		                    top: 0,
-		                    color: leftColor,
+		                    color: leftHeaderCellTextColor,
 												height: rowHeight * headerCounter,
 												width: columnWidth,
 		                  }}
@@ -485,7 +486,7 @@ export default class QuickPivot extends PureComponent{
 		                    position: 'absolute',
 		                    left: 0,
 		                    top: rowHeight * headerCounter,
-		                    color: leftColor,
+		                    color: leftSideGridTextColor,
 		                  }}
 		                >
 		                  <Grid
@@ -511,7 +512,7 @@ export default class QuickPivot extends PureComponent{
 		                      <div>
 		                        <div
 		                          style={{
-		                            color: topColor,
+		                            color: headerGridTextColor,
 		                            height: rowHeight * headerCounter,
 		                            width: width - scrollbarSize(),
 		                          }}
@@ -532,7 +533,7 @@ export default class QuickPivot extends PureComponent{
 		                        </div>
 		                        <div
 		                          style={{
-		                            color: middleColor,
+		                            color: bodyGridTextColor,
 		                            height,
 		                            width,
 		                          }}

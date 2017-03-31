@@ -20,7 +20,6 @@ export default class App extends React.Component {
          ['Jaime', 'm', 'Lannister', 32],
          ['Sansa', 'f', 'Stark', 12],
        ],
-       selectedDataset: '',
     };
 
     this.handleFileSelect = this.handleFileSelect.bind(this);
@@ -37,7 +36,6 @@ handleFileSelect(evt) {
 }
 
   render () {
-    const datasets = [{ value: 'Wisconsin_Data.csv', label: 'Wisconsin_Data.csv' }];
     return (
       <div>
         <div className="app-menu" style={{'width': '100%', height: '50px'}}>
