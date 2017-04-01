@@ -386,54 +386,55 @@ export default class QuickPivot extends PureComponent{
 	      	</div>
 	       </div>
 
-					<div className="fields">
-						<div className="title">Fields</div>
-		        <Sortable
-							className="sortable-container block__list block__list_tags"
-							onChange={fields => this.setState({fields})}
-	            options={{
-	              group: 'shared',
-	              onAdd: this.onAddUpdateField,
-	            }}
-	            tag="ul"
-						>
-		        	{fields}
-		        </Sortable>
-	        </div>
+				 <div className="fields-drag-container">
+						<div className="fields">
+							<div className="title">Fields</div>
+			        <Sortable
+								className="sortable-container block__list block__list_tags"
+								onChange={fields => this.setState({fields})}
+		            options={{
+		              group: 'shared',
+		              onAdd: this.onAddUpdateField,
+		            }}
+		            tag="ul"
+							>
+			        	{fields}
+			        </Sortable>
+		        </div>
 
-	        <div className="rows">
-						<div className="title">Rows</div>
-		        <Sortable
-							className="sortable-container block__list block__list_tags"
-							onChange={rowFields => this.setState({rowFields})}
-	            options={{
-                group: 'shared',
-                onAdd: this.onAddUpdateField,
-                onUpdate: this.onAddUpdateField,
-	            }}
-	            tag="ul"
-						>
-		          {rowFieldsRender}
-		        </Sortable>
-	        </div>
+		        <div className="rows">
+							<div className="title">Rows</div>
+			        <Sortable
+								className="sortable-container block__list block__list_tags"
+								onChange={rowFields => this.setState({rowFields})}
+		            options={{
+	                group: 'shared',
+	                onAdd: this.onAddUpdateField,
+	                onUpdate: this.onAddUpdateField,
+		            }}
+		            tag="ul"
+							>
+			          {rowFieldsRender}
+			        </Sortable>
+		        </div>
 
-	        <div className="columns">
-						<div className="title">Columns</div>
-		        <Sortable
-							className="sortable-container block__list block__list_tags"
-							onChange={(colFields) => this.setState({colFields})}
-	            options={{
-                group: 'shared',
-                onAdd: this.onAddUpdateField,
-                onUpdate: this.onAddUpdateField,
-	            }}
-	            tag="ul"
-						>
-		          {colFieldsRender}
-		        </Sortable>
+		        <div className="columns">
+							<div className="title">Columns</div>
+			        <Sortable
+								className="sortable-container block__list block__list_tags"
+								onChange={(colFields) => this.setState({colFields})}
+		            options={{
+	                group: 'shared',
+	                onAdd: this.onAddUpdateField,
+	                onUpdate: this.onAddUpdateField,
+		            }}
+		            tag="ul"
+							>
+			          {colFieldsRender}
+			        </Sortable>
+		        </div>
 	        </div>
-        </div>
-
+				</div>
 				<div className="pivot-grid">
 
 					<section className='pivot-grid'>

@@ -30,6 +30,7 @@ handleFileSelect(evt) {
 
   Papa.parse(file, {
     complete: (results) => {
+      console.log(JSON.stringify(results.data))
       this.setState({data: results.data})
     }
   });
