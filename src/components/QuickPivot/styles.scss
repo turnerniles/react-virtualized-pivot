@@ -5,35 +5,59 @@ section.quick-pivot{
 		margin-left: 10px;
 		margin-bottom: 8px;
 	}
-
-	.select-container{
-		width: 200px;
-		display: inline-block;
-	}
-
 	.pivot-options{
 		height: 150px;
-	}
-
-	.fields{
-		height: 46px;
-		width: 33%;
+		width: 100%;
 		display: inline-block;
-		float: left;
-	}
 
-	.rows{
-		height: 46px;
-		width: 33%;
-		display: inline-block;
-		float: left;
-	}
+		.selectors-container{
+			width: 25%;
+			display: inline-block;
+			float: left;
 
-	.columns{
-		height: 46px;
-		width: 33%;
-		display: inline-block;
-		float: left;
+			@media (min-width: 768px){width: 100%}
+			@media (min-width: 992px){width: 100%}
+			@media (min-width: 1220px){width: 100%}
+
+			.select-container{
+				width: 100%;
+				display: inline-block;
+
+				@media (min-width: 768px){width: 200px}
+				@media (min-width: 992px){width: 200px}
+				@media (min-width: 1220px){width: 200px}
+			}
+		}
+
+		.fields-drag-container{
+			width: 75%;
+			float: left;
+
+			@media (min-width: 768px){width: 100%}
+			@media (min-width: 992px){width: 100%}
+			@media (min-width: 1220px){width: 100%}
+
+			.fields{
+				height: 46px;
+				width: 33%;
+				display: inline-block;
+				float: left;
+			}
+
+			.rows{
+				height: 46px;
+				width: 33%;
+				display: inline-block;
+				float: left;
+			}
+
+			.columns{
+				height: 46px;
+				width: 33%;
+				display: inline-block;
+				float: left;
+			}
+		}
 	}
 
 	.title {
@@ -47,11 +71,15 @@ section.quick-pivot{
 	}
 
 	.block__list {
-		height: 76px;
-	  // padding: 20px 0;
+		height: 119px;
 	  margin-top: -8px;
 	  margin-left: 10px;
 	  background-color: #fff;
+		overflow-y: auto;
+
+		@media (min-width: 768px){height: 76px;}
+		@media (min-width: 992px){height: 76px;}
+		@media (min-width: 1220px){height: 76px;}
 	}
 	.block__list-title {
 	  margin: -20px 0 0;
@@ -59,7 +87,10 @@ section.quick-pivot{
 	  text-align: center;
 	  background: #5F9EDF;
 	}
-	.block__list li { cursor: move; }
+	.block__list li {
+		cursor: move;
+		list-style: none;
+	}
 
 	.block__list_words li {
 	  background-color: #fff;
@@ -71,7 +102,11 @@ section.quick-pivot{
 	}
 
 	.block__list_tags {
-	  padding-left: 30px;
+	  padding-left: 15px;
+
+		@media (min-width: 768px){padding-left: 30px;}
+		@media (min-width: 992px){padding-left: 30px;}
+		@media (min-width: 1220px){padding-left: 30px;}
 	}
 
 	.block__list_tags:after {

@@ -42,30 +42,97 @@ section.quick-pivot .Select {
   margin-bottom: 8px;
 }
 
-section.quick-pivot .select-container {
-  width: 200px;
-  display: inline-block;
-}
-
 section.quick-pivot .pivot-options {
   height: 150px;
+  width: 100%;
+  display: inline-block;
 }
 
-section.quick-pivot .fields {
+section.quick-pivot .pivot-options .selectors-container {
+  width: 25%;
+  display: inline-block;
+  float: left;
+}
+
+@media (min-width: 768px) {
+  section.quick-pivot .pivot-options .selectors-container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  section.quick-pivot .pivot-options .selectors-container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1220px) {
+  section.quick-pivot .pivot-options .selectors-container {
+    width: 100%;
+  }
+}
+
+section.quick-pivot .pivot-options .selectors-container .select-container {
+  width: 100%;
+  display: inline-block;
+}
+
+@media (min-width: 768px) {
+  section.quick-pivot .pivot-options .selectors-container .select-container {
+    width: 200px;
+  }
+}
+
+@media (min-width: 992px) {
+  section.quick-pivot .pivot-options .selectors-container .select-container {
+    width: 200px;
+  }
+}
+
+@media (min-width: 1220px) {
+  section.quick-pivot .pivot-options .selectors-container .select-container {
+    width: 200px;
+  }
+}
+
+section.quick-pivot .pivot-options .fields-drag-container {
+  width: 75%;
+  float: left;
+}
+
+@media (min-width: 768px) {
+  section.quick-pivot .pivot-options .fields-drag-container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  section.quick-pivot .pivot-options .fields-drag-container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1220px) {
+  section.quick-pivot .pivot-options .fields-drag-container {
+    width: 100%;
+  }
+}
+
+section.quick-pivot .pivot-options .fields-drag-container .fields {
   height: 46px;
   width: 33%;
   display: inline-block;
   float: left;
 }
 
-section.quick-pivot .rows {
+section.quick-pivot .pivot-options .fields-drag-container .rows {
   height: 46px;
   width: 33%;
   display: inline-block;
   float: left;
 }
 
-section.quick-pivot .columns {
+section.quick-pivot .pivot-options .fields-drag-container .columns {
   height: 46px;
   width: 33%;
   display: inline-block;
@@ -83,10 +150,29 @@ section.quick-pivot .title {
 }
 
 section.quick-pivot .block__list {
-  height: 76px;
+  height: 119px;
   margin-top: -8px;
   margin-left: 10px;
   background-color: #fff;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  section.quick-pivot .block__list {
+    height: 76px;
+  }
+}
+
+@media (min-width: 992px) {
+  section.quick-pivot .block__list {
+    height: 76px;
+  }
+}
+
+@media (min-width: 1220px) {
+  section.quick-pivot .block__list {
+    height: 76px;
+  }
 }
 
 section.quick-pivot .block__list-title {
@@ -98,6 +184,7 @@ section.quick-pivot .block__list-title {
 
 section.quick-pivot .block__list li {
   cursor: move;
+  list-style: none;
 }
 
 section.quick-pivot .block__list_words li {
@@ -111,7 +198,25 @@ section.quick-pivot .block__list_words .sortable-ghost {
 }
 
 section.quick-pivot .block__list_tags {
-  padding-left: 30px;
+  padding-left: 15px;
+}
+
+@media (min-width: 768px) {
+  section.quick-pivot .block__list_tags {
+    padding-left: 30px;
+  }
+}
+
+@media (min-width: 992px) {
+  section.quick-pivot .block__list_tags {
+    padding-left: 30px;
+  }
+}
+
+@media (min-width: 1220px) {
+  section.quick-pivot .block__list_tags {
+    padding-left: 30px;
+  }
 }
 
 section.quick-pivot .block__list_tags:after {
