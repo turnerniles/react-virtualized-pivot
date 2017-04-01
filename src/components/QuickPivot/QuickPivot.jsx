@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { Grid, AutoSizer, ScrollSync } from 'react-virtualized'
-import { ContentBox, ContentBoxHeader, ContentBoxParagraph }
+import { ContentBox }
 	from '../ContentBox/ContentBox.jsx'
 import cn from 'classnames'
 import scrollbarSize from 'dom-helpers/util/scrollbarSize'
@@ -29,7 +29,6 @@ export default class QuickPivot extends PureComponent{
 
 				columnWidth: 75,
 	      columnCount: 0,
-	      height: (window.innerHeight - 240),
 	      overscanColumnCount: 0,
 	      overscanRowCount: 5,
 	      rowHeight: 40,
@@ -81,7 +80,7 @@ export default class QuickPivot extends PureComponent{
 			rowFields,
 			colFields,
 			selectedAggregationDimension,
-			selectedAggregationType.value,
+			selectedAggregationType.value
 		);
 
 		let headerCounter = 0;
@@ -124,7 +123,7 @@ export default class QuickPivot extends PureComponent{
 			rowFields,
 			colFields,
 			selectedAggregationDimension.value,
-			selectedAggregationType,
+			selectedAggregationType
 		);
 
 		let headerCounter = 0;
@@ -154,7 +153,7 @@ export default class QuickPivot extends PureComponent{
 		this.forceRenderGrid();
 	}
 
-	onAddUpdateField (event) {
+	onAddUpdateField() {
 		const {
 			dataArray,
 			rowFields,
@@ -168,7 +167,7 @@ export default class QuickPivot extends PureComponent{
 			rowFields,
 			colFields,
 			selectedAggregationDimension,
-			selectedAggregationType,
+			selectedAggregationType
 		);
 
 		let headerCounter = 0;
@@ -203,7 +202,7 @@ export default class QuickPivot extends PureComponent{
 		} = this.state;
 		//row index +1 because we remove/slice the header row off the data we render
 		//in the renderBodyCell
-		const newPivot = pivot.toggle(rowIndex+1);
+		const newPivot = pivot.toggle(rowIndex + 1);
 		this.setState(
 		{
 			pivot: newPivot,
@@ -227,24 +226,16 @@ export default class QuickPivot extends PureComponent{
 
 	forceRenderGrid() {
 		if (this.header) {
-			this.header.recomputeGridSize(
-				{columnIndex: 0, rowIndex: 0},
-			);
+			this.header.recomputeGridSize({columnIndex: 0, rowIndex: 0});
 		}
 		if (this.leftHeader) {
-			this.leftHeader.recomputeGridSize(
-				{columnIndex: 0, rowIndex: 0},
-			);
+			this.leftHeader.recomputeGridSize({columnIndex: 0, rowIndex: 0});
 		}
 		if (this.grid) {
-			this.grid.recomputeGridSize(
-				{columnIndex: 0, rowIndex: 0},
-			);
+			this.grid.recomputeGridSize({columnIndex: 0, rowIndex: 0});
 		}
 		if (this.bodyGrid) {
-			this.bodyGrid.recomputeGridSize(
-				{columnIndex: 0, rowIndex: 0},
-			);
+			this.bodyGrid.recomputeGridSize({columnIndex: 0, rowIndex: 0});
 		}
 	}
 
@@ -266,7 +257,6 @@ export default class QuickPivot extends PureComponent{
 	renderLeftHeaderCell({ columnIndex, key, rowIndex, style }) {
 		const {
 			data,
-			headerCounter
 		} = this.state;
 
 		return (
@@ -295,7 +285,7 @@ export default class QuickPivot extends PureComponent{
 		const firstColumnStyle = {};
 			if (columnIndex === 0) {
 				firstColumnStyle['paddingLeft'] =
-					`${20*data.slice(headerCounter)[rowIndex].depth}px`
+					`${20 * data.slice(headerCounter)[rowIndex].depth}px`
 			}
 			if (rowFields.length === 1 ||
 					data.slice(headerCounter)[rowIndex].depth <
@@ -331,19 +321,18 @@ export default class QuickPivot extends PureComponent{
 	render() {
 		const {
 			aggregationDimensions,
-			pivot,
 			selectedAggregationType,
 			selectedAggregationDimension,
-
 			columnCount,
       columnWidth,
 			headerCounter,
-      height,
       overscanColumnCount,
       overscanRowCount,
       rowHeight,
       rowCount,
 		} = this.state;
+
+		const height = (window.innerHeight - 240 - (this.state.headerCounter * 40))
 
 		const aggregationTypes = [
 	    { value: 'sum', label: 'sum' },
