@@ -195,11 +195,11 @@ section.quick-pivot{
 	}
 
 	.filter-menu{
-		position: absolute;
-		width: 100px;
-		height: 100px;
-		background-color: #fff;
-		z-index: 11;
-		color: black;
-	}
+    position: relative;
+    width: 100px;
+    height: 100px;
+    background-color: #fff;
+    z-index: 11;
+    color: black;
+  }
 }

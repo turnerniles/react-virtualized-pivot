@@ -28,8 +28,9 @@ export default class QuickPivot extends PureComponent{
 				rowFields: [],
 				selectedAggregationType: 'sum',
 				selectedAggregationDimension: this.props.selectedAggregationDimension || '',
-				filterValues: {},
-				filterMenuToDisplay: {},
+				currentFilter: '',
+				currentValues: {},
+				filters: {},
 
 				columnWidth: 75,
 	      columnCount: 0,
@@ -56,8 +57,9 @@ export default class QuickPivot extends PureComponent{
     this.renderLeftSideCell = this.renderLeftSideCell.bind(this);
 
 		this.displayFilter = this.displayFilter.bind(this);
-		this.addFilter = this.addFilter.bind(this);
+		this.addToFilters = this.addToFilters.bind(this);
 		this.submitFilters = this.submitFilters.bind(this);
+		this.showFilterMenu = this.showFilterMenu.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -331,39 +333,63 @@ export default class QuickPivot extends PureComponent{
 	displayFilter(fieldName) {
 		const {
 			filterMenuToDisplay,
-			filterValues,
+			currentValues,
 			pivot
 		} = this.state;
 
-		//row index +1 because we remove/slice the header row off the data we render
-		//in the renderBodyCell
 		const uniqueValues = pivot.getUniqueValues(fieldName);
-		// this.setState(
-		// {
-		// 	pivot: newPivot,
-		// 	columnCount: (newPivot.data.table.length &&
-		// 		newPivot.data.table[0].value.length) ?
-		// 	newPivot.data.table[0].value.length : 0,
-		// 	rowCount: newPivot.data.table.length || 0,
-		// 	data: newPivot.data.table,
-		// 	header: newPivot.data.table[0],
-		// });
-
-		filterValues[fieldName] = uniqueValues;
-		filterMenuToDisplay[fieldName] = true;
-		this.setState({
-			filterMenuToDisplay,
-			filterValues,
-		})
 	}
 
-	addFilter() {
-		return null;
+	addToFilters(filterValue) {
+		const {
+			currentFilter,
+		} = this.state;
+
+		let {
+			filters
+		} = this.state;
+
+		filters[currentFilter] ? filters[currentFilter].push(filterValue) : filters[currentFilter] = [filterValue];
+
+		this.setState({
+			filters,
+		},()=>{console.log(this.state.filters)})
 	}
 
 	submitFilters(){
-		console.log('subitting filters')
-		return null;
+		const {
+			currentFilter,
+			filters,
+			pivot,
+		} = this.state;
+
+		const newPivot = pivot.filter(
+				currentFilter, filters[currentFilter], 'exclude');
+
+		this.setState(
+		{
+			pivot: newPivot,
+			columnCount: (newPivot.data.table.length &&
+				newPivot.data.table[0].value.length) ?
+			newPivot.data.table[0].value.length : 0,
+			rowCount: newPivot.data.table.length || 0,
+			data: newPivot.data.table,
+			header: newPivot.data.table[0],
+		});
+
+	}
+
+	showFilterMenu(field){
+		const {
+			pivot
+		} = this.state;
+
+		const uniqueValues = pivot.getUniqueValues(field);
+
+		this.setState({
+			currentFilter: field,
+			currentValues: uniqueValues,
+		},()=>{console.log(this.state.currentValues)});
 	}
 
 	render() {
@@ -378,7 +404,8 @@ export default class QuickPivot extends PureComponent{
       overscanRowCount,
       rowHeight,
       rowCount,
-			filterValues,
+			currentValues,
+			displayFilterMenu,
 		} = this.state;
 
 		const height = (window.innerHeight - 240 - (this.state.headerCounter * 40))
@@ -397,14 +424,12 @@ export default class QuickPivot extends PureComponent{
 					data-id={field}
 				>
 					{field}
-					<FilterMenu
-						field={field}
-						filterValues={this.state.filterValues}
-						displayFilter={this.displayFilter}
-						filterMenuToDisplay={this.state.filterMenuToDisplay}
-						submitFilters={this.submitFilters}
-					>
-					</FilterMenu>
+					<div
+	  				className="filter-button"
+	  				onClick={this.showFilterMenu.bind(this, field)}
+	  			>
+	  				✎
+	  			</div>
 				</li>
 			)}
 		) : ''
@@ -414,14 +439,12 @@ export default class QuickPivot extends PureComponent{
 				key={index}
 				data-id={field}>
 				{field}
-				<FilterMenu
-					field={field}
-					filterValues={this.state.filterValues}
-					displayFilter={this.displayFilter}
-					filterMenuToDisplay={this.state.filterMenuToDisplay}
-					submitFilters={this.submitFilters}
+				<div
+					className="filter-button"
+					onClick={this.showFilterMenu.bind(this, field)}
 				>
-				</FilterMenu>
+					✎
+				</div>
 			</li>
 		));
 
@@ -429,21 +452,39 @@ export default class QuickPivot extends PureComponent{
 			(
 				<li
 				key={index}
-				data-id={field}>
-				{field}
-				<FilterMenu
-					field={field}
-					filterValues={this.state.filterValues}
-					displayFilter={this.displayFilter}
-					filterMenuToDisplay={this.state.filterMenuToDisplay}
-					submitFilters={this.submitFilters}
+				data-id={field}
 				>
-				</FilterMenu>
+				{field}
+				<div
+					className="filter-button"
+					onClick={this.showFilterMenu.bind(this, field)}
+				>
+					✎
+				</div>
 			</li>
 		));
-
 		return(
 			<section className="quick-pivot">
+
+					<div
+						className="filter-menu"
+						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
+						{ currentValues.length > 0 &&
+
+							 currentValues.map((filterValue, index) => {
+								 return (
+									 <div
+										 key={filterValue}
+										 onClick={this.addToFilters.bind(this, filterValue)}
+										>
+										 {filterValue}
+									 </div>
+								 )
+							 })
+						}
+						<div onClick={this.submitFilters}>Submit</div>
+					</div>
+
 				<div className="pivot-options">
 	       <div className="selectors-container">
 						<div className="select-container">
@@ -479,16 +520,6 @@ export default class QuickPivot extends PureComponent{
 		            options={{
 		              group: 'shared',
 		              onAdd: this.onAddUpdateField,
-									onChoose: () => console.log('onStart', this.setState(this.state)),
-									onStart: console.log('onStart', this.setState(this.state)),
-									onEnd:function(){console.log('onEnd')},
-									onAdd:function(){console.log('onAdd')},
-									onUpdate:function(){console.log('onUpdate')},
-									onSort:function(){console.log('onSort')},
-									onRemove:function(){console.log('onRemove')},
-									onFilter:function(){console.log('onFilter')},
-									onMove:function(){console.log('onMove')},
-									onClone:function(){console.log('onClone')},
 		            }}
 								ref='filter'
 		            tag="ul"

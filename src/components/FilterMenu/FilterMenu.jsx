@@ -18,12 +18,6 @@ export default class FilterMenu extends PureComponent{
 
     return (
       <section className="filter-menu-container">
-  			<div
-  				className="filter-button"
-  				onClick={this.props.displayFilter.bind(this, field)}
-  			>
-  				✎
-  			</div>
   			{ filterMenuToDisplay[field] === true &&
   				<div className="filter-menu">
   				 {
