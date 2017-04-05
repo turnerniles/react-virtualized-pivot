@@ -67,7 +67,7 @@ section.quick-pivot{
 		display: inline-block;
 		position: relative;
 		background-color: #FF7373;
-		z-index: 1000;
+		z-index: 2;
 	}
 
 	.block__list {
@@ -195,11 +195,11 @@ section.quick-pivot{
 	}
 
 	.filter-menu{
-    position: relative;
+    position: absolute;
     width: 100px;
     height: 100px;
     background-color: #fff;
-    z-index: 11;
+    z-index: 3;
     color: black;
   }
 }

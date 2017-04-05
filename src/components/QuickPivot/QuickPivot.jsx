@@ -477,7 +477,9 @@ export default class QuickPivot extends PureComponent{
 										 key={filterValue}
 										 onClick={this.addToFilters.bind(this, filterValue)}
 										>
+										<div>
 										 {filterValue}
+									 </div>
 									 </div>
 								 )
 							 })
@@ -494,7 +496,7 @@ export default class QuickPivot extends PureComponent{
 									value={selectedAggregationType}
 							    options={aggregationTypes}
 							    onChange={this.onSelectAggregationType}
-									menuContainerStyle={{ zIndex: 2000 }}
+									menuContainerStyle={{ zIndex: 2 }}
 							/>
          	</div>
 
@@ -505,7 +507,7 @@ export default class QuickPivot extends PureComponent{
 									value={selectedAggregationDimension}
 									options={aggregationDimensions}
 									onChange={this.onSelectAggregationDimension}
-									menuContainerStyle={{ zIndex: 2000 }}
+									menuContainerStyle={{ zIndex: 2 }}
 							/>
 	      	</div>
 	       </div>
