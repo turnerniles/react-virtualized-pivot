@@ -4,14 +4,14 @@ import { ContentBox }
 	from '../ContentBox/ContentBox.jsx'
 import cn from 'classnames'
 import scrollbarSize from 'dom-helpers/util/scrollbarSize'
-import Pivot from 'quick-pivot';
+import pivot from 'quick-pivot';
 import Select from 'react-select-plus';
-import Sortable from 'react-sortablejs';
+import ReactSortable from 'react-sortablejs';
 
 import 'react-select-plus/dist/react-select-plus.css';
 import './styles.scss';
 
-export default class QuickPivot extends PureComponent{
+export default class Pivot extends PureComponent{
 	constructor(props){
 		super(props);
 
@@ -20,12 +20,16 @@ export default class QuickPivot extends PureComponent{
 					return {value: item, label: item}
 				}),
 				colFields: [],
-				pivot: {},
+				pivot: new Pivot(this.props.data, [], [],
+					this.props.selectedAggregationDimension || '', 'sum'),
 				dataArray: this.props.data,
 				fields: this.props.data[0],
 				rowFields: [],
 				selectedAggregationType: 'sum',
 				selectedAggregationDimension: this.props.selectedAggregationDimension || '',
+				currentFilter: '',
+				currentValues: {},
+				filters: {},
 
 				columnWidth: 75,
 	      columnCount: 0,
@@ -50,6 +54,11 @@ export default class QuickPivot extends PureComponent{
     this.renderHeaderCell = this.renderHeaderCell.bind(this);
     this.renderLeftHeaderCell = this.renderLeftHeaderCell.bind(this);
     this.renderLeftSideCell = this.renderLeftSideCell.bind(this);
+
+		this.displayFilter = this.displayFilter.bind(this);
+		this.addToFilters = this.addToFilters.bind(this);
+		this.submitFilters = this.submitFilters.bind(this);
+		this.showFilterMenu = this.showFilterMenu.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -128,7 +137,7 @@ export default class QuickPivot extends PureComponent{
 
 		let headerCounter = 0;
 
-		if(pivotedData.data){
+		if (pivotedData.data) {
 			while(true) {
 				if (pivotedData.data.table[headerCounter].type === 'colHeader') {
 					headerCounter += 1;
@@ -172,7 +181,7 @@ export default class QuickPivot extends PureComponent{
 
 		let headerCounter = 0;
 
-		if(pivotedData.data){
+		if (pivotedData.data) {
 			while(true) {
 				if (pivotedData.data.table[headerCounter].type === 'colHeader') {
 					headerCounter += 1;
@@ -237,6 +246,8 @@ export default class QuickPivot extends PureComponent{
 		if (this.bodyGrid) {
 			this.bodyGrid.recomputeGridSize({columnIndex: 0, rowIndex: 0});
 		}
+		// console.log(this.refs.filter.sortable.options.onUpdate())
+		// this.filter.sortable.options.onUpdate();
 	}
 
 	renderBodyCell({ columnIndex, key, rowIndex, style }) {
@@ -271,7 +282,7 @@ export default class QuickPivot extends PureComponent{
 		)
 	}
 
-	renderLeftSideCell ({ columnIndex, key, rowIndex, style }) {
+	renderLeftSideCell({ columnIndex, key, rowIndex, style }) {
 		const {
 			data,
 			headerCounter,
@@ -296,7 +307,7 @@ export default class QuickPivot extends PureComponent{
 		const arrowStyle = (rowIndex) => {
 			//rowIndex - 1 because we are checking against the pivot data
 			if(this.checkIfInCollapsed(rowIndex)){
-				return '▶';
+				return '►';
 			}
 			if (data.slice(headerCounter)[rowIndex].depth < rowFields.length - 1) {
 				return '▼';
@@ -304,19 +315,81 @@ export default class QuickPivot extends PureComponent{
 			return '';
 		}
 
-	return (
-		<div
-			className={classNames}
-			key={key}
-			style={Object.assign({}, firstColumnStyle, style)}
-			onClick={this.onToggleRow.bind(this, rowIndex)}
-		>
-			{ columnIndex === 0 ? arrowStyle(rowIndex) : ''}
-			{`${data.length ?
-				data.slice(headerCounter)[rowIndex].value[columnIndex] : ''}`}
-		</div>
-	)
-}
+		return (
+			<div
+				className={classNames}
+				key={key}
+				style={Object.assign({}, firstColumnStyle, style)}
+				onClick={this.onToggleRow.bind(this, rowIndex)}
+			>
+				{ columnIndex === 0 ? arrowStyle(rowIndex) : ''}
+				{`${data.length ?
+					data.slice(headerCounter)[rowIndex].value[columnIndex] : ''}`}
+			</div>
+		)
+	}
+
+	displayFilter(fieldName) {
+		const {
+			filterMenuToDisplay,
+			currentValues,
+			pivot
+		} = this.state;
+
+		const uniqueValues = pivot.getUniqueValues(fieldName);
+	}
+
+	addToFilters(filterValue) {
+		const {
+			currentFilter,
+		} = this.state;
+
+		let {
+			filters
+		} = this.state;
+
+		filters[currentFilter] ? filters[currentFilter].push(filterValue) : filters[currentFilter] = [filterValue];
+
+		this.setState({
+			filters,
+		},()=>{console.log(this.state.filters)})
+	}
+
+	submitFilters(){
+		const {
+			currentFilter,
+			filters,
+			pivot,
+		} = this.state;
+
+		const newPivot = pivot.filter(
+				currentFilter, filters[currentFilter], 'exclude');
+
+		this.setState(
+		{
+			pivot: newPivot,
+			columnCount: (newPivot.data.table.length &&
+				newPivot.data.table[0].value.length) ?
+			newPivot.data.table[0].value.length : 0,
+			rowCount: newPivot.data.table.length || 0,
+			data: newPivot.data.table,
+			header: newPivot.data.table[0],
+		});
+
+	}
+
+	showFilterMenu(field){
+		const {
+			pivot
+		} = this.state;
+
+		const uniqueValues = pivot.getUniqueValues(field);
+
+		this.setState({
+			currentFilter: field,
+			currentValues: uniqueValues,
+		},()=>{console.log(this.state.currentValues)});
+	}
 
 	render() {
 		const {
@@ -330,6 +403,8 @@ export default class QuickPivot extends PureComponent{
       overscanRowCount,
       rowHeight,
       rowCount,
+			currentValues,
+			displayFilterMenu,
 		} = this.state;
 
 		const height = (window.innerHeight - 240 - (this.state.headerCounter * 40))
@@ -341,15 +416,76 @@ export default class QuickPivot extends PureComponent{
 
 		//We are not using deconstructed state consts here due to
 		// react-sortablejs bug
-		const fields = this.state.fields.map((field, index) =>
-			(<li key={index} data-id={field}>{field}</li>));
+		const fields = this.state.fields.length ? this.state.fields.map((field, index) =>
+			{ return (
+				<li
+					key={index}
+					data-id={field}
+				>
+					{field}
+					<div
+	  				className="filter-button"
+	  				onClick={this.showFilterMenu.bind(this, field)}
+	  			>
+	  				✎
+	  			</div>
+				</li>
+			)}
+		) : ''
 		const rowFieldsRender = this.state.rowFields.map((field, index) =>
-			(<li key={index} data-id={field}>{field}</li>));
-		const colFieldsRender = this.state.colFields.map((field, index) =>
-			(<li key={index} data-id={field}>{field}</li>));
+			(
+				<li
+				key={index}
+				data-id={field}>
+				{field}
+				<div
+					className="filter-button"
+					onClick={this.showFilterMenu.bind(this, field)}
+				>
+					✎
+				</div>
+			</li>
+		));
 
+		const colFieldsRender = this.state.colFields.map((field, index) =>
+			(
+				<li
+				key={index}
+				data-id={field}
+				>
+				{field}
+				<div
+					className="filter-button"
+					onClick={this.showFilterMenu.bind(this, field)}
+				>
+					✎
+				</div>
+			</li>
+		));
 		return(
 			<section className="quick-pivot">
+
+					<div
+						className="filter-menu"
+						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
+						{ currentValues.length > 0 &&
+
+							 currentValues.map((filterValue, index) => {
+								 return (
+									 <div
+										 key={filterValue}
+										 onClick={this.addToFilters.bind(this, filterValue)}
+										>
+										<div>
+										 {filterValue}
+									 </div>
+									 </div>
+								 )
+							 })
+						}
+						<div onClick={this.submitFilters}>Submit</div>
+					</div>
+
 				<div className="pivot-options">
 	       <div className="selectors-container">
 						<div className="select-container">
@@ -359,7 +495,7 @@ export default class QuickPivot extends PureComponent{
 									value={selectedAggregationType}
 							    options={aggregationTypes}
 							    onChange={this.onSelectAggregationType}
-									menuContainerStyle={{ zIndex: 2000 }}
+									menuContainerStyle={{ zIndex: 2 }}
 							/>
          	</div>
 
@@ -370,7 +506,7 @@ export default class QuickPivot extends PureComponent{
 									value={selectedAggregationDimension}
 									options={aggregationDimensions}
 									onChange={this.onSelectAggregationDimension}
-									menuContainerStyle={{ zIndex: 2000 }}
+									menuContainerStyle={{ zIndex: 2 }}
 							/>
 	      	</div>
 	       </div>
@@ -378,22 +514,24 @@ export default class QuickPivot extends PureComponent{
 				 <div className="fields-drag-container">
 						<div className="fields">
 							<div className="title">Fields</div>
-			        <Sortable
+			        <ReactSortable
 								className="sortable-container block__list block__list_tags"
+								handle='.my-handle'
 								onChange={fields => this.setState({fields})}
 		            options={{
 		              group: 'shared',
 		              onAdd: this.onAddUpdateField,
 		            }}
+								ref='filter'
 		            tag="ul"
 							>
 			        	{fields}
-			        </Sortable>
+			        </ReactSortable>
 		        </div>
 
 		        <div className="rows">
 							<div className="title">Rows</div>
-			        <Sortable
+			        <ReactSortable
 								className="sortable-container block__list block__list_tags"
 								onChange={rowFields => this.setState({rowFields})}
 		            options={{
@@ -402,14 +540,15 @@ export default class QuickPivot extends PureComponent{
 	                onUpdate: this.onAddUpdateField,
 		            }}
 		            tag="ul"
+								ref='filter'
 							>
 			          {rowFieldsRender}
-			        </Sortable>
+			        </ReactSortable>
 		        </div>
 
 		        <div className="columns">
 							<div className="title">Columns</div>
-			        <Sortable
+			        <ReactSortable
 								className="sortable-container block__list block__list_tags"
 								onChange={(colFields) => this.setState({colFields})}
 		            options={{
@@ -418,9 +557,10 @@ export default class QuickPivot extends PureComponent{
 	                onUpdate: this.onAddUpdateField,
 		            }}
 		            tag="ul"
+								ref='filter'
 							>
 			          {colFieldsRender}
-			        </Sortable>
+			        </ReactSortable>
 		        </div>
 	        </div>
 				</div>

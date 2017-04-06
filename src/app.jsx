@@ -1,5 +1,5 @@
 import React from 'react';
-import QuickPivot from './components/QuickPivot/QuickPivot.jsx';
+import Pivot from './components/Pivot/Pivot.jsx';
 import Papa from 'papaparse/papaparse.js';
 import '../styles/index.scss';
 
@@ -45,7 +45,7 @@ handleFileSelect(evt) {
             style={{padding: '5px', width: '200px', display: 'inline-block', float: 'left'}}
           />
         </div>
-        <QuickPivot data={this.state.data} selectedAggregationDimension={'age'}></QuickPivot>
+        <Pivot data={this.state.data} selectedAggregationDimension={'age'}></Pivot>
       </div>
     )
   }

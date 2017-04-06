@@ -146,7 +146,7 @@ section.quick-pivot .title {
   display: inline-block;
   position: relative;
   background-color: #FF7373;
-  z-index: 1000;
+  z-index: 2;
 }
 
 section.quick-pivot .block__list {
@@ -299,6 +299,21 @@ section.quick-pivot section.pivot-grid .leftCell {
 section.quick-pivot section.pivot-grid .headerCell,
 section.quick-pivot section.pivot-grid .leftCell {
   font-weight: bold;
+}
+
+section.quick-pivot .filter-button {
+  font-size: 20px;
+  width: 50px;
+  height: 50px;
+}
+
+section.quick-pivot .filter-menu {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: #fff;
+  z-index: 3;
+  color: black;
 }
 body {
   background: #ece7e7;
