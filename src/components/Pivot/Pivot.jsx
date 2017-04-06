@@ -2,17 +2,16 @@ import React, { PureComponent } from 'react'
 import { Grid, AutoSizer, ScrollSync } from 'react-virtualized'
 import { ContentBox }
 	from '../ContentBox/ContentBox.jsx'
-import FilterMenu from '../FilterMenu/FilterMenu.jsx'
 import cn from 'classnames'
 import scrollbarSize from 'dom-helpers/util/scrollbarSize'
-import Pivot from 'quick-pivot';
+import pivot from 'quick-pivot';
 import Select from 'react-select-plus';
-import ReactSortable from '../ReactSortable/ReactSortable.jsx';
+import ReactSortable from 'react-sortablejs';
 
 import 'react-select-plus/dist/react-select-plus.css';
 import './styles.scss';
 
-export default class QuickPivot extends PureComponent{
+export default class Pivot extends PureComponent{
 	constructor(props){
 		super(props);
 

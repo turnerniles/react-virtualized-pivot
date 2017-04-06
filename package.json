@@ -1,7 +1,7 @@
 {
-  "name": "quick-pivot-ui",
-  "version": "0.1.0-alpha",
-  "description": "React Quick Pivot UI",
+  "name": "react-virtualized-pivot",
+  "version": "0.0.0-alpha",
+  "description": "React Virtualized Pivot",
   "main": "''",
   "scripts": {
     "build": "webpack --config webpack.production.config.js --progress --profile --colors",
@@ -11,11 +11,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/turnerniles/react-quick-pivot-ui"
+    "url": "https://github.com/turnerniles/react-virtualized-pivot"
   },
   "author": "Niles Turner",
   "license": "MIT",
-  "homepage": "https://github.com/turnerniles/react-quick-pivot-ui#readme",
+  "homepage": "https://github.com/turnerniles/react-virtualized-pivot#readme",
   "dependencies": {
     "node-sass": "^4.3.0",
     "papaparse": "^4.1.4",

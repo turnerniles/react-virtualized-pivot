@@ -1,26 +1,26 @@
-quick-pivot-ui
+react-virtualized-pivot
 ============
 
 ## About
-quick-pivot-ui is a React.js pivot UI built on top of the [quick-pivot](https://github.com/pat310/quick-pivot) pivot library.
+react-virtualized-pivot is a React.js pivot UI built on top of [react-virtualized](https://github.com/bvaughn/react-virtualized) and [quick-pivot](https://github.com/pat310/quick-pivot).
 
 ## Demo
-https://turnerniles.github.io/react-quick-pivot-ui/
+https://turnerniles.github.io/react-virtualized-pivot/
 
 ## Getting started
 
-Install `quick-pivot-ui` using npm.
+Install `react-virtualized-pivot` using npm.
 
 ```shell
-npm install quick-pivot-ui --save
+npm install react-virtualized-pivot --save
 ```
 
 ## Usage
 ```jsx
 import React from 'react';
-import QuickPivot from 'quick-pivot-ui';
+import Pivot from 'react-virtualized-pivot';
 
-<QuickPivot
+<Pivot
   data = [
     ['name', 'gender', 'house', 'age'],
     ['Jon', 'm', 'Stark', 14],
@@ -34,7 +34,7 @@ import QuickPivot from 'quick-pivot-ui';
     ['Sansa', 'f', 'Stark', 12],
   ]
 >
-</QuickPivot>
+</Pivot>
 ```
 
 ## Contribute
