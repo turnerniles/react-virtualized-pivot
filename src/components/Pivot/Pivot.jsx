@@ -4,14 +4,14 @@ import { ContentBox }
 	from '../ContentBox/ContentBox.jsx'
 import cn from 'classnames'
 import scrollbarSize from 'dom-helpers/util/scrollbarSize'
-import pivot from 'quick-pivot';
+import QuickPivot from 'quick-pivot';
 import Select from 'react-select-plus';
 import ReactSortable from 'react-sortablejs';
 
 import 'react-select-plus/dist/react-select-plus.css';
 import './styles.scss';
 
-export default class Pivot extends PureComponent{
+export default class QPivot extends PureComponent {
 	constructor(props){
 		super(props);
 
@@ -20,7 +20,7 @@ export default class Pivot extends PureComponent{
 					return {value: item, label: item}
 				}),
 				colFields: [],
-				pivot: new Pivot(this.props.data, [], [],
+				pivot: new QuickPivot(this.props.data, [], [],
 					this.props.selectedAggregationDimension || '', 'sum'),
 				dataArray: this.props.data,
 				fields: this.props.data[0],
@@ -84,7 +84,7 @@ export default class Pivot extends PureComponent{
 			selectedAggregationDimension,
 		} = this.state;
 
-		const pivotedData = new Pivot(
+		const pivotedData = new QuickPivot(
 			dataArray,
 			rowFields,
 			colFields,
@@ -127,7 +127,7 @@ export default class Pivot extends PureComponent{
 			selectedAggregationType,
 		} = this.state;
 
-		const pivotedData = new Pivot(
+		const pivotedData = new QuickPivot(
 			dataArray,
 			rowFields,
 			colFields,
@@ -171,7 +171,7 @@ export default class Pivot extends PureComponent{
 			selectedAggregationType,
 		} = this.state;
 
-		const pivotedData = new Pivot(
+		const pivotedData = new QuickPivot(
 			dataArray,
 			rowFields,
 			colFields,
@@ -463,7 +463,7 @@ export default class Pivot extends PureComponent{
 			</li>
 		));
 		return(
-			<section className="quick-pivot">
+			<section className="virtualized-pivot">
 
 					<div
 						className="filter-menu"

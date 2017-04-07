@@ -45,7 +45,7 @@ handleFileSelect(evt) {
             style={{padding: '5px', width: '200px', display: 'inline-block', float: 'left'}}
           />
         </div>
-        <Pivot data={this.state.data} selectedAggregationDimension={'age'}></Pivot>
+        <Pivot data={this.state.data} selectedAggregationDimension={'age'} />
       </div>
     )
   }
