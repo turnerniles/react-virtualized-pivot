@@ -11,7 +11,7 @@ import ReactSortable from 'react-sortablejs';
 import 'react-select-plus/dist/react-select-plus.css';
 import './styles.scss';
 
-export default class QPivot extends PureComponent {
+export default class Pivot extends PureComponent {
 	constructor(props){
 		super(props);
 

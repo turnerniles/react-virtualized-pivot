@@ -36,110 +36,110 @@
   line-height: 1.2rem;
   margin: 0 0 1rem;
 }
-section.quick-pivot .Select {
+section.virtualized-pivot .Select {
   margin-top: -8px;
   margin-left: 10px;
   margin-bottom: 8px;
 }
 
-section.quick-pivot .pivot-options {
+section.virtualized-pivot .pivot-options {
   height: 150px;
   width: 100%;
   display: inline-block;
 }
 
-section.quick-pivot .pivot-options .selectors-container {
+section.virtualized-pivot .pivot-options .selectors-container {
   width: 25%;
   display: inline-block;
   float: left;
 }
 
 @media (min-width: 768px) {
-  section.quick-pivot .pivot-options .selectors-container {
+  section.virtualized-pivot .pivot-options .selectors-container {
     width: 100%;
   }
 }
 
 @media (min-width: 992px) {
-  section.quick-pivot .pivot-options .selectors-container {
+  section.virtualized-pivot .pivot-options .selectors-container {
     width: 100%;
   }
 }
 
 @media (min-width: 1220px) {
-  section.quick-pivot .pivot-options .selectors-container {
+  section.virtualized-pivot .pivot-options .selectors-container {
     width: 100%;
   }
 }
 
-section.quick-pivot .pivot-options .selectors-container .select-container {
+section.virtualized-pivot .pivot-options .selectors-container .select-container {
   width: 100%;
   display: inline-block;
 }
 
 @media (min-width: 768px) {
-  section.quick-pivot .pivot-options .selectors-container .select-container {
+  section.virtualized-pivot .pivot-options .selectors-container .select-container {
     width: 200px;
   }
 }
 
 @media (min-width: 992px) {
-  section.quick-pivot .pivot-options .selectors-container .select-container {
+  section.virtualized-pivot .pivot-options .selectors-container .select-container {
     width: 200px;
   }
 }
 
 @media (min-width: 1220px) {
-  section.quick-pivot .pivot-options .selectors-container .select-container {
+  section.virtualized-pivot .pivot-options .selectors-container .select-container {
     width: 200px;
   }
 }
 
-section.quick-pivot .pivot-options .fields-drag-container {
+section.virtualized-pivot .pivot-options .fields-drag-container {
   width: 75%;
   float: left;
 }
 
 @media (min-width: 768px) {
-  section.quick-pivot .pivot-options .fields-drag-container {
+  section.virtualized-pivot .pivot-options .fields-drag-container {
     width: 100%;
   }
 }
 
 @media (min-width: 992px) {
-  section.quick-pivot .pivot-options .fields-drag-container {
+  section.virtualized-pivot .pivot-options .fields-drag-container {
     width: 100%;
   }
 }
 
 @media (min-width: 1220px) {
-  section.quick-pivot .pivot-options .fields-drag-container {
+  section.virtualized-pivot .pivot-options .fields-drag-container {
     width: 100%;
   }
 }
 
-section.quick-pivot .pivot-options .fields-drag-container .fields {
+section.virtualized-pivot .pivot-options .fields-drag-container .fields {
   height: 46px;
   width: 33%;
   display: inline-block;
   float: left;
 }
 
-section.quick-pivot .pivot-options .fields-drag-container .rows {
+section.virtualized-pivot .pivot-options .fields-drag-container .rows {
   height: 46px;
   width: 33%;
   display: inline-block;
   float: left;
 }
 
-section.quick-pivot .pivot-options .fields-drag-container .columns {
+section.virtualized-pivot .pivot-options .fields-drag-container .columns {
   height: 46px;
   width: 33%;
   display: inline-block;
   float: left;
 }
 
-section.quick-pivot .title {
+section.virtualized-pivot .title {
   color: #fff;
   padding: 3px 10px;
   margin-left: 5px;
@@ -149,7 +149,7 @@ section.quick-pivot .title {
   z-index: 2;
 }
 
-section.quick-pivot .block__list {
+section.virtualized-pivot .block__list {
   height: 119px;
   margin-top: -8px;
   margin-left: 10px;
@@ -158,74 +158,74 @@ section.quick-pivot .block__list {
 }
 
 @media (min-width: 768px) {
-  section.quick-pivot .block__list {
+  section.virtualized-pivot .block__list {
     height: 76px;
   }
 }
 
 @media (min-width: 992px) {
-  section.quick-pivot .block__list {
+  section.virtualized-pivot .block__list {
     height: 76px;
   }
 }
 
 @media (min-width: 1220px) {
-  section.quick-pivot .block__list {
+  section.virtualized-pivot .block__list {
     height: 76px;
   }
 }
 
-section.quick-pivot .block__list-title {
+section.virtualized-pivot .block__list-title {
   margin: -20px 0 0;
   padding: 10px;
   text-align: center;
   background: #5F9EDF;
 }
 
-section.quick-pivot .block__list li {
+section.virtualized-pivot .block__list li {
   cursor: move;
   list-style: none;
 }
 
-section.quick-pivot .block__list_words li {
+section.virtualized-pivot .block__list_words li {
   background-color: #fff;
   padding: 10px 40px;
 }
 
-section.quick-pivot .block__list_words .sortable-ghost {
+section.virtualized-pivot .block__list_words .sortable-ghost {
   opacity: 0.4;
   background-color: #F4E2C9;
 }
 
-section.quick-pivot .block__list_tags {
+section.virtualized-pivot .block__list_tags {
   padding-left: 15px;
 }
 
 @media (min-width: 768px) {
-  section.quick-pivot .block__list_tags {
+  section.virtualized-pivot .block__list_tags {
     padding-left: 30px;
   }
 }
 
 @media (min-width: 992px) {
-  section.quick-pivot .block__list_tags {
+  section.virtualized-pivot .block__list_tags {
     padding-left: 30px;
   }
 }
 
 @media (min-width: 1220px) {
-  section.quick-pivot .block__list_tags {
+  section.virtualized-pivot .block__list_tags {
     padding-left: 30px;
   }
 }
 
-section.quick-pivot .block__list_tags:after {
+section.virtualized-pivot .block__list_tags:after {
   clear: both;
   content: '';
   display: block;
 }
 
-section.quick-pivot .block__list_tags li {
+section.virtualized-pivot .block__list_tags li {
   color: #fff;
   float: left;
   margin: 8px 20px 10px 0;
@@ -235,7 +235,7 @@ section.quick-pivot .block__list_tags li {
   text-align: center;
 }
 
-section.quick-pivot section.pivot-grid {
+section.virtualized-pivot section.pivot-grid {
   padding-top: 1rem;
   flex: 1 0 auto;
   display: flex;
@@ -246,46 +246,46 @@ section.quick-pivot section.pivot-grid {
   background: #fff;
 }
 
-section.quick-pivot section.pivot-grid .GridRow {
+section.virtualized-pivot section.pivot-grid .GridRow {
   position: relative;
   display: flex;
   flex-direction: row;
 }
 
-section.quick-pivot section.pivot-grid .GridColumn {
+section.virtualized-pivot section.pivot-grid .GridColumn {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
 }
 
-section.quick-pivot section.pivot-grid .LeftSideGridContainer {
+section.virtualized-pivot section.pivot-grid .LeftSideGridContainer {
   flex: 0 0 75px;
   z-index: 10;
 }
 
-section.quick-pivot section.pivot-grid .LeftSideGrid {
+section.virtualized-pivot section.pivot-grid .LeftSideGrid {
   overflow: hidden !important;
   background-color: #bc3959;
 }
 
-section.quick-pivot section.pivot-grid .HeaderGrid {
+section.virtualized-pivot section.pivot-grid .HeaderGrid {
   width: 100%;
   overflow: hidden !important;
   background-color: #333333;
 }
 
-section.quick-pivot section.pivot-grid .BodyGrid {
+section.virtualized-pivot section.pivot-grid .BodyGrid {
   width: 100%;
   background-color: #783646;
 }
 
-section.quick-pivot section.pivot-grid .oddRow {
+section.virtualized-pivot section.pivot-grid .oddRow {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-section.quick-pivot section.pivot-grid .cell,
-section.quick-pivot section.pivot-grid .headerCell,
-section.quick-pivot section.pivot-grid .leftCell {
+section.virtualized-pivot section.pivot-grid .cell,
+section.virtualized-pivot section.pivot-grid .headerCell,
+section.virtualized-pivot section.pivot-grid .leftCell {
   width: 100%;
   height: 100%;
   display: flex;
@@ -296,18 +296,18 @@ section.quick-pivot section.pivot-grid .leftCell {
   padding: 0 .5em;
 }
 
-section.quick-pivot section.pivot-grid .headerCell,
-section.quick-pivot section.pivot-grid .leftCell {
+section.virtualized-pivot section.pivot-grid .headerCell,
+section.virtualized-pivot section.pivot-grid .leftCell {
   font-weight: bold;
 }
 
-section.quick-pivot .filter-button {
+section.virtualized-pivot .filter-button {
   font-size: 20px;
   width: 50px;
   height: 50px;
 }
 
-section.quick-pivot .filter-menu {
+section.virtualized-pivot .filter-menu {
   position: absolute;
   width: 100px;
   height: 100px;
