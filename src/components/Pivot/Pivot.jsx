@@ -209,9 +209,11 @@ export default class Pivot extends PureComponent {
 		const {
 			pivot
 		} = this.state;
-		//row index +1 because we remove/slice the header row off the data we render
-		//in the renderBodyCell
-		const newPivot = pivot.toggle(rowIndex + 1);
+		//row index headerCount because we remove/slice the header off the data we
+		//render in the renderBodyCell
+
+		const newPivot = pivot.toggle(rowIndex + this.state.headerCounter);
+
 		this.setState(
 		{
 			pivot: newPivot,
