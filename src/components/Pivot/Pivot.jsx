@@ -11,6 +11,8 @@ import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 import 'react-select-plus/dist/react-select-plus.css';
 import './styles.scss';
 
+window.pivot = QuickPivot;
+
 export default class Pivot extends PureComponent {
 	constructor(props){
 		super(props);
@@ -360,11 +362,14 @@ export default class Pivot extends PureComponent {
 	}
 
 	submitFilters(){
+		console.log('submitted')
 		const {
 			currentFilter,
 			filters,
 			pivot,
 		} = this.state;
+
+		console.log(currentFilter, filters[currentFilter])
 
 		const newPivot = pivot.filter(
 				currentFilter, filters[currentFilter], 'exclude');
