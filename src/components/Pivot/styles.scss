@@ -190,16 +190,40 @@ section.virtualized-pivot{
 
 	.filter-button{
 		font-size: 20px;
-		width: 50px;
-		height: 50px;
+		height: 30px;
+		display: inline-block;
+		cursor: pointer;
 	}
+
 
 	.filter-menu{
     position: absolute;
+		overflow: scroll;
     width: 100px;
     height: 100px;
     background-color: #fff;
     z-index: 3;
     color: black;
+
+		.filters-container{
+			height: 80%;
+			overflow: scroll;
+			.filter-container{
+				float: left;
+				text-align: left;
+				width: 100%;
+				.filter-name{
+					display: inline-block;
+				}
+				.filter-checkbox{
+					display: inline-block;
+				}
+			}
+		}
   }
+	.filter-submit{
+		height: 20%;
+		background-color: #5F9EDF;
+		cursor: pointer;
+	}
 }

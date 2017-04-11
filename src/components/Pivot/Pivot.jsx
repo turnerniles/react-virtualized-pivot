@@ -6,10 +6,12 @@ import cn from 'classnames'
 import scrollbarSize from 'dom-helpers/util/scrollbarSize'
 import QuickPivot from 'quick-pivot';
 import Select from 'react-select-plus';
-import ReactSortable from 'react-sortablejs';
+import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 
 import 'react-select-plus/dist/react-select-plus.css';
 import './styles.scss';
+
+window.pivot = QuickPivot;
 
 export default class Pivot extends PureComponent {
 	constructor(props){
@@ -342,6 +344,7 @@ export default class Pivot extends PureComponent {
 	}
 
 	addToFilters(filterValue) {
+		console.log('changed', filterValue)
 		const {
 			currentFilter,
 		} = this.state;
@@ -350,7 +353,10 @@ export default class Pivot extends PureComponent {
 			filters
 		} = this.state;
 
-		filters[currentFilter] ? filters[currentFilter].push(filterValue) : filters[currentFilter] = [filterValue];
+		if (!(currentFilter in filters)) filters[currentFilter] = [];
+		filters[currentFilter].indexOf(filterValue) === -1 ?
+			filters[currentFilter].push(filterValue) :
+			filters[currentFilter].splice(filters[currentFilter].indexOf(filterValue), 1)
 
 		this.setState({
 			filters,
@@ -358,11 +364,14 @@ export default class Pivot extends PureComponent {
 	}
 
 	submitFilters(){
+		console.log('submitted')
 		const {
 			currentFilter,
 			filters,
 			pivot,
 		} = this.state;
+
+		console.log(currentFilter, filters[currentFilter])
 
 		const newPivot = pivot.filter(
 				currentFilter, filters[currentFilter], 'exclude');
@@ -390,7 +399,7 @@ export default class Pivot extends PureComponent {
 		this.setState({
 			currentFilter: field,
 			currentValues: uniqueValues,
-		},()=>{console.log(this.state.currentValues)});
+		},() => {console.log(this.state.currentValues)});
 	}
 
 	render() {
@@ -407,6 +416,8 @@ export default class Pivot extends PureComponent {
       rowCount,
 			currentValues,
 			displayFilterMenu,
+			currentFilter,
+			filters
 		} = this.state;
 
 		const height = (window.innerHeight - 240 - (this.state.headerCounter * 40))
@@ -416,6 +427,23 @@ export default class Pivot extends PureComponent {
 	    { value: 'count', label: 'count' },
 		];
 
+
+		const currentFilterJSX = currentValues.length > 0 ? currentValues.map((filterValue, index) => {
+			return (
+				<div key={filterValue} className='filter-container'>
+					<div className='filter-name'>
+						{filterValue}
+					</div>
+					<input
+						onChange={this.addToFilters.bind(this, filterValue)}
+						className="filter-checkbox"
+						type="checkbox"
+						defaultChecked={(filters[currentFilter] === undefined) ? false : filters[currentFilter].indexOf(filterValue) !== -1}
+					>
+					</input>
+				</div>
+			)
+	 	}) : '';
 		//We are not using deconstructed state consts here due to
 		// react-sortablejs bug
 		const fields = this.state.fields.length ? this.state.fields.map((field, index) =>
@@ -431,6 +459,18 @@ export default class Pivot extends PureComponent {
 	  			>
 	  				✎
 	  			</div>
+						{(currentValues.length > 0 && currentFilter === field) &&
+							<div
+								className="filter-menu"
+								style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
+								<div className="filters-container">
+								<div>
+									{currentFilterJSX}
+								</div>
+							</div>
+							<div onClick={this.submitFilters} className="filter-submit">Submit</div>
+						</div>
+						}
 				</li>
 			)}
 		) : ''
@@ -446,6 +486,18 @@ export default class Pivot extends PureComponent {
 				>
 					✎
 				</div>
+				{(currentValues.length > 0 && currentFilter === field) &&
+					<div
+						className="filter-menu"
+						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
+						<div className="filters-container">
+						<div>
+							{currentFilterJSX}
+						</div>
+					</div>
+					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
+				</div>
+				}
 			</li>
 		));
 
@@ -462,32 +514,22 @@ export default class Pivot extends PureComponent {
 				>
 					✎
 				</div>
+				{(currentValues.length > 0 && currentFilter === field) &&
+					<div
+						className="filter-menu"
+						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
+						<div className="filters-container">
+						<div>
+							{currentFilterJSX}
+						</div>
+					</div>
+					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
+				</div>
+				}
 			</li>
 		));
 		return(
 			<section className="virtualized-pivot">
-
-					<div
-						className="filter-menu"
-						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
-						{ currentValues.length > 0 &&
-
-							 currentValues.map((filterValue, index) => {
-								 return (
-									 <div
-										 key={filterValue}
-										 onClick={this.addToFilters.bind(this, filterValue)}
-										>
-										<div>
-										 {filterValue}
-									 </div>
-									 </div>
-								 )
-							 })
-						}
-						<div onClick={this.submitFilters}>Submit</div>
-					</div>
-
 				<div className="pivot-options">
 	       <div className="selectors-container">
 						<div className="select-container">
