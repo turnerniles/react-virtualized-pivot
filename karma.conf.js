@@ -3,7 +3,7 @@ var webpack = require('webpack');
 module.exports = function (config) {
   config.set({
     browsers: [ 'Chrome' ], //run in Chrome
-    singleRun: true, //just run once by default
+    singleRun: false, //just run once by default
     frameworks: [ 'mocha', 'chai' ], //use the mocha test framework
     files: [
       'tests.webpack.js' //just load this file

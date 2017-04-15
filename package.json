@@ -8,7 +8,8 @@
     "start": "webpack-dev-server --progress --profile --colors",
     "lint": "eslint --ext js --ext jsx src || exit 0",
     "dev": "webpack-dashboard -- webpack-dev-server --progress --profile --colors",
-    "test": "karma start"
+    "test:watch": "karma start",
+    "test": "karma start --browsers Firefox --single-run"
   },
   "repository": {
     "type": "git",
@@ -50,6 +51,7 @@
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-cli": "^1.0.1",
+    "karma-firefox-launcher": "^1.0.1",
     "karma-mocha": "^1.3.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.3",
