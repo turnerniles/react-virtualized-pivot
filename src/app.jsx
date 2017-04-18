@@ -25,15 +25,15 @@ export default class App extends React.Component {
     this.handleFileSelect = this.handleFileSelect.bind(this);
   }
 
-handleFileSelect(evt) {
-  const file = evt.target.files[0];
+  handleFileSelect(evt) {
+    const file = evt.target.files[0];
 
-  Papa.parse(file, {
-    complete: (results) => {
-      this.setState({data: results.data})
-    }
-  });
-}
+    Papa.parse(file, {
+      complete: (results) => {
+        this.setState({data: results.data})
+      }
+    });
+  }
 
   render () {
     return (
