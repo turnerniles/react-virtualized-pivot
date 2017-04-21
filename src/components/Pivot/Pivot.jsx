@@ -171,6 +171,7 @@ export default class Pivot extends PureComponent {
 			colFields,
 			selectedAggregationDimension,
 			selectedAggregationType,
+			filters
 		} = this.state;
 
 		const pivotedData = new QuickPivot(
@@ -182,6 +183,10 @@ export default class Pivot extends PureComponent {
 		);
 
 		let headerCounter = 0;
+
+		// Object.keys(filters).forEach((filter) => {
+		// 	pivotedData.filter(filter, filters[filter], 'exclude')
+		// })
 
 		if (pivotedData.data) {
 			while(true) {
@@ -342,37 +347,34 @@ export default class Pivot extends PureComponent {
 	}
 
 	addToFilters(filterValue) {
-		console.log('changed', filterValue)
 		const {
 			currentFilter,
 		} = this.state;
 
-		let {
-			filters
-		} = this.state;
+		const newFilters = [ ...this.state.filters ]
 
-		if (!(currentFilter in filters)) filters[currentFilter] = [];
-		filters[currentFilter].indexOf(filterValue) === -1 ?
-			filters[currentFilter].push(filterValue) :
-			filters[currentFilter].splice(filters[currentFilter].indexOf(filterValue), 1)
+		if (!(currentFilter in newFilters)) newFilters[currentFilter] = [];
+		newFilters[currentFilter].indexOf(filterValue) === -1 ?
+			newFilters[currentFilter].push(filterValue) :
+			newFilters[currentFilter].splice(newFilters[currentFilter].indexOf(filterValue), 1)
 
 		this.setState({
-			filters,
+			filters: newFilters,
 		})
 	}
 
 	submitFilters(){
-		console.log('submitted')
 		const {
 			currentFilter,
 			filters,
 			pivot,
 		} = this.state;
 
-		console.log(currentFilter, filters[currentFilter])
-
-		const newPivot = pivot.filter(
-				currentFilter, filters[currentFilter], 'exclude');
+		const newPivot = pivot.filter((elem, index, array) => {
+			return filters[currentFilter].findIndex((field) => {
+				return field != elem[currentFilter]}
+			) > -1
+		});
 
 		this.setState(
 		{
@@ -383,6 +385,7 @@ export default class Pivot extends PureComponent {
 			rowCount: newPivot.data.table.length || 0,
 			data: newPivot.data.table,
 			header: newPivot.data.table[0],
+			currentFilter: '',
 		});
 
 	}
