@@ -351,15 +351,17 @@ export default class Pivot extends PureComponent {
 			currentFilter,
 		} = this.state;
 
-		const newFilters = [ ...this.state.filters ]
+		const {
+			filters
+		} = this.state;
 
-		if (!(currentFilter in newFilters)) newFilters[currentFilter] = [];
-		newFilters[currentFilter].indexOf(filterValue) === -1 ?
-			newFilters[currentFilter].push(filterValue) :
-			newFilters[currentFilter].splice(newFilters[currentFilter].indexOf(filterValue), 1)
+		if (!(currentFilter in filters)) filters[currentFilter] = [];
+		filters[currentFilter].indexOf(filterValue) === -1 ?
+			filters[currentFilter].push(filterValue) :
+			filters[currentFilter].splice(filters[currentFilter].indexOf(filterValue), 1)
 
 		this.setState({
-			filters: newFilters,
+			filters,
 		})
 	}
 
@@ -372,9 +374,13 @@ export default class Pivot extends PureComponent {
 
 		const newPivot = pivot.filter((elem, index, array) => {
 			return filters[currentFilter].findIndex((field) => {
-				return field != elem[currentFilter]}
+				console.log('hmmmm', field !== elem[currentFilter])
+				return field != elem[currentFilter]
+			}
 			) > -1
 		});
+
+		// const newPivot = pivot.filter(currentFilter, filters[currentFilter], 'exclude');
 
 		this.setState(
 		{
