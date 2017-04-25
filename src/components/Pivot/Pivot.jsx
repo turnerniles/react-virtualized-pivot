@@ -84,6 +84,7 @@ export default class Pivot extends PureComponent {
 			dataArray,
 			rowFields,
 			selectedAggregationDimension,
+			filters,
 		} = this.state;
 
 		const pivotedData = new QuickPivot(
@@ -93,6 +94,15 @@ export default class Pivot extends PureComponent {
 			selectedAggregationDimension,
 			selectedAggregationType.value
 		);
+
+		Object.keys(filters).forEach((filter) => {
+			pivotedData.filter((elem, index, array) => {
+				return filters[filter].findIndex((field) => {
+					return field == elem[filter]
+				}
+			) === -1
+			});
+		})
 
 		let headerCounter = 0;
 
@@ -127,6 +137,7 @@ export default class Pivot extends PureComponent {
 			dataArray,
 			rowFields,
 			selectedAggregationType,
+			filters,
 		} = this.state;
 
 		const pivotedData = new QuickPivot(
@@ -136,6 +147,15 @@ export default class Pivot extends PureComponent {
 			selectedAggregationDimension.value,
 			selectedAggregationType
 		);
+
+		Object.keys(filters).forEach((filter) => {
+			pivotedData.filter((elem, index, array) => {
+				return filters[filter].findIndex((field) => {
+					return field == elem[filter]
+				}
+			) === -1
+			});
+		})
 
 		let headerCounter = 0;
 
@@ -182,11 +202,16 @@ export default class Pivot extends PureComponent {
 			selectedAggregationType
 		);
 
-		let headerCounter = 0;
+		Object.keys(filters).forEach((filter) => {
+			pivotedData.filter((elem, index, array) => {
+				return filters[filter].findIndex((field) => {
+					return field == elem[filter]
+				}
+			) === -1
+			});
+		})
 
-		// Object.keys(filters).forEach((filter) => {
-		// 	pivotedData.filter(filter, filters[filter], 'exclude')
-		// })
+		let headerCounter = 0;
 
 		if (pivotedData.data) {
 			while(true) {
@@ -220,6 +245,8 @@ export default class Pivot extends PureComponent {
 		//render in the renderBodyCell
 
 		const newPivot = pivot.toggle(rowIndex + this.state.headerCounter);
+
+
 
 		this.setState(
 		{
@@ -372,6 +399,8 @@ export default class Pivot extends PureComponent {
 			pivot,
 		} = this.state;
 
+		console.log('i am the pivot', pivot)
+
 		const newPivot = pivot.filter((elem, index, array) => {
 			return filters[currentFilter].findIndex((field) => {
 				return field == elem[currentFilter]
@@ -431,22 +460,23 @@ export default class Pivot extends PureComponent {
 	    { value: 'count', label: 'count' },
 		];
 
-
-		const currentFilterJSX = currentValues.length > 0 ? currentValues.map((filterValue, index) => {
-			return (
-				<div key={filterValue} className='filter-container'>
-					<div className='filter-name'>
-						{filterValue}
+		const currentFilterJSX = currentValues.length > 0 ?
+			currentValues.map((filterValue, index) => {
+				return (
+					<div key={filterValue} className='filter-container'>
+						<div className='filter-name'>
+							{filterValue}
+						</div>
+						<input
+							onChange={this.addToFilters.bind(this, filterValue)}
+							className="filter-checkbox"
+							type="checkbox"
+							defaultChecked={(filters[currentFilter] === undefined) ? false :
+								filters[currentFilter].indexOf(filterValue) !== -1}
+						>
+						</input>
 					</div>
-					<input
-						onChange={this.addToFilters.bind(this, filterValue)}
-						className="filter-checkbox"
-						type="checkbox"
-						defaultChecked={(filters[currentFilter] === undefined) ? false : filters[currentFilter].indexOf(filterValue) !== -1}
-					>
-					</input>
-				</div>
-			)
+				)
 	 	}) : '';
 		//We are not using deconstructed state consts here due to
 		// react-sortablejs bug

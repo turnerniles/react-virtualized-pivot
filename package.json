@@ -1,8 +1,8 @@
 {
   "name": "react-virtualized-pivot",
-  "version": "0.0.1-alpha",
+  "version": "0.0.2-alpha",
   "description": "React Virtualized Pivot",
-  "main": "''",
+  "main": "src/components/Pivot/Pivot.jsx",
   "scripts": {
     "build": "webpack --config webpack.production.config.js --progress --profile --colors",
     "start": "webpack-dev-server --progress --profile --colors",
