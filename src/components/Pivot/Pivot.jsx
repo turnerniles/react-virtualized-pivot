@@ -374,13 +374,10 @@ export default class Pivot extends PureComponent {
 
 		const newPivot = pivot.filter((elem, index, array) => {
 			return filters[currentFilter].findIndex((field) => {
-				console.log('hmmmm', field !== elem[currentFilter])
-				return field != elem[currentFilter]
+				return field == elem[currentFilter]
 			}
-			) > -1
+		) === -1
 		});
-
-		// const newPivot = pivot.filter(currentFilter, filters[currentFilter], 'exclude');
 
 		this.setState(
 		{
