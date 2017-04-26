@@ -11,8 +11,6 @@ import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 import 'react-select-plus/dist/react-select-plus.css';
 import './styles.scss';
 
-window.pivot = QuickPivot;
-
 export default class Pivot extends PureComponent {
 	constructor(props){
 		super(props);
@@ -266,7 +264,9 @@ export default class Pivot extends PureComponent {
 			pivot,
 		} = this.state;
 
-		return pivot.data.table[rowIndex + 1].row in pivot.collapsedRows
+		if (rowIndex > 1) {
+			return pivot.data.table[rowIndex + 1].row in pivot.collapsedRows
+		}
 	}
 
 	forceRenderGrid() {
@@ -398,8 +398,6 @@ export default class Pivot extends PureComponent {
 			filters,
 			pivot,
 		} = this.state;
-
-		console.log('i am the pivot', pivot)
 
 		const newPivot = pivot.filter((elem, index, array) => {
 			return filters[currentFilter].findIndex((field) => {
