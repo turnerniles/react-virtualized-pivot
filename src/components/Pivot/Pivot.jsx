@@ -11,8 +11,6 @@ import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 import 'react-select-plus/dist/react-select-plus.css';
 import './styles.scss';
 
-window.pivot = QuickPivot;
-
 export default class Pivot extends PureComponent {
 	constructor(props){
 		super(props);
@@ -84,6 +82,7 @@ export default class Pivot extends PureComponent {
 			dataArray,
 			rowFields,
 			selectedAggregationDimension,
+			filters,
 		} = this.state;
 
 		const pivotedData = new QuickPivot(
@@ -93,6 +92,15 @@ export default class Pivot extends PureComponent {
 			selectedAggregationDimension,
 			selectedAggregationType.value
 		);
+
+		Object.keys(filters).forEach((filter) => {
+			pivotedData.filter((elem, index, array) => {
+				return filters[filter].findIndex((field) => {
+					return field == elem[filter]
+				}
+			) === -1
+			});
+		})
 
 		let headerCounter = 0;
 
@@ -127,6 +135,7 @@ export default class Pivot extends PureComponent {
 			dataArray,
 			rowFields,
 			selectedAggregationType,
+			filters,
 		} = this.state;
 
 		const pivotedData = new QuickPivot(
@@ -136,6 +145,15 @@ export default class Pivot extends PureComponent {
 			selectedAggregationDimension.value,
 			selectedAggregationType
 		);
+
+		Object.keys(filters).forEach((filter) => {
+			pivotedData.filter((elem, index, array) => {
+				return filters[filter].findIndex((field) => {
+					return field == elem[filter]
+				}
+			) === -1
+			});
+		})
 
 		let headerCounter = 0;
 
@@ -171,6 +189,7 @@ export default class Pivot extends PureComponent {
 			colFields,
 			selectedAggregationDimension,
 			selectedAggregationType,
+			filters
 		} = this.state;
 
 		const pivotedData = new QuickPivot(
@@ -180,6 +199,15 @@ export default class Pivot extends PureComponent {
 			selectedAggregationDimension,
 			selectedAggregationType
 		);
+
+		Object.keys(filters).forEach((filter) => {
+			pivotedData.filter((elem, index, array) => {
+				return filters[filter].findIndex((field) => {
+					return field == elem[filter]
+				}
+			) === -1
+			});
+		})
 
 		let headerCounter = 0;
 
@@ -216,6 +244,8 @@ export default class Pivot extends PureComponent {
 
 		const newPivot = pivot.toggle(rowIndex + this.state.headerCounter);
 
+
+
 		this.setState(
 		{
 			pivot: newPivot,
@@ -234,7 +264,9 @@ export default class Pivot extends PureComponent {
 			pivot,
 		} = this.state;
 
-		return pivot.data.table[rowIndex + 1].row in pivot.collapsedRows
+		if (rowIndex > 1) {
+			return pivot.data.table[rowIndex + 1].row in pivot.collapsedRows
+		}
 	}
 
 	forceRenderGrid() {
@@ -342,12 +374,11 @@ export default class Pivot extends PureComponent {
 	}
 
 	addToFilters(filterValue) {
-		console.log('changed', filterValue)
 		const {
 			currentFilter,
 		} = this.state;
 
-		let {
+		const {
 			filters
 		} = this.state;
 
@@ -362,17 +393,18 @@ export default class Pivot extends PureComponent {
 	}
 
 	submitFilters(){
-		console.log('submitted')
 		const {
 			currentFilter,
 			filters,
 			pivot,
 		} = this.state;
 
-		console.log(currentFilter, filters[currentFilter])
-
-		const newPivot = pivot.filter(
-				currentFilter, filters[currentFilter], 'exclude');
+		const newPivot = pivot.filter((elem, index, array) => {
+			return filters[currentFilter].findIndex((field) => {
+				return field == elem[currentFilter]
+			}
+		) === -1
+		});
 
 		this.setState(
 		{
@@ -383,6 +415,7 @@ export default class Pivot extends PureComponent {
 			rowCount: newPivot.data.table.length || 0,
 			data: newPivot.data.table,
 			header: newPivot.data.table[0],
+			currentFilter: '',
 		});
 
 	}
@@ -425,22 +458,23 @@ export default class Pivot extends PureComponent {
 	    { value: 'count', label: 'count' },
 		];
 
-
-		const currentFilterJSX = currentValues.length > 0 ? currentValues.map((filterValue, index) => {
-			return (
-				<div key={filterValue} className='filter-container'>
-					<div className='filter-name'>
-						{filterValue}
+		const currentFilterJSX = currentValues.length > 0 ?
+			currentValues.map((filterValue, index) => {
+				return (
+					<div key={filterValue} className='filter-container'>
+						<div className='filter-name'>
+							{filterValue}
+						</div>
+						<input
+							onChange={this.addToFilters.bind(this, filterValue)}
+							className="filter-checkbox"
+							type="checkbox"
+							defaultChecked={(filters[currentFilter] === undefined) ? false :
+								filters[currentFilter].indexOf(filterValue) !== -1}
+						>
+						</input>
 					</div>
-					<input
-						onChange={this.addToFilters.bind(this, filterValue)}
-						className="filter-checkbox"
-						type="checkbox"
-						defaultChecked={(filters[currentFilter] === undefined) ? false : filters[currentFilter].indexOf(filterValue) !== -1}
-					>
-					</input>
-				</div>
-			)
+				)
 	 	}) : '';
 		//We are not using deconstructed state consts here due to
 		// react-sortablejs bug
