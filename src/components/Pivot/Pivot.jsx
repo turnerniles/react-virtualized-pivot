@@ -244,8 +244,6 @@ export default class Pivot extends PureComponent {
 
 		const newPivot = pivot.toggle(rowIndex + this.state.headerCounter);
 
-
-
 		this.setState(
 		{
 			pivot: newPivot,
@@ -264,9 +262,7 @@ export default class Pivot extends PureComponent {
 			pivot,
 		} = this.state;
 
-		if (rowIndex > 1) {
-			return pivot.data.table[rowIndex + 1].row in pivot.collapsedRows
-		}
+		return pivot.data.table[rowIndex + 1].row in pivot.collapsedRows
 	}
 
 	forceRenderGrid() {
@@ -339,7 +335,6 @@ export default class Pivot extends PureComponent {
 			}
 
 		const arrowStyle = (rowIndex) => {
-			//rowIndex - 1 because we are checking against the pivot data
 			if(this.checkIfInCollapsed(rowIndex)){
 				return '►';
 			}
@@ -406,8 +401,21 @@ export default class Pivot extends PureComponent {
 		) === -1
 		});
 
+		let headerCounter = 0;
+
+		if (newPivot.data) {
+			while(true) {
+				if (newPivot.data.table[headerCounter].type === 'colHeader') {
+					headerCounter += 1;
+				} else {
+					break
+				}
+			}
+		}
+
 		this.setState(
 		{
+			headerCounter,
 			pivot: newPivot,
 			columnCount: (newPivot.data.table.length &&
 				newPivot.data.table[0].value.length) ?
@@ -597,6 +605,7 @@ export default class Pivot extends PureComponent {
 		            options={{
 		              group: 'shared',
 		              onAdd: this.onAddUpdateField,
+									onChoose: function(){console.log('chosen')}
 		            }}
 		            tag="ul"
 							>
