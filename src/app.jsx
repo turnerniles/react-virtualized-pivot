@@ -20,29 +20,29 @@ export default class App extends React.Component {
          ['Jaime', 'm', 'Lannister', 32],
          ['Sansa', 'f', 'Stark', 12],
        ],
+       selectedAggregationDimension: 'age',
     };
 
     this.handleFileSelect = this.handleFileSelect.bind(this);
   }
 
   componentWillMount() {
-    // Papa.parse('http://s000.tinyupload.com/download.php?file_id=90501845894885865722&t=9050184589488586572229223', {
-    //   download: true,
-    //   complete: (results) => {
-    //   console.log(results)
-    //   this.setState({data: results.data})
-    //   }
-    // });
+    Papa.parse('https://raw.githubusercontent.com/turnerniles/react-virtualized-pivot/master/src/sampledata/RejectStatsA.csv', {
+      download: true,
+      complete: (results) => {
+        this.setState({
+          data: results.data,
+          selectedAggregationDimension: 'Amount Requested',
+        })
+      }
+    });
   }
 
   handleFileSelect(evt) {
-    console.log(evt)
-    console.log(evt.target.files[0])
     const file = evt.target.files[0];
 
     Papa.parse(file, {
       complete: (results) => {
-        console.log(results.data)
         this.setState({data: results.data})
       }
     });
@@ -58,7 +58,7 @@ export default class App extends React.Component {
             style={{padding: '5px', width: '200px', display: 'inline-block', float: 'left'}}
           />
         </div>
-        <Pivot data={this.state.data} selectedAggregationDimension={'age'} />
+        <Pivot data={this.state.data} selectedAggregationDimension={this.state.selectedAggregationDimension} />
       </div>
     )
   }

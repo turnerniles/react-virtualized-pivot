@@ -7,6 +7,8 @@ react-virtualized-pivot is a React.js pivot UI built on top of [react-virtualize
 ## Demo
 https://turnerniles.github.io/react-virtualized-pivot/
 
+The demo uses ~24.7mb uncompressed .csv, 269,372 rows by 9 columns (2,424,348 cells) of 2007-2012 Declined Loan data provided by [Lending Club](https://www.lendingclub.com/info/download-data.action).
+
 ## Getting started
 
 Install `react-virtualized-pivot` using npm.

@@ -59,6 +59,7 @@ export default class Pivot extends PureComponent {
 		this.addToFilters = this.addToFilters.bind(this);
 		this.submitFilters = this.submitFilters.bind(this);
 		this.showFilterMenu = this.showFilterMenu.bind(this);
+
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -70,7 +71,7 @@ export default class Pivot extends PureComponent {
 			data: {},
 			headers: {},
 			fields: nextProps.data[0],
-			selectedAggregationDimension: '',
+			selectedAggregationDimension: nextProps.selectedAggregationDimension || '',
 			colFields: [],
 			rowFields: [],
 		})
@@ -242,8 +243,7 @@ export default class Pivot extends PureComponent {
 		//row index headerCount because we remove/slice the header off the data we
 		//render in the renderBodyCell
 
-
-			const newPivot = pivot.toggle(rowIndex + this.state.headerCounter);
+		const newPivot = pivot.toggle(rowIndex + this.state.headerCounter);
 
 		this.setState(
 		{
@@ -633,7 +633,7 @@ export default class Pivot extends PureComponent {
 		            options={{
 		              group: 'shared',
 		              onAdd: this.onAddUpdateField,
-									onChoose: function(){console.log('chosen')}
+					  onChoose: () => {this.setState({currentFilter: ''})},
 		            }}
 		            tag="ul"
 							>
@@ -650,6 +650,7 @@ export default class Pivot extends PureComponent {
 	                group: 'shared',
 	                onAdd: this.onAddUpdateField,
 	                onUpdate: this.onAddUpdateField,
+	                onChoose: () => {this.setState({currentFilter: ''})},
 		            }}
 		            tag="ul"
 							>
@@ -666,6 +667,7 @@ export default class Pivot extends PureComponent {
 	                group: 'shared',
 	                onAdd: this.onAddUpdateField,
 	                onUpdate: this.onAddUpdateField,
+					onChoose: () => {this.setState({currentFilter: ''})},	                
 		            }}
 		            tag="ul"
 							>

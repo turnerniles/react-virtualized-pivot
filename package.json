@@ -1,6 +1,6 @@
 {
   "name": "react-virtualized-pivot",
-  "version": "0.0.2-alpha",
+  "version": "0.0.3-alpha",
   "description": "React Virtualized Pivot",
   "main": "src/components/Pivot/Pivot.jsx",
   "scripts": {
