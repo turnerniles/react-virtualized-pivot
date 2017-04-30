@@ -242,9 +242,8 @@ export default class Pivot extends PureComponent {
 		//row index headerCount because we remove/slice the header off the data we
 		//render in the renderBodyCell
 
-		const newPivot = pivot.toggle(rowIndex + this.state.headerCounter);
 
-
+			const newPivot = pivot.toggle(rowIndex + this.state.headerCounter);
 
 		this.setState(
 		{
@@ -262,11 +261,10 @@ export default class Pivot extends PureComponent {
 	checkIfInCollapsed(rowIndex) {
 		const {
 			pivot,
+			headerCounter
 		} = this.state;
 
-		if (rowIndex > 1) {
-			return pivot.data.table[rowIndex + 1].row in pivot.collapsedRows
-		}
+		return pivot.data.table[rowIndex + headerCounter].row in pivot.collapsedRows
 	}
 
 	forceRenderGrid() {
@@ -330,18 +328,16 @@ export default class Pivot extends PureComponent {
 		const firstColumnStyle = {};
 			if (columnIndex === 0) {
 				firstColumnStyle['paddingLeft'] =
-					`${20 * data.slice(headerCounter)[rowIndex].depth}px`
+					`${20 * data.slice(headerCounter)[rowIndex].depth}px`;
+				if (rowFields.length === 1 ||
+						data.slice(headerCounter)[rowIndex].depth <
+							rowFields.length - 1) {
+						firstColumnStyle['cursor'] = 'pointer';
+				}
 			}
-			if (rowFields.length === 1 ||
-					data.slice(headerCounter)[rowIndex].depth <
-						rowFields.length - 1) {
-					firstColumnStyle['fontWeight'] = 'bold';
-			}
-
 		const arrowStyle = (rowIndex) => {
-			//rowIndex - 1 because we are checking against the pivot data
 			if(this.checkIfInCollapsed(rowIndex)){
-				return '►';
+				return '▶';
 			}
 			if (data.slice(headerCounter)[rowIndex].depth < rowFields.length - 1) {
 				return '▼';
@@ -354,11 +350,17 @@ export default class Pivot extends PureComponent {
 				className={classNames}
 				key={key}
 				style={Object.assign({}, firstColumnStyle, style)}
-				onClick={this.onToggleRow.bind(this, rowIndex)}
+				onClick={columnIndex === 0 ? this.onToggleRow.bind(this, rowIndex) : ''}
 			>
-				{ columnIndex === 0 ? arrowStyle(rowIndex) : ''}
-				{`${data.length ?
-					data.slice(headerCounter)[rowIndex].value[columnIndex] : ''}`}
+				<div className="cell-text-container">
+				<div className="arrow">
+					{ columnIndex === 0 ? arrowStyle(rowIndex) : ''}
+				</div>
+				<div className="cell-data">
+					{`${data.length ?
+						data.slice(headerCounter)[rowIndex].value[columnIndex] : ''}`}
+				</div>
+			</div>
 			</div>
 		)
 	}
@@ -392,32 +394,50 @@ export default class Pivot extends PureComponent {
 		})
 	}
 
-	submitFilters(){
+	submitFilters() {
 		const {
 			currentFilter,
 			filters,
 			pivot,
 		} = this.state;
 
-		const newPivot = pivot.filter((elem, index, array) => {
-			return filters[currentFilter].findIndex((field) => {
-				return field == elem[currentFilter]
+		if (currentFilter in filters) {
+			pivot.filter((elem, index, array) => {
+				return filters[currentFilter].findIndex((field) => {
+					return field == elem[currentFilter]
+				}
+			) === -1
+			});
+
+			let headerCounter = 0;
+
+			if (pivot.data) {
+				while(true) {
+					if (pivot.data.table[headerCounter].type === 'colHeader') {
+						headerCounter += 1;
+					} else {
+						break
+					}
+				}
 			}
-		) === -1
-		});
 
-		this.setState(
-		{
-			pivot: newPivot,
-			columnCount: (newPivot.data.table.length &&
-				newPivot.data.table[0].value.length) ?
-			newPivot.data.table[0].value.length : 0,
-			rowCount: newPivot.data.table.length || 0,
-			data: newPivot.data.table,
-			header: newPivot.data.table[0],
-			currentFilter: '',
-		});
-
+			this.setState(
+			{
+				headerCounter,
+				pivot,
+				columnCount: (pivot.data.table.length &&
+					pivot.data.table[0].value.length) ?
+				pivot.data.table[0].value.length : 0,
+				rowCount: pivot.data.table.length || 0,
+				data: pivot.data.table,
+				header: pivot.data.table[0],
+				currentFilter: '',
+			});
+		} else {
+			this.setState({
+				currentFilter: '',
+			})
+		}
 	}
 
 	showFilterMenu(field){
@@ -456,15 +476,15 @@ export default class Pivot extends PureComponent {
 		const aggregationTypes = [
 	    { value: 'sum', label: 'sum' },
 	    { value: 'count', label: 'count' },
+			{ value: 'min', label: 'min' },
+			{ value: 'max', label: 'max' },
+			{ value: 'average', label: 'average' },			
 		];
 
 		const currentFilterJSX = currentValues.length > 0 ?
 			currentValues.map((filterValue, index) => {
 				return (
 					<div key={filterValue} className='filter-container'>
-						<div className='filter-name'>
-							{filterValue}
-						</div>
 						<input
 							onChange={this.addToFilters.bind(this, filterValue)}
 							className="filter-checkbox"
@@ -473,6 +493,9 @@ export default class Pivot extends PureComponent {
 								filters[currentFilter].indexOf(filterValue) !== -1}
 						>
 						</input>
+						<div className='filter-name'>
+							{filterValue}
+						</div>
 					</div>
 				)
 	 	}) : '';
@@ -484,39 +507,48 @@ export default class Pivot extends PureComponent {
 					key={index}
 					data-id={field}
 				>
+				<div className="inner-filter-container">
+					<div className="filter-text">
 					{field}
+					</div>
 					<div
 	  				className="filter-button"
 	  				onClick={this.showFilterMenu.bind(this, field)}
 	  			>
 	  				✎
 	  			</div>
-						{(currentValues.length > 0 && currentFilter === field) &&
-							<div
-								className="filter-menu"
-								style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
-								<div className="filters-container">
-								<div>
-									{currentFilterJSX}
-								</div>
-							</div>
-							<div onClick={this.submitFilters} className="filter-submit">Submit</div>
+				</div>
+				{(currentValues.length > 0 && currentFilter === field) &&
+					<div
+						className="filter-menu"
+						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
+						<div className="filters-container">
+						<div>
+							{currentFilterJSX}
 						</div>
-						}
-				</li>
+					</div>
+					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
+				</div>
+				}
+			</li>
 			)}
 		) : ''
 		const rowFieldsRender = this.state.rowFields.map((field, index) =>
 			(
 				<li
-				key={index}
-				data-id={field}>
-				{field}
-				<div
-					className="filter-button"
-					onClick={this.showFilterMenu.bind(this, field)}
+					key={index}
+					data-id={field}
 				>
-					✎
+				<div className="inner-filter-container">
+					<div className="filter-text">
+					{field}
+					</div>
+					<div
+	  				className="filter-button"
+	  				onClick={this.showFilterMenu.bind(this, field)}
+	  			>
+	  				✎
+	  			</div>
 				</div>
 				{(currentValues.length > 0 && currentFilter === field) &&
 					<div
@@ -536,15 +568,19 @@ export default class Pivot extends PureComponent {
 		const colFieldsRender = this.state.colFields.map((field, index) =>
 			(
 				<li
-				key={index}
-				data-id={field}
+					key={index}
+					data-id={field}
 				>
-				{field}
-				<div
-					className="filter-button"
-					onClick={this.showFilterMenu.bind(this, field)}
-				>
-					✎
+				<div className="inner-filter-container">
+					<div className="filter-text">
+					{field}
+					</div>
+					<div
+	  				className="filter-button"
+	  				onClick={this.showFilterMenu.bind(this, field)}
+	  			>
+	  				✎
+	  			</div>
 				</div>
 				{(currentValues.length > 0 && currentFilter === field) &&
 					<div
@@ -597,6 +633,7 @@ export default class Pivot extends PureComponent {
 		            options={{
 		              group: 'shared',
 		              onAdd: this.onAddUpdateField,
+									onChoose: function(){console.log('chosen')}
 		            }}
 		            tag="ul"
 							>

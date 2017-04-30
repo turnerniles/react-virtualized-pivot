@@ -25,11 +25,24 @@ export default class App extends React.Component {
     this.handleFileSelect = this.handleFileSelect.bind(this);
   }
 
+  componentWillMount() {
+    // Papa.parse('http://s000.tinyupload.com/download.php?file_id=90501845894885865722&t=9050184589488586572229223', {
+    //   download: true,
+    //   complete: (results) => {
+    //   console.log(results)
+    //   this.setState({data: results.data})
+    //   }
+    // });
+  }
+
   handleFileSelect(evt) {
+    console.log(evt)
+    console.log(evt.target.files[0])
     const file = evt.target.files[0];
 
     Papa.parse(file, {
       complete: (results) => {
+        console.log(results.data)
         this.setState({data: results.data})
       }
     });
@@ -38,7 +51,7 @@ export default class App extends React.Component {
   render () {
     return (
       <div>
-        <div className="app-menu" style={{'width': '100%', height: '50px'}}>
+        <div className="app-menu" style={{'width': '100%', height: '30px'}}>
           <input
             type="file"
             onChange={this.handleFileSelect}
