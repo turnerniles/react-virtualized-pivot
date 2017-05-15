@@ -26,17 +26,17 @@ export default class App extends React.Component {
     this.handleFileSelect = this.handleFileSelect.bind(this);
   }
 
-  componentWillMount() {
-    Papa.parse('https://raw.githubusercontent.com/turnerniles/react-virtualized-pivot/master/src/sampledata/RejectStatsA.csv', {
-      download: true,
-      complete: (results) => {
-        this.setState({
-          data: results.data,
-          selectedAggregationDimension: 'Amount Requested',
-        })
-      }
-    });
-  }
+    // componentWillMount() {
+    //   Papa.parse('https://raw.githubusercontent.com/turnerniles/react-virtualized-pivot/master/src/sampledata/RejectStatsA.csv', {
+    //     download: true,
+    //     complete: (results) => {
+    //       this.setState({
+    //         data: results.data,
+    //         selectedAggregationDimension: 'Amount Requested',
+    //       })
+    //     }
+    //   });
+    // }
 
   handleFileSelect(evt) {
     const file = evt.target.files[0];

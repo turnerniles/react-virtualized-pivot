@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Grid, AutoSizer, ScrollSync } from 'react-virtualized'
+import { Grid, List, AutoSizer, ScrollSync } from 'react-virtualized'
 import { ContentBox }
 	from '../ContentBox/ContentBox.jsx'
 import cn from 'classnames'
@@ -32,18 +32,18 @@ export default class Pivot extends PureComponent {
 				filters: {},
 
 				columnWidth: 75,
-	      columnCount: 0,
-	      overscanColumnCount: 0,
-	      overscanRowCount: 5,
-	      rowHeight: 40,
-	      rowCount: 0,
+		      	columnCount: 0,
+		      	overscanColumnCount: 0,
+		      	overscanRowCount: 5,
+		      	rowHeight: 40,
+		      	rowCount: 0,
 				data:{},
 				header:{},
 				headerCounter: 0,
     };
 
 		this.onSelectAggregationDimension =
-			this.onSelectAggregationDimension.bind(this);
+		this.onSelectAggregationDimension.bind(this);
 		this.onSelectAggregationType = this.onSelectAggregationType.bind(this);
 		this.onAddUpdateField = this.onAddUpdateField.bind(this);
 		this.onToggleRow = this.onToggleRow.bind(this);
@@ -59,7 +59,7 @@ export default class Pivot extends PureComponent {
 		this.addToFilters = this.addToFilters.bind(this);
 		this.submitFilters = this.submitFilters.bind(this);
 		this.showFilterMenu = this.showFilterMenu.bind(this);
-
+		this.listRowRenderer = this.listRowRenderer.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -282,6 +282,26 @@ export default class Pivot extends PureComponent {
 		}
 	}
 
+	listRowRenderer({ index, isScrolling, key, style }){
+    console.log('rendering')
+		const { currentValues, currentFilter, filters, } = this.state;
+		return (
+			<div key={currentValues[index]} className='filter-container'>
+				<input
+					onChange={this.addToFilters.bind(this, currentValues[index])}
+					className="filter-checkbox"
+					type="checkbox"
+					defaultChecked={(filters[currentFilter] === undefined) ? false :
+						filters[currentFilter].indexOf(currentValues[index]) !== -1}
+				>
+				</input>
+				<div className='filter-name'>
+					{currentValues[index]}
+				</div>
+			</div>
+		)
+	}
+
 	renderBodyCell({ columnIndex, key, rowIndex, style }) {
 		if (columnIndex < 1) {
 			return
@@ -478,7 +498,7 @@ export default class Pivot extends PureComponent {
 	    { value: 'count', label: 'count' },
 			{ value: 'min', label: 'min' },
 			{ value: 'max', label: 'max' },
-			{ value: 'average', label: 'average' },			
+			{ value: 'average', label: 'average' },
 		];
 
 		const currentFilterJSX = currentValues.length > 0 ?
@@ -523,9 +543,17 @@ export default class Pivot extends PureComponent {
 						className="filter-menu"
 						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
 						<div className="filters-container">
-						<div>
-							{currentFilterJSX}
-						</div>
+						<List
+							ref='List'
+							className={'virtualized-list'}
+							height={100}
+							overscanRowCount={5}
+							rowCount={currentValues.length}
+							rowHeight={10}
+							rowRenderer={this.listRowRenderer}
+							width={100}
+						>
+						</List>
 					</div>
 					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
 				</div>
@@ -667,7 +695,7 @@ export default class Pivot extends PureComponent {
 	                group: 'shared',
 	                onAdd: this.onAddUpdateField,
 	                onUpdate: this.onAddUpdateField,
-					onChoose: () => {this.setState({currentFilter: ''})},	                
+					onChoose: () => {this.setState({currentFilter: ''})},
 		            }}
 		            tag="ul"
 							>
