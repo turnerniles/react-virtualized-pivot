@@ -286,7 +286,7 @@ export default class Pivot extends PureComponent {
     console.log('rendering')
 		const { currentValues, currentFilter, filters, } = this.state;
 		return (
-			<div key={currentValues[index]} className='filter-container'>
+			<div key={currentValues[index]} className='filter-container' style={{}}>
 				<input
 					onChange={this.addToFilters.bind(this, currentValues[index])}
 					className="filter-checkbox"
@@ -396,6 +396,7 @@ export default class Pivot extends PureComponent {
 	}
 
 	addToFilters(filterValue) {
+    console.log('adding to filters')
 		const {
 			currentFilter,
 		} = this.state;
@@ -415,6 +416,7 @@ export default class Pivot extends PureComponent {
 	}
 
 	submitFilters() {
+    console.log('wtf im submitting')
 		const {
 			currentFilter,
 			filters,
@@ -454,6 +456,7 @@ export default class Pivot extends PureComponent {
 				currentFilter: '',
 			});
 		} else {
+      console.log('clearing filter submitFilters')
 			this.setState({
 				currentFilter: '',
 			})
@@ -467,6 +470,7 @@ export default class Pivot extends PureComponent {
 
 		const uniqueValues = pivot.getUniqueValues(field);
 
+    console.log('setting filter menu showFilterMenu', field)
 		this.setState({
 			currentFilter: field,
 			currentValues: uniqueValues,
@@ -501,26 +505,12 @@ export default class Pivot extends PureComponent {
 			{ value: 'average', label: 'average' },
 		];
 
-		const currentFilterJSX = currentValues.length > 0 ?
-			currentValues.map((filterValue, index) => {
-				return (
-					<div key={filterValue} className='filter-container'>
-						<input
-							onChange={this.addToFilters.bind(this, filterValue)}
-							className="filter-checkbox"
-							type="checkbox"
-							defaultChecked={(filters[currentFilter] === undefined) ? false :
-								filters[currentFilter].indexOf(filterValue) !== -1}
-						>
-						</input>
-						<div className='filter-name'>
-							{filterValue}
-						</div>
-					</div>
-				)
-	 	}) : '';
 		//We are not using deconstructed state consts here due to
 		// react-sortablejs bug
+
+    console.log(currentValues.length, currentFilter, this.state.fields);
+
+
 		const fields = this.state.fields.length ? this.state.fields.map((field, index) =>
 			{ return (
 				<li
@@ -543,18 +533,17 @@ export default class Pivot extends PureComponent {
 						className="filter-menu"
 						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
 						<div className="filters-container">
-						<List
-							ref='List'
-							className={'virtualized-list'}
-							height={100}
-							overscanRowCount={5}
-							rowCount={currentValues.length}
-							rowHeight={10}
-							rowRenderer={this.listRowRenderer}
-							width={100}
-						>
-						</List>
-					</div>
+  						<List
+  							ref='List'
+  							className={'virtualized-list'}
+  							height={80}
+  							overscanRowCount={5}
+  							rowCount={currentValues.length}
+  							rowHeight={10}
+  							rowRenderer={this.listRowRenderer}
+  							width={100}
+  						/>
+					 </div>
 					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
 				</div>
 				}
@@ -583,9 +572,16 @@ export default class Pivot extends PureComponent {
 						className="filter-menu"
 						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
 						<div className="filters-container">
-						<div>
-							{currentFilterJSX}
-						</div>
+            <List
+              ref='List'
+              className={'virtualized-list'}
+              height={80}
+              overscanRowCount={5}
+              rowCount={currentValues.length}
+              rowHeight={10}
+              rowRenderer={this.listRowRenderer}
+              width={100}
+            />
 					</div>
 					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
 				</div>
@@ -615,9 +611,16 @@ export default class Pivot extends PureComponent {
 						className="filter-menu"
 						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
 						<div className="filters-container">
-						<div>
-							{currentFilterJSX}
-						</div>
+            <List
+              ref='List'
+              className={'virtualized-list'}
+              height={80}
+              overscanRowCount={5}
+              rowCount={currentValues.length}
+              rowHeight={10}
+              rowRenderer={this.listRowRenderer}
+              width={100}
+           />
 					</div>
 					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
 				</div>
@@ -661,7 +664,7 @@ export default class Pivot extends PureComponent {
 		            options={{
 		              group: 'shared',
 		              onAdd: this.onAddUpdateField,
-					  onChoose: () => {this.setState({currentFilter: ''})},
+					       // onChoose: () => {this.setState({currentFilter: ''})},
 		            }}
 		            tag="ul"
 							>
@@ -678,7 +681,7 @@ export default class Pivot extends PureComponent {
 	                group: 'shared',
 	                onAdd: this.onAddUpdateField,
 	                onUpdate: this.onAddUpdateField,
-	                onChoose: () => {this.setState({currentFilter: ''})},
+	                // onChoose: () => {this.setState({currentFilter: ''})},
 		            }}
 		            tag="ul"
 							>
@@ -695,7 +698,7 @@ export default class Pivot extends PureComponent {
 	                group: 'shared',
 	                onAdd: this.onAddUpdateField,
 	                onUpdate: this.onAddUpdateField,
-					onChoose: () => {this.setState({currentFilter: ''})},
+					       // onChoose: () => {this.setState({currentFilter: ''})},
 		            }}
 		            tag="ul"
 							>
