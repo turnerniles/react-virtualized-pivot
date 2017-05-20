@@ -30,13 +30,12 @@ export default class Pivot extends PureComponent {
 				currentFilter: '',
 				currentValues: {},
 				filters: {},
-
 				columnWidth: 75,
-		      	columnCount: 0,
-		      	overscanColumnCount: 0,
-		      	overscanRowCount: 5,
-		      	rowHeight: 40,
-		      	rowCount: 0,
+      	columnCount: 0,
+      	overscanColumnCount: 0,
+      	overscanRowCount: 5,
+      	rowHeight: 40,
+      	rowCount: 0,
 				data:{},
 				header:{},
 				headerCounter: 0,
@@ -48,13 +47,11 @@ export default class Pivot extends PureComponent {
 		this.onAddUpdateField = this.onAddUpdateField.bind(this);
 		this.onToggleRow = this.onToggleRow.bind(this);
 		this.checkIfInCollapsed = this.checkIfInCollapsed.bind(this);
-
 		this.forceRenderGrid = this.forceRenderGrid.bind(this);
 		this.renderBodyCell = this.renderBodyCell.bind(this);
     this.renderHeaderCell = this.renderHeaderCell.bind(this);
     this.renderLeftHeaderCell = this.renderLeftHeaderCell.bind(this);
     this.renderLeftSideCell = this.renderLeftSideCell.bind(this);
-
 		this.displayFilter = this.displayFilter.bind(this);
 		this.addToFilters = this.addToFilters.bind(this);
 		this.submitFilters = this.submitFilters.bind(this);
@@ -283,7 +280,6 @@ export default class Pivot extends PureComponent {
 	}
 
 	listRowRenderer({ index, isScrolling, key, style }){
-    console.log('rendering')
 		const { currentValues, currentFilter, filters, } = this.state;
 		return (
 			<div key={currentValues[index]} className='filter-container' style={{}}>
@@ -341,10 +337,14 @@ export default class Pivot extends PureComponent {
 			rowFields,
 		} = this.state;
 
-		const rowClass = rowIndex % 2 === 0
-			? columnIndex % 2 === 0 ? 'evenRow' : 'oddRow'
-			: columnIndex % 2 !== 0 ? 'evenRow' : 'oddRow';
-		const classNames = cn(rowClass, 'cell');
+    const {
+      colorPack
+    } = this.props;
+
+    const evenOddRowStyle = rowIndex % 2 === 0
+      ? columnIndex % 2 === 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground}
+      : columnIndex % 2 !== 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground};      
+		const classNames = cn('cell');
 		const firstColumnStyle = {};
 			if (columnIndex === 0) {
 				firstColumnStyle['paddingLeft'] =
@@ -369,7 +369,7 @@ export default class Pivot extends PureComponent {
 			<div
 				className={classNames}
 				key={key}
-				style={Object.assign({}, firstColumnStyle, style)}
+				style={Object.assign({}, firstColumnStyle, evenOddRowStyle, style)}
 				onClick={columnIndex === 0 ? this.onToggleRow.bind(this, rowIndex) : ''}
 			>
 				<div className="cell-text-container">
@@ -396,7 +396,6 @@ export default class Pivot extends PureComponent {
 	}
 
 	addToFilters(filterValue) {
-    console.log('adding to filters')
 		const {
 			currentFilter,
 		} = this.state;
@@ -416,7 +415,6 @@ export default class Pivot extends PureComponent {
 	}
 
 	submitFilters() {
-    console.log('wtf im submitting')
 		const {
 			currentFilter,
 			filters,
@@ -456,7 +454,6 @@ export default class Pivot extends PureComponent {
 				currentFilter: '',
 			});
 		} else {
-      console.log('clearing filter submitFilters')
 			this.setState({
 				currentFilter: '',
 			})
@@ -470,7 +467,6 @@ export default class Pivot extends PureComponent {
 
 		const uniqueValues = pivot.getUniqueValues(field);
 
-    console.log('setting filter menu showFilterMenu', field)
 		this.setState({
 			currentFilter: field,
 			currentValues: uniqueValues,
@@ -495,6 +491,8 @@ export default class Pivot extends PureComponent {
 			filters
 		} = this.state;
 
+    const { colorPack } = this.props;
+
 		const height = (window.innerHeight - 240 - (this.state.headerCounter * 40))
 
 		const aggregationTypes = [
@@ -507,15 +505,15 @@ export default class Pivot extends PureComponent {
 
 		//We are not using deconstructed state consts here due to
 		// react-sortablejs bug
-
-    console.log(currentValues.length, currentFilter, this.state.fields);
-
-
 		const fields = this.state.fields.length ? this.state.fields.map((field, index) =>
 			{ return (
 				<li
 					key={index}
 					data-id={field}
+          style={{
+            backgroundColor: colorPack.sortableFieldBackground,
+            color: colorPack.sortableFieldText
+          }}
 				>
 				<div className="inner-filter-container">
 					<div className="filter-text">
@@ -555,6 +553,10 @@ export default class Pivot extends PureComponent {
 				<li
 					key={index}
 					data-id={field}
+          style={{
+            backgroundColor: colorPack.sortableFieldBackground,
+            color: colorPack.sortableFieldText
+          }}          
 				>
 				<div className="inner-filter-container">
 					<div className="filter-text">
@@ -594,6 +596,10 @@ export default class Pivot extends PureComponent {
 				<li
 					key={index}
 					data-id={field}
+          style={{
+            backgroundColor: colorPack.sortableFieldBackground,
+            color: colorPack.sortableFieldText
+          }}          
 				>
 				<div className="inner-filter-container">
 					<div className="filter-text">
@@ -632,7 +638,15 @@ export default class Pivot extends PureComponent {
 				<div className="pivot-options">
 	       <div className="selectors-container">
 						<div className="select-container">
-	          <div className="title">Aggregation Type</div>
+	          <div 
+              className="title"
+              style={{
+                'backgroundColor': colorPack.selectorContainerTitleBackground,
+                'color': colorPack.selectorContainerTitleText,
+              }}
+            >
+              Aggregation Type
+            </div>
 							<Select
 							    name="Aggregation Type"
 									value={selectedAggregationType}
@@ -643,7 +657,15 @@ export default class Pivot extends PureComponent {
          	</div>
 
          	<div className="select-container">
-	          <div className="title">Aggregation Dimension</div>
+            <div 
+              className="title"
+              style={{
+                'backgroundColor': colorPack.selectorContainerTitleBackground,
+                'color': colorPack.selectorContainerTitleText,
+              }}
+            >
+              Aggregation Dimension
+            </div>
 							<Select
 									name="Aggregation Type"
 									value={selectedAggregationDimension}
@@ -656,9 +678,18 @@ export default class Pivot extends PureComponent {
 
 				 <div className="fields-drag-container">
 						<div className="fields">
-							<div className="title">Fields</div>
+              <div 
+                className="title"
+                style={{
+                  'backgroundColor': colorPack.selectorContainerTitleBackground,
+                  'color': colorPack.selectorContainerTitleText,
+                }}
+              >
+                Fields
+              </div>
 			        <ReactSortable
 								className="sortable-container block__list block__list_tags"
+                style={{backgroundColor: colorPack.sortableContainerBackground}}
 								handle='.my-handle'
 								onChange={fields => this.setState({fields})}
 		            options={{
@@ -673,10 +704,19 @@ export default class Pivot extends PureComponent {
 		        </div>
 
 		        <div className="rows">
-							<div className="title">Rows</div>
+              <div 
+                className="title"
+                style={{
+                  'backgroundColor': colorPack.selectorContainerTitleBackground,
+                  'color': colorPack.selectorContainerTitleText,
+                }}
+              >            
+							 Rows
+              </div>
 			        <ReactSortable
 								className="sortable-container block__list block__list_tags"
-								onChange={rowFields => this.setState({rowFields})}
+                style={{backgroundColor: colorPack.sortableContainerBackground}}
+            		onChange={rowFields => this.setState({rowFields})}
 		            options={{
 	                group: 'shared',
 	                onAdd: this.onAddUpdateField,
@@ -690,10 +730,19 @@ export default class Pivot extends PureComponent {
 		        </div>
 
 		        <div className="columns">
-							<div className="title">Columns</div>
+              <div 
+                className="title"
+                style={{
+                  'backgroundColor': colorPack.selectorContainerTitleBackground,
+                  'color': colorPack.selectorContainerTitleText,
+                }}
+              >            
+							 Columns
+              </div>
 			        <ReactSortable
 								className="sortable-container block__list block__list_tags"
-								onChange={(colFields) => this.setState({colFields})}
+                style={{backgroundColor: colorPack.sortableContainerBackground}}
+                onChange={(colFields) => this.setState({colFields})}
 		            options={{
 	                group: 'shared',
 	                onAdd: this.onAddUpdateField,
@@ -721,13 +770,6 @@ export default class Pivot extends PureComponent {
 								scrollTop,
 								scrollWidth
 							}) => {
-		            const x = scrollLeft / (scrollWidth - clientWidth);
-		            const y = scrollTop / (scrollHeight - clientHeight);
-								const leftHeaderCellTextColor = '#ffffff';
-		            const headerGridTextColor = '#ffffff';
-								const leftSideGridTextColor = '#ffffff';
-		            const bodyGridTextColor = '#ffffff';
-
 		            return (
 		              <div className="GridRow">
 		                <div
@@ -736,7 +778,7 @@ export default class Pivot extends PureComponent {
 		                    position: 'absolute',
 		                    left: 0,
 		                    top: 0,
-		                    color: leftHeaderCellTextColor,
+		                    color: colorPack.leftHeaderCellText,
 												height: rowHeight * headerCounter,
 												width: columnWidth,
 		                  }}
@@ -759,7 +801,7 @@ export default class Pivot extends PureComponent {
 		                    position: 'absolute',
 		                    left: 0,
 		                    top: rowHeight * headerCounter,
-		                    color: leftSideGridTextColor,
+		                    color: colorPack.leftSideGridText,
 		                  }}
 		                >
 		                  <Grid
@@ -770,6 +812,7 @@ export default class Pivot extends PureComponent {
 		                    columnWidth={columnWidth}
 		                    columnCount={1}
 		                    className={'LeftSideGrid'}
+                        style={{backgroundColor: colorPack.leftHeaderCellBackground}}
 		                    height={height - scrollbarSize()}
 		                    rowHeight={rowHeight}
 		                    rowCount={rowCount === 0 ? 0 : (rowCount - headerCounter)}
@@ -785,7 +828,8 @@ export default class Pivot extends PureComponent {
 		                      <div>
 		                        <div
 		                          style={{
-		                            color: headerGridTextColor,
+		                            color: colorPack.headerGridText,
+                                backgroundColor: colorPack.headerGridBackground,
 		                            height: rowHeight * headerCounter,
 		                            width: width - scrollbarSize(),
 		                          }}
@@ -806,7 +850,7 @@ export default class Pivot extends PureComponent {
 		                        </div>
 		                        <div
 		                          style={{
-		                            color: bodyGridTextColor,
+		                            color: colorPack.bodyGridText,
 		                            height,
 		                            width,
 		                          }}
@@ -814,6 +858,7 @@ export default class Pivot extends PureComponent {
 		                          <Grid
 		                            ref={(input) => { this.bodyGrid = input; }}
 		                            className="BodyGrid"
+                                style={{backgroundColor: colorPack.bodyGridBackground}}
 		                            columnWidth={columnWidth}
 		                            columnCount={columnCount}
 		                            height={height}

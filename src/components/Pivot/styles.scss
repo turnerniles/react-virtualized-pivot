@@ -1,5 +1,4 @@
 section.virtualized-pivot{
-
 	.Select{
 		margin-top: -8px;
 		margin-left: 10px;
@@ -111,14 +110,12 @@ section.virtualized-pivot{
 	  display: block;
 	}
 	.block__list_tags li {
-	  color: #fff;
 	  float: left;
 	  margin: 5px;
-		padding: 3px;
+	  padding: 3px;
 	  min-width: 10px;
-	  background-color: #5F9EDF;
-	  text-align: center;
-		box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  	text-align: center;
+	  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 	  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 	}
 
@@ -149,26 +146,20 @@ section.virtualized-pivot{
 
 	  .LeftSideGrid {
 	    overflow: hidden !important;
-	    background-color: rgb(188, 57, 89);
 	  }
 	  .HeaderGrid {
 	    width: 100%;
 	    overflow: hidden !important;
-	    background-color: rgb(51, 51, 51);
 	  }
 	  .BodyGrid {
 	    width: 100%;
-	    background-color: rgb(120, 54, 70);
-	  }
-
-	  .evenRow {
-	  }
-
-	  .oddRow {
-	    background-color: rgba(0, 0, 0, .1);
 	  }
 
 		.cell-text-container{
+/*      width: 100%;
+      height: 100%;
+      overflow: hidden;*/
+      
 			.arrow{
 				display: inline-block;
 			}
