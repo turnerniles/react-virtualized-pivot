@@ -71,6 +71,8 @@ export default class Pivot extends PureComponent {
 			selectedAggregationDimension: nextProps.selectedAggregationDimension || '',
 			colFields: [],
 			rowFields: [],
+			pivot: new QuickPivot(nextProps.data, [], [],
+				nextProps.selectedAggregationDimension || '', 'sum'),
 		})
   }
 
@@ -282,7 +284,7 @@ export default class Pivot extends PureComponent {
 	listRowRenderer({ index, isScrolling, key, style }){
 		const { currentValues, currentFilter, filters, } = this.state;
 		return (
-			<div key={currentValues[index]} className='filter-container' style={{}}>
+			<div key={currentValues[index]} className='filter-container' style={style}>
 				<input
 					onChange={this.addToFilters.bind(this, currentValues[index])}
 					className="filter-checkbox"
@@ -343,7 +345,7 @@ export default class Pivot extends PureComponent {
 
     const evenOddRowStyle = rowIndex % 2 === 0
       ? columnIndex % 2 === 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground}
-      : columnIndex % 2 !== 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground};      
+      : columnIndex % 2 !== 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground};
 		const classNames = cn('cell');
 		const firstColumnStyle = {};
 			if (columnIndex === 0) {
@@ -515,6 +517,25 @@ export default class Pivot extends PureComponent {
             color: colorPack.sortableFieldText
           }}
 				>
+					{(currentValues.length > 0 && currentFilter === field) &&
+						<div
+							className="filter-menu"
+							style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
+							<div className="filters-container">
+	  						<List
+	  							ref='List'
+	  							className={'virtualized-list'}
+	  							height={80}
+	  							overscanRowCount={10}
+	  							rowCount={currentValues.length}
+	  							rowHeight={20}
+	  							rowRenderer={this.listRowRenderer}
+	  							width={100}
+	  						/>
+						 	</div>
+						<div onClick={this.submitFilters} className="filter-submit">Submit</div>
+					</div>
+					}					
 				<div className="inner-filter-container">
 					<div className="filter-text">
 					{field}
@@ -526,25 +547,6 @@ export default class Pivot extends PureComponent {
 	  				✎
 	  			</div>
 				</div>
-				{(currentValues.length > 0 && currentFilter === field) &&
-					<div
-						className="filter-menu"
-						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
-						<div className="filters-container">
-  						<List
-  							ref='List'
-  							className={'virtualized-list'}
-  							height={80}
-  							overscanRowCount={5}
-  							rowCount={currentValues.length}
-  							rowHeight={10}
-  							rowRenderer={this.listRowRenderer}
-  							width={100}
-  						/>
-					 </div>
-					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
-				</div>
-				}
 			</li>
 			)}
 		) : ''
@@ -556,7 +558,7 @@ export default class Pivot extends PureComponent {
           style={{
             backgroundColor: colorPack.sortableFieldBackground,
             color: colorPack.sortableFieldText
-          }}          
+          }}
 				>
 				<div className="inner-filter-container">
 					<div className="filter-text">
@@ -574,17 +576,17 @@ export default class Pivot extends PureComponent {
 						className="filter-menu"
 						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
 						<div className="filters-container">
-            <List
-              ref='List'
-              className={'virtualized-list'}
-              height={80}
-              overscanRowCount={5}
-              rowCount={currentValues.length}
-              rowHeight={10}
-              rowRenderer={this.listRowRenderer}
-              width={100}
-            />
-					</div>
+							<List
+  							ref='List'
+  							className={'virtualized-list'}
+  							height={80}
+  							overscanRowCount={10}
+  							rowCount={currentValues.length}
+  							rowHeight={20}
+  							rowRenderer={this.listRowRenderer}
+  							width={100}
+  						/>
+						</div>
 					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
 				</div>
 				}
@@ -599,7 +601,7 @@ export default class Pivot extends PureComponent {
           style={{
             backgroundColor: colorPack.sortableFieldBackground,
             color: colorPack.sortableFieldText
-          }}          
+          }}
 				>
 				<div className="inner-filter-container">
 					<div className="filter-text">
@@ -617,17 +619,17 @@ export default class Pivot extends PureComponent {
 						className="filter-menu"
 						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
 						<div className="filters-container">
-            <List
-              ref='List'
-              className={'virtualized-list'}
-              height={80}
-              overscanRowCount={5}
-              rowCount={currentValues.length}
-              rowHeight={10}
-              rowRenderer={this.listRowRenderer}
-              width={100}
-           />
-					</div>
+							<List
+  							ref='List'
+  							className={'virtualized-list'}
+  							height={80}
+  							overscanRowCount={10}
+  							rowCount={currentValues.length}
+  							rowHeight={20}
+  							rowRenderer={this.listRowRenderer}
+  							width={100}
+  						/>
+						</div>
 					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
 				</div>
 				}
@@ -638,7 +640,7 @@ export default class Pivot extends PureComponent {
 				<div className="pivot-options">
 	       <div className="selectors-container">
 						<div className="select-container">
-	          <div 
+	          <div
               className="title"
               style={{
                 'backgroundColor': colorPack.selectorContainerTitleBackground,
@@ -657,7 +659,7 @@ export default class Pivot extends PureComponent {
          	</div>
 
          	<div className="select-container">
-            <div 
+            <div
               className="title"
               style={{
                 'backgroundColor': colorPack.selectorContainerTitleBackground,
@@ -678,7 +680,7 @@ export default class Pivot extends PureComponent {
 
 				 <div className="fields-drag-container">
 						<div className="fields">
-              <div 
+              <div
                 className="title"
                 style={{
                   'backgroundColor': colorPack.selectorContainerTitleBackground,
@@ -704,13 +706,13 @@ export default class Pivot extends PureComponent {
 		        </div>
 
 		        <div className="rows">
-              <div 
+              <div
                 className="title"
                 style={{
                   'backgroundColor': colorPack.selectorContainerTitleBackground,
                   'color': colorPack.selectorContainerTitleText,
                 }}
-              >            
+              >
 							 Rows
               </div>
 			        <ReactSortable
@@ -730,13 +732,13 @@ export default class Pivot extends PureComponent {
 		        </div>
 
 		        <div className="columns">
-              <div 
+              <div
                 className="title"
                 style={{
                   'backgroundColor': colorPack.selectorContainerTitleBackground,
                   'color': colorPack.selectorContainerTitleText,
                 }}
-              >            
+              >
 							 Columns
               </div>
 			        <ReactSortable
