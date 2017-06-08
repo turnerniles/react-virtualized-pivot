@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Grid, AutoSizer, ScrollSync } from 'react-virtualized'
+import { Grid, List, AutoSizer, ScrollSync } from 'react-virtualized'
 import { ContentBox }
 	from '../ContentBox/ContentBox.jsx'
 import cn from 'classnames'
@@ -30,36 +30,33 @@ export default class Pivot extends PureComponent {
 				currentFilter: '',
 				currentValues: {},
 				filters: {},
-
 				columnWidth: 75,
-	      columnCount: 0,
-	      overscanColumnCount: 0,
-	      overscanRowCount: 5,
-	      rowHeight: 40,
-	      rowCount: 0,
+      	columnCount: 0,
+      	overscanColumnCount: 0,
+      	overscanRowCount: 5,
+      	rowHeight: 40,
+      	rowCount: 0,
 				data:{},
 				header:{},
 				headerCounter: 0,
     };
 
 		this.onSelectAggregationDimension =
-			this.onSelectAggregationDimension.bind(this);
+		this.onSelectAggregationDimension.bind(this);
 		this.onSelectAggregationType = this.onSelectAggregationType.bind(this);
 		this.onAddUpdateField = this.onAddUpdateField.bind(this);
 		this.onToggleRow = this.onToggleRow.bind(this);
 		this.checkIfInCollapsed = this.checkIfInCollapsed.bind(this);
-
 		this.forceRenderGrid = this.forceRenderGrid.bind(this);
 		this.renderBodyCell = this.renderBodyCell.bind(this);
     this.renderHeaderCell = this.renderHeaderCell.bind(this);
     this.renderLeftHeaderCell = this.renderLeftHeaderCell.bind(this);
     this.renderLeftSideCell = this.renderLeftSideCell.bind(this);
-
 		this.displayFilter = this.displayFilter.bind(this);
 		this.addToFilters = this.addToFilters.bind(this);
 		this.submitFilters = this.submitFilters.bind(this);
 		this.showFilterMenu = this.showFilterMenu.bind(this);
-
+		this.listRowRenderer = this.listRowRenderer.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -74,6 +71,8 @@ export default class Pivot extends PureComponent {
 			selectedAggregationDimension: nextProps.selectedAggregationDimension || '',
 			colFields: [],
 			rowFields: [],
+			pivot: new QuickPivot(nextProps.data, [], [],
+				nextProps.selectedAggregationDimension || '', 'sum'),
 		})
   }
 
@@ -282,6 +281,25 @@ export default class Pivot extends PureComponent {
 		}
 	}
 
+	listRowRenderer({ index, isScrolling, key, style }){
+		const { currentValues, currentFilter, filters, } = this.state;
+		return (
+			<div key={currentValues[index]} className='filter-container' style={style}>
+				<input
+					onChange={this.addToFilters.bind(this, currentValues[index])}
+					className="filter-checkbox"
+					type="checkbox"
+					defaultChecked={(filters[currentFilter] === undefined) ? false :
+						filters[currentFilter].indexOf(currentValues[index]) !== -1}
+				>
+				</input>
+				<div className='filter-name'>
+					{currentValues[index]}
+				</div>
+			</div>
+		)
+	}
+
 	renderBodyCell({ columnIndex, key, rowIndex, style }) {
 		if (columnIndex < 1) {
 			return
@@ -321,10 +339,14 @@ export default class Pivot extends PureComponent {
 			rowFields,
 		} = this.state;
 
-		const rowClass = rowIndex % 2 === 0
-			? columnIndex % 2 === 0 ? 'evenRow' : 'oddRow'
-			: columnIndex % 2 !== 0 ? 'evenRow' : 'oddRow';
-		const classNames = cn(rowClass, 'cell');
+    const {
+      colorPack
+    } = this.props;
+
+    const evenOddRowStyle = rowIndex % 2 === 0
+      ? columnIndex % 2 === 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground}
+      : columnIndex % 2 !== 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground};
+		const classNames = cn('cell');
 		const firstColumnStyle = {};
 			if (columnIndex === 0) {
 				firstColumnStyle['paddingLeft'] =
@@ -349,7 +371,7 @@ export default class Pivot extends PureComponent {
 			<div
 				className={classNames}
 				key={key}
-				style={Object.assign({}, firstColumnStyle, style)}
+				style={Object.assign({}, firstColumnStyle, evenOddRowStyle, style)}
 				onClick={columnIndex === 0 ? this.onToggleRow.bind(this, rowIndex) : ''}
 			>
 				<div className="cell-text-container">
@@ -471,6 +493,8 @@ export default class Pivot extends PureComponent {
 			filters
 		} = this.state;
 
+    const { colorPack } = this.props;
+
 		const height = (window.innerHeight - 240 - (this.state.headerCounter * 40))
 
 		const aggregationTypes = [
@@ -478,27 +502,9 @@ export default class Pivot extends PureComponent {
 	    { value: 'count', label: 'count' },
 			{ value: 'min', label: 'min' },
 			{ value: 'max', label: 'max' },
-			{ value: 'average', label: 'average' },			
+			{ value: 'average', label: 'average' },
 		];
 
-		const currentFilterJSX = currentValues.length > 0 ?
-			currentValues.map((filterValue, index) => {
-				return (
-					<div key={filterValue} className='filter-container'>
-						<input
-							onChange={this.addToFilters.bind(this, filterValue)}
-							className="filter-checkbox"
-							type="checkbox"
-							defaultChecked={(filters[currentFilter] === undefined) ? false :
-								filters[currentFilter].indexOf(filterValue) !== -1}
-						>
-						</input>
-						<div className='filter-name'>
-							{filterValue}
-						</div>
-					</div>
-				)
-	 	}) : '';
 		//We are not using deconstructed state consts here due to
 		// react-sortablejs bug
 		const fields = this.state.fields.length ? this.state.fields.map((field, index) =>
@@ -506,7 +512,30 @@ export default class Pivot extends PureComponent {
 				<li
 					key={index}
 					data-id={field}
+          style={{
+            backgroundColor: colorPack.sortableFieldBackground,
+            color: colorPack.sortableFieldText
+          }}
 				>
+					{(currentValues.length > 0 && currentFilter === field) &&
+						<div
+							className="filter-menu"
+							style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
+							<div className="filters-container">
+	  						<List
+	  							ref='List'
+	  							className={'virtualized-list'}
+	  							height={80}
+	  							overscanRowCount={10}
+	  							rowCount={currentValues.length}
+	  							rowHeight={20}
+	  							rowRenderer={this.listRowRenderer}
+	  							width={100}
+	  						/>
+						 	</div>
+						<div onClick={this.submitFilters} className="filter-submit">Submit</div>
+					</div>
+					}					
 				<div className="inner-filter-container">
 					<div className="filter-text">
 					{field}
@@ -518,18 +547,6 @@ export default class Pivot extends PureComponent {
 	  				✎
 	  			</div>
 				</div>
-				{(currentValues.length > 0 && currentFilter === field) &&
-					<div
-						className="filter-menu"
-						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
-						<div className="filters-container">
-						<div>
-							{currentFilterJSX}
-						</div>
-					</div>
-					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
-				</div>
-				}
 			</li>
 			)}
 		) : ''
@@ -538,6 +555,10 @@ export default class Pivot extends PureComponent {
 				<li
 					key={index}
 					data-id={field}
+          style={{
+            backgroundColor: colorPack.sortableFieldBackground,
+            color: colorPack.sortableFieldText
+          }}
 				>
 				<div className="inner-filter-container">
 					<div className="filter-text">
@@ -555,10 +576,17 @@ export default class Pivot extends PureComponent {
 						className="filter-menu"
 						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
 						<div className="filters-container">
-						<div>
-							{currentFilterJSX}
+							<List
+  							ref='List'
+  							className={'virtualized-list'}
+  							height={80}
+  							overscanRowCount={10}
+  							rowCount={currentValues.length}
+  							rowHeight={20}
+  							rowRenderer={this.listRowRenderer}
+  							width={100}
+  						/>
 						</div>
-					</div>
 					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
 				</div>
 				}
@@ -570,6 +598,10 @@ export default class Pivot extends PureComponent {
 				<li
 					key={index}
 					data-id={field}
+          style={{
+            backgroundColor: colorPack.sortableFieldBackground,
+            color: colorPack.sortableFieldText
+          }}
 				>
 				<div className="inner-filter-container">
 					<div className="filter-text">
@@ -587,10 +619,17 @@ export default class Pivot extends PureComponent {
 						className="filter-menu"
 						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
 						<div className="filters-container">
-						<div>
-							{currentFilterJSX}
+							<List
+  							ref='List'
+  							className={'virtualized-list'}
+  							height={80}
+  							overscanRowCount={10}
+  							rowCount={currentValues.length}
+  							rowHeight={20}
+  							rowRenderer={this.listRowRenderer}
+  							width={100}
+  						/>
 						</div>
-					</div>
 					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
 				</div>
 				}
@@ -601,7 +640,15 @@ export default class Pivot extends PureComponent {
 				<div className="pivot-options">
 	       <div className="selectors-container">
 						<div className="select-container">
-	          <div className="title">Aggregation Type</div>
+	          <div
+              className="title"
+              style={{
+                'backgroundColor': colorPack.selectorContainerTitleBackground,
+                'color': colorPack.selectorContainerTitleText,
+              }}
+            >
+              Aggregation Type
+            </div>
 							<Select
 							    name="Aggregation Type"
 									value={selectedAggregationType}
@@ -612,7 +659,15 @@ export default class Pivot extends PureComponent {
          	</div>
 
          	<div className="select-container">
-	          <div className="title">Aggregation Dimension</div>
+            <div
+              className="title"
+              style={{
+                'backgroundColor': colorPack.selectorContainerTitleBackground,
+                'color': colorPack.selectorContainerTitleText,
+              }}
+            >
+              Aggregation Dimension
+            </div>
 							<Select
 									name="Aggregation Type"
 									value={selectedAggregationDimension}
@@ -625,15 +680,24 @@ export default class Pivot extends PureComponent {
 
 				 <div className="fields-drag-container">
 						<div className="fields">
-							<div className="title">Fields</div>
+              <div
+                className="title"
+                style={{
+                  'backgroundColor': colorPack.selectorContainerTitleBackground,
+                  'color': colorPack.selectorContainerTitleText,
+                }}
+              >
+                Fields
+              </div>
 			        <ReactSortable
 								className="sortable-container block__list block__list_tags"
+                style={{backgroundColor: colorPack.sortableContainerBackground}}
 								handle='.my-handle'
 								onChange={fields => this.setState({fields})}
 		            options={{
 		              group: 'shared',
 		              onAdd: this.onAddUpdateField,
-					  onChoose: () => {this.setState({currentFilter: ''})},
+					       // onChoose: () => {this.setState({currentFilter: ''})},
 		            }}
 		            tag="ul"
 							>
@@ -642,15 +706,24 @@ export default class Pivot extends PureComponent {
 		        </div>
 
 		        <div className="rows">
-							<div className="title">Rows</div>
+              <div
+                className="title"
+                style={{
+                  'backgroundColor': colorPack.selectorContainerTitleBackground,
+                  'color': colorPack.selectorContainerTitleText,
+                }}
+              >
+							 Rows
+              </div>
 			        <ReactSortable
 								className="sortable-container block__list block__list_tags"
-								onChange={rowFields => this.setState({rowFields})}
+                style={{backgroundColor: colorPack.sortableContainerBackground}}
+            		onChange={rowFields => this.setState({rowFields})}
 		            options={{
 	                group: 'shared',
 	                onAdd: this.onAddUpdateField,
 	                onUpdate: this.onAddUpdateField,
-	                onChoose: () => {this.setState({currentFilter: ''})},
+	                // onChoose: () => {this.setState({currentFilter: ''})},
 		            }}
 		            tag="ul"
 							>
@@ -659,15 +732,24 @@ export default class Pivot extends PureComponent {
 		        </div>
 
 		        <div className="columns">
-							<div className="title">Columns</div>
+              <div
+                className="title"
+                style={{
+                  'backgroundColor': colorPack.selectorContainerTitleBackground,
+                  'color': colorPack.selectorContainerTitleText,
+                }}
+              >
+							 Columns
+              </div>
 			        <ReactSortable
 								className="sortable-container block__list block__list_tags"
-								onChange={(colFields) => this.setState({colFields})}
+                style={{backgroundColor: colorPack.sortableContainerBackground}}
+                onChange={(colFields) => this.setState({colFields})}
 		            options={{
 	                group: 'shared',
 	                onAdd: this.onAddUpdateField,
 	                onUpdate: this.onAddUpdateField,
-					onChoose: () => {this.setState({currentFilter: ''})},	                
+					       // onChoose: () => {this.setState({currentFilter: ''})},
 		            }}
 		            tag="ul"
 							>
@@ -690,13 +772,6 @@ export default class Pivot extends PureComponent {
 								scrollTop,
 								scrollWidth
 							}) => {
-		            const x = scrollLeft / (scrollWidth - clientWidth);
-		            const y = scrollTop / (scrollHeight - clientHeight);
-								const leftHeaderCellTextColor = '#ffffff';
-		            const headerGridTextColor = '#ffffff';
-								const leftSideGridTextColor = '#ffffff';
-		            const bodyGridTextColor = '#ffffff';
-
 		            return (
 		              <div className="GridRow">
 		                <div
@@ -705,7 +780,7 @@ export default class Pivot extends PureComponent {
 		                    position: 'absolute',
 		                    left: 0,
 		                    top: 0,
-		                    color: leftHeaderCellTextColor,
+		                    color: colorPack.leftHeaderCellText,
 												height: rowHeight * headerCounter,
 												width: columnWidth,
 		                  }}
@@ -728,7 +803,7 @@ export default class Pivot extends PureComponent {
 		                    position: 'absolute',
 		                    left: 0,
 		                    top: rowHeight * headerCounter,
-		                    color: leftSideGridTextColor,
+		                    color: colorPack.leftSideGridText,
 		                  }}
 		                >
 		                  <Grid
@@ -739,6 +814,7 @@ export default class Pivot extends PureComponent {
 		                    columnWidth={columnWidth}
 		                    columnCount={1}
 		                    className={'LeftSideGrid'}
+                        style={{backgroundColor: colorPack.leftHeaderCellBackground}}
 		                    height={height - scrollbarSize()}
 		                    rowHeight={rowHeight}
 		                    rowCount={rowCount === 0 ? 0 : (rowCount - headerCounter)}
@@ -754,7 +830,8 @@ export default class Pivot extends PureComponent {
 		                      <div>
 		                        <div
 		                          style={{
-		                            color: headerGridTextColor,
+		                            color: colorPack.headerGridText,
+                                backgroundColor: colorPack.headerGridBackground,
 		                            height: rowHeight * headerCounter,
 		                            width: width - scrollbarSize(),
 		                          }}
@@ -775,7 +852,7 @@ export default class Pivot extends PureComponent {
 		                        </div>
 		                        <div
 		                          style={{
-		                            color: bodyGridTextColor,
+		                            color: colorPack.bodyGridText,
 		                            height,
 		                            width,
 		                          }}
@@ -783,6 +860,7 @@ export default class Pivot extends PureComponent {
 		                          <Grid
 		                            ref={(input) => { this.bodyGrid = input; }}
 		                            className="BodyGrid"
+                                style={{backgroundColor: colorPack.bodyGridBackground}}
 		                            columnWidth={columnWidth}
 		                            columnCount={columnCount}
 		                            height={height}

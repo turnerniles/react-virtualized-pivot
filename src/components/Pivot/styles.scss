@@ -1,5 +1,4 @@
 section.virtualized-pivot{
-
 	.Select{
 		margin-top: -8px;
 		margin-left: 10px;
@@ -111,14 +110,13 @@ section.virtualized-pivot{
 	  display: block;
 	}
 	.block__list_tags li {
-	  color: #fff;
 	  float: left;
 	  margin: 5px;
-		padding: 3px;
-	  min-width: 10px;
-	  background-color: #5F9EDF;
-	  text-align: center;
-		box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+		padding-left: 3px;
+    padding-right: 3px;
+		min-width: 10px;
+  	text-align: center;
+	  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 	  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 	}
 
@@ -149,26 +147,20 @@ section.virtualized-pivot{
 
 	  .LeftSideGrid {
 	    overflow: hidden !important;
-	    background-color: rgb(188, 57, 89);
 	  }
 	  .HeaderGrid {
 	    width: 100%;
 	    overflow: hidden !important;
-	    background-color: rgb(51, 51, 51);
 	  }
 	  .BodyGrid {
 	    width: 100%;
-	    background-color: rgb(120, 54, 70);
-	  }
-
-	  .evenRow {
-	  }
-
-	  .oddRow {
-	    background-color: rgba(0, 0, 0, .1);
 	  }
 
 		.cell-text-container{
+/*      width: 100%;
+      height: 100%;
+      overflow: hidden;*/
+
 			.arrow{
 				display: inline-block;
 			}
@@ -197,7 +189,7 @@ section.virtualized-pivot{
 
 	.inner-filter-container{
 		position: relative;
-    padding: 5px 10px 5px 5px;
+		padding: 5px 10px 5px 5px;
 
 		.filter-text{
 
@@ -208,14 +200,13 @@ section.virtualized-pivot{
 			font-size: 10px;
 			display: inline-block;
 			cursor: pointer;
-			top: 0;
-			right: 0;
+			top: 0px;
+			right: 1px;
 		}
 	}
 
 	.filter-menu{
     position: absolute;
-		overflow: scroll;
     width: 100px;
     height: 100px;
     background-color: #fff;
@@ -223,12 +214,16 @@ section.virtualized-pivot{
     color: black;
 
 		.filters-container{
-			height: 80%;
-			overflow: scroll;
+			height: 80px;
 			padding: 1px;
-			border: 1px solid;
+			border-left: 1px solid black;
+			border-right: 1px solid black;
+			border-top: 1px solid black;
+			box-sizing: content-box;
 
 			.filter-container{
+				margin-top: 3px;
+				height: 20px;
 				float: left;
 				text-align: left;
 				width: 100%;
@@ -242,6 +237,7 @@ section.virtualized-pivot{
 		}
   }
 	.filter-submit{
+		border-top: 1px solid black;
 		height: 20%;
 		line-height: 1.7;
 		background-color: #5F9EDF;

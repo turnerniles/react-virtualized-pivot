@@ -21,22 +21,24 @@ export default class App extends React.Component {
          ['Sansa', 'f', 'Stark', 12],
        ],
        selectedAggregationDimension: 'age',
+       isLoaded: false,
     };
 
     this.handleFileSelect = this.handleFileSelect.bind(this);
   }
 
-  componentWillMount() {
-    Papa.parse('https://raw.githubusercontent.com/turnerniles/react-virtualized-pivot/master/src/sampledata/RejectStatsA.csv', {
-      download: true,
-      complete: (results) => {
-        this.setState({
-          data: results.data,
-          selectedAggregationDimension: 'Amount Requested',
-        })
-      }
-    });
-  }
+    componentWillMount() {
+      Papa.parse('https://raw.githubusercontent.com/turnerniles/react-virtualized-pivot/master/src/sampledata/RejectStatsA.csv', {
+        download: true,
+        complete: (results) => {
+          this.setState({
+            data: results.data,
+            selectedAggregationDimension: 'Amount Requested',
+            isLoaded: true,
+          })
+        }
+      });
+    }
 
   handleFileSelect(evt) {
     const file = evt.target.files[0];
@@ -49,8 +51,17 @@ export default class App extends React.Component {
   }
 
   render () {
+    const {
+      selectedAggregationDimension,
+      isLoaded,
+    } = this.state;
     return (
       <div>
+        <div className="loader" style={{'display': isLoaded ? 'none' : 'inherit'}}>
+          <div className="inner one"></div>
+          <div className="inner two"></div>
+          <div className="inner three"></div>
+        </div>
         <div className="app-menu" style={{'width': '100%', height: '30px'}}>
           <input
             type="file"
@@ -58,7 +69,27 @@ export default class App extends React.Component {
             style={{padding: '5px', width: '200px', display: 'inline-block', float: 'left'}}
           />
         </div>
-        <Pivot data={this.state.data} selectedAggregationDimension={this.state.selectedAggregationDimension} />
+        <Pivot
+          data={this.state.data}
+          selectedAggregationDimension={selectedAggregationDimension}
+          colorPack={{
+            sortableFieldBackground: '#5F9EDF',
+            sortableFieldText: '#fff',
+            sortableContainerBackground: '#fff',
+            selectorContainerTitleBackground: '#FF7373',
+            selectorContainerTitleText: '#fff',
+            leftHeaderCellBackground:'rgb(188, 57, 89)',
+            leftHeaderCellText:'#fff',
+            headerGridBackground:'rgb(51, 51, 51)',
+            headerGridText:'#fff',
+            leftSideGridBackground: 'rgb(188, 57, 89)',
+            leftSideGridText:'#fff',
+            bodyGridBackground: 'rgb(120, 54, 70)',
+            bodyGridText:'#fff',
+            evenRowBackground: '',
+            oddRowBackground: 'rgba(0, 0, 0, .1)',
+          }}
+        />
       </div>
     )
   }
