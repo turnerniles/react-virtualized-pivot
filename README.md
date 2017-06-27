@@ -22,6 +22,9 @@ npm install react-virtualized-pivot --save
 import React from 'react';
 import Pivot from 'react-virtualized-pivot';
 
+// Be sure to include styles at some point, probably during your bootstrapping
+import 'react-virtualized-pivot/docs/umd/styles.css';
+
 <Pivot
   data = [
     ['name', 'gender', 'house', 'age'],
