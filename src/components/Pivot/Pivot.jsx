@@ -15,15 +15,23 @@ export default class Pivot extends PureComponent {
 	constructor(props){
 		super(props);
 
+		const aggregationDimensions = this.props.data !== undefined ?
+			this.props.data[0].map((item, index) => {
+				return {value: item, label: item}
+		}) : [];
+		const dataArray = this.props.data !== undefined ? this.props.data : [];
+		const fields = this.props.data !== undefined ? this.props.data[0] : [];
+		const pivot = this.props.data !== undefined ?
+			new QuickPivot(this.props.data, [], [],
+			this.props.selectedAggregationDimension || '', 'sum') :
+			{};
+
 		this.state = {
-				aggregationDimensions: this.props.data[0].map((item, index) => {
-					return {value: item, label: item}
-				}),
+				aggregationDimensions,
+				dataArray,
+				fields,
+				pivot,
 				colFields: [],
-				pivot: new QuickPivot(this.props.data, [], [],
-					this.props.selectedAggregationDimension || '', 'sum'),
-				dataArray: this.props.data,
-				fields: this.props.data[0],
 				rowFields: [],
 				selectedAggregationType: 'sum',
 				selectedAggregationDimension: this.props.selectedAggregationDimension || '',
@@ -60,19 +68,26 @@ export default class Pivot extends PureComponent {
 	}
 
 	componentWillReceiveProps(nextProps) {
-    this.setState({
-			aggregationDimensions: nextProps.data[0].map((item, index) => {
+		const aggregationDimensions = nextProps.data !== undefined ?
+			nextProps.data[0].map((item, index) => {
 				return {value: item, label: item}
-			}),
-			dataArray: nextProps.data,
+		}) : [];
+		const dataArray = nextProps.data !== undefined ? nextProps.data : [];
+		const fields = nextProps.data !== undefined ? nextProps.data[0] : [];
+		const pivot = nextProps.data !== undefined ?
+			new QuickPivot(nextProps.data, [], [],
+				nextProps.selectedAggregationDimension || '', 'sum') : {};
+
+    this.setState({
+			aggregationDimensions,
+			dataArray,
+			fields,
+			pivot,
 			data: {},
 			headers: {},
-			fields: nextProps.data[0],
 			selectedAggregationDimension: nextProps.selectedAggregationDimension || '',
 			colFields: [],
 			rowFields: [],
-			pivot: new QuickPivot(nextProps.data, [], [],
-				nextProps.selectedAggregationDimension || '', 'sum'),
 		})
   }
 
