@@ -493,7 +493,24 @@ export default class Pivot extends PureComponent {
 			filters
 		} = this.state;
 
-    const { colorPack } = this.props;
+    const colorPack = this.props.colorPack !== undefined ? this.props.colorPack :
+		{
+			sortableFieldBackground: '#5F9EDF',
+			sortableFieldText: '#fff',
+			sortableContainerBackground: '#fff',
+			selectorContainerTitleBackground: '#FF7373',
+			selectorContainerTitleText: '#fff',
+			leftHeaderCellBackground:'rgb(188, 57, 89)',
+			leftHeaderCellText:'#fff',
+			headerGridBackground:'rgb(51, 51, 51)',
+			headerGridText:'#fff',
+			leftSideGridBackground: 'rgb(188, 57, 89)',
+			leftSideGridText:'#fff',
+			bodyGridBackground: 'rgb(120, 54, 70)',
+			bodyGridText:'#fff',
+			evenRowBackground: '',
+			oddRowBackground: 'rgba(0, 0, 0, .1)',
+		};
 
 		const height = (window.innerHeight - 240 - (this.state.headerCounter * 40))
 
@@ -535,7 +552,7 @@ export default class Pivot extends PureComponent {
 						 	</div>
 						<div onClick={this.submitFilters} className="filter-submit">Submit</div>
 					</div>
-					}					
+					}
 				<div className="inner-filter-container">
 					<div className="filter-text">
 					{field}
@@ -789,6 +806,7 @@ export default class Pivot extends PureComponent {
 		                    ref={(input) => { this.header = input; }}
 		                    cellRenderer={this.renderLeftHeaderCell}
 		                    className={'HeaderGrid'}
+												style={{backgroundColor: colorPack.headerGridBackground}}
 		                    width={columnWidth}
 		                    height={rowHeight * headerCounter}
 		                    rowHeight={rowHeight}
