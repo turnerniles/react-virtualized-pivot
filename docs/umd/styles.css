@@ -1,0 +1,354 @@
+.ContentBox {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: #FFF;
+  padding: 0 1rem 1rem 1rem;
+  overflow: auto;
+  background: white;
+}
+
+.ContentBox:first-of-type {
+  padding-top: 1rem;
+}
+
+.Header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: row;
+  font-weight: normal;
+  justify-content: space-between;
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.Small {
+  font-size: .65em;
+}
+
+.Link:hover {
+  text-decoration: none;
+}
+
+.Paragraph {
+  flex: 0 0 auto;
+  line-height: 1.2rem;
+  margin: 0 0 1rem;
+}
+section.virtualized-pivot .Select {
+  margin-top: -8px;
+  margin-left: 10px;
+  margin-bottom: 8px;
+}
+
+section.virtualized-pivot .pivot-options {
+  height: 150px;
+  width: 100%;
+  display: inline-block;
+}
+
+section.virtualized-pivot .pivot-options .selectors-container {
+  width: 25%;
+  display: inline-block;
+  float: left;
+}
+
+@media (min-width: 768px) {
+  section.virtualized-pivot .pivot-options .selectors-container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  section.virtualized-pivot .pivot-options .selectors-container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1220px) {
+  section.virtualized-pivot .pivot-options .selectors-container {
+    width: 100%;
+  }
+}
+
+section.virtualized-pivot .pivot-options .selectors-container .select-container {
+  width: 100%;
+  display: inline-block;
+}
+
+@media (min-width: 768px) {
+  section.virtualized-pivot .pivot-options .selectors-container .select-container {
+    width: 200px;
+  }
+}
+
+@media (min-width: 992px) {
+  section.virtualized-pivot .pivot-options .selectors-container .select-container {
+    width: 200px;
+  }
+}
+
+@media (min-width: 1220px) {
+  section.virtualized-pivot .pivot-options .selectors-container .select-container {
+    width: 200px;
+  }
+}
+
+section.virtualized-pivot .pivot-options .fields-drag-container {
+  width: 75%;
+  float: left;
+}
+
+@media (min-width: 768px) {
+  section.virtualized-pivot .pivot-options .fields-drag-container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  section.virtualized-pivot .pivot-options .fields-drag-container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1220px) {
+  section.virtualized-pivot .pivot-options .fields-drag-container {
+    width: 100%;
+  }
+}
+
+section.virtualized-pivot .pivot-options .fields-drag-container .fields {
+  height: 46px;
+  width: 33%;
+  display: inline-block;
+  float: left;
+}
+
+section.virtualized-pivot .pivot-options .fields-drag-container .rows {
+  height: 46px;
+  width: 33%;
+  display: inline-block;
+  float: left;
+}
+
+section.virtualized-pivot .pivot-options .fields-drag-container .columns {
+  height: 46px;
+  width: 33%;
+  display: inline-block;
+  float: left;
+}
+
+section.virtualized-pivot .title {
+  color: #fff;
+  padding: 3px 10px;
+  margin-left: 5px;
+  display: inline-block;
+  position: relative;
+  background-color: #FF7373;
+  z-index: 1;
+}
+
+section.virtualized-pivot .block__list {
+  height: 119px;
+  margin-top: -8px;
+  margin-left: 10px;
+  background-color: #fff;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  section.virtualized-pivot .block__list {
+    height: 76px;
+  }
+}
+
+@media (min-width: 992px) {
+  section.virtualized-pivot .block__list {
+    height: 76px;
+  }
+}
+
+@media (min-width: 1220px) {
+  section.virtualized-pivot .block__list {
+    height: 76px;
+  }
+}
+
+section.virtualized-pivot .block__list-title {
+  margin: -20px 0 0;
+  padding: 10px;
+  text-align: center;
+  background: #5F9EDF;
+}
+
+section.virtualized-pivot .block__list li {
+  cursor: move;
+  list-style: none;
+}
+
+section.virtualized-pivot .block__list_words li {
+  background-color: #fff;
+  padding: 10px 40px;
+}
+
+section.virtualized-pivot .block__list_words .sortable-ghost {
+  opacity: 0.4;
+  background-color: #F4E2C9;
+}
+
+section.virtualized-pivot .block__list_tags {
+  padding-left: 15px;
+}
+
+section.virtualized-pivot .block__list_tags:after {
+  clear: both;
+  content: '';
+  display: block;
+}
+
+section.virtualized-pivot .block__list_tags li {
+  float: left;
+  margin: 5px;
+  padding-left: 3px;
+  padding-right: 3px;
+  min-width: 10px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+section.virtualized-pivot section.pivot-grid {
+  padding-top: 1rem;
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 0 1rem 1rem;
+  overflow: auto;
+  background: #fff;
+}
+
+section.virtualized-pivot section.pivot-grid .GridRow {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+
+section.virtualized-pivot section.pivot-grid .GridColumn {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+section.virtualized-pivot section.pivot-grid .LeftSideGridContainer {
+  flex: 0 0 75px;
+  z-index: 1;
+}
+
+section.virtualized-pivot section.pivot-grid .LeftSideGrid {
+  overflow: hidden !important;
+}
+
+section.virtualized-pivot section.pivot-grid .HeaderGrid {
+  width: 100%;
+  overflow: hidden !important;
+}
+
+section.virtualized-pivot section.pivot-grid .BodyGrid {
+  width: 100%;
+}
+
+section.virtualized-pivot section.pivot-grid .cell-text-container {
+  /*      width: 100%;
+      height: 100%;
+      overflow: hidden;*/
+}
+
+section.virtualized-pivot section.pivot-grid .cell-text-container .arrow {
+  display: inline-block;
+}
+
+section.virtualized-pivot section.pivot-grid .cell-text-container .cell-data {
+  display: inline-block;
+}
+
+section.virtualized-pivot section.pivot-grid .cell,
+section.virtualized-pivot section.pivot-grid .headerCell,
+section.virtualized-pivot section.pivot-grid .leftCell {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 .5em;
+}
+
+section.virtualized-pivot section.pivot-grid .headerCell,
+section.virtualized-pivot section.pivot-grid .leftCell {
+  font-weight: bold;
+}
+
+section.virtualized-pivot .inner-filter-container {
+  position: relative;
+  padding: 5px 10px 5px 5px;
+}
+
+section.virtualized-pivot .inner-filter-container .filter-button {
+  position: absolute;
+  font-size: 10px;
+  display: inline-block;
+  cursor: pointer;
+  top: 0px;
+  right: 1px;
+}
+
+section.virtualized-pivot .filter-menu {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: #fff;
+  z-index: 2;
+  color: black;
+}
+
+section.virtualized-pivot .filter-menu .filters-container {
+  height: 80px;
+  padding: 1px;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  border-top: 1px solid black;
+  box-sizing: content-box;
+}
+
+section.virtualized-pivot .filter-menu .filters-container .filter-container {
+  margin-top: 3px;
+  height: 20px;
+  float: left;
+  text-align: left;
+  width: 100%;
+}
+
+section.virtualized-pivot .filter-menu .filters-container .filter-container .filter-name {
+  display: inline-block;
+}
+
+section.virtualized-pivot .filter-menu .filters-container .filter-container .filter-checkbox {
+  display: inline-block;
+}
+
+section.virtualized-pivot .filter-submit {
+  border-top: 1px solid black;
+  height: 20%;
+  line-height: 1.7;
+  background-color: #5F9EDF;
+  cursor: pointer;
+  border-right: 1px solid black;
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+  color: white;
+}
+
+/*# sourceMappingURL=styles.css.map*/
