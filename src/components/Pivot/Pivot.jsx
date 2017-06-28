@@ -15,15 +15,23 @@ export default class Pivot extends PureComponent {
 	constructor(props){
 		super(props);
 
+		const aggregationDimensions = this.props.data !== undefined ?
+			this.props.data[0].map((item, index) => {
+				return {value: item, label: item}
+		}) : [];
+		const dataArray = this.props.data !== undefined ? this.props.data : [];
+		const fields = this.props.data !== undefined ? this.props.data[0] : [];
+		const pivot = this.props.data !== undefined ?
+			new QuickPivot(this.props.data, [], [],
+			this.props.selectedAggregationDimension || '', 'sum') :
+			{};
+
 		this.state = {
-				aggregationDimensions: this.props.data[0].map((item, index) => {
-					return {value: item, label: item}
-				}),
+				aggregationDimensions,
+				dataArray,
+				fields,
+				pivot,
 				colFields: [],
-				pivot: new QuickPivot(this.props.data, [], [],
-					this.props.selectedAggregationDimension || '', 'sum'),
-				dataArray: this.props.data,
-				fields: this.props.data[0],
 				rowFields: [],
 				selectedAggregationType: 'sum',
 				selectedAggregationDimension: this.props.selectedAggregationDimension || '',
@@ -60,19 +68,26 @@ export default class Pivot extends PureComponent {
 	}
 
 	componentWillReceiveProps(nextProps) {
-    this.setState({
-			aggregationDimensions: nextProps.data[0].map((item, index) => {
+		const aggregationDimensions = nextProps.data !== undefined ?
+			nextProps.data[0].map((item, index) => {
 				return {value: item, label: item}
-			}),
-			dataArray: nextProps.data,
+		}) : [];
+		const dataArray = nextProps.data !== undefined ? nextProps.data : [];
+		const fields = nextProps.data !== undefined ? nextProps.data[0] : [];
+		const pivot = nextProps.data !== undefined ?
+			new QuickPivot(nextProps.data, [], [],
+				nextProps.selectedAggregationDimension || '', 'sum') : {};
+
+    this.setState({
+			aggregationDimensions,
+			dataArray,
+			fields,
+			pivot,
 			data: {},
 			headers: {},
-			fields: nextProps.data[0],
 			selectedAggregationDimension: nextProps.selectedAggregationDimension || '',
 			colFields: [],
 			rowFields: [],
-			pivot: new QuickPivot(nextProps.data, [], [],
-				nextProps.selectedAggregationDimension || '', 'sum'),
 		})
   }
 
@@ -493,7 +508,24 @@ export default class Pivot extends PureComponent {
 			filters
 		} = this.state;
 
-    const { colorPack } = this.props;
+    const colorPack = this.props.colorPack !== undefined ? this.props.colorPack :
+		{
+			sortableFieldBackground: '#5F9EDF',
+			sortableFieldText: '#fff',
+			sortableContainerBackground: '#fff',
+			selectorContainerTitleBackground: '#FF7373',
+			selectorContainerTitleText: '#fff',
+			leftHeaderCellBackground:'rgb(188, 57, 89)',
+			leftHeaderCellText:'#fff',
+			headerGridBackground:'rgb(51, 51, 51)',
+			headerGridText:'#fff',
+			leftSideGridBackground: 'rgb(188, 57, 89)',
+			leftSideGridText:'#fff',
+			bodyGridBackground: 'rgb(120, 54, 70)',
+			bodyGridText:'#fff',
+			evenRowBackground: '',
+			oddRowBackground: 'rgba(0, 0, 0, .1)',
+		};
 
 		const height = (window.innerHeight - 240 - (this.state.headerCounter * 40))
 
@@ -535,7 +567,7 @@ export default class Pivot extends PureComponent {
 						 	</div>
 						<div onClick={this.submitFilters} className="filter-submit">Submit</div>
 					</div>
-					}					
+					}
 				<div className="inner-filter-container">
 					<div className="filter-text">
 					{field}
@@ -789,6 +821,7 @@ export default class Pivot extends PureComponent {
 		                    ref={(input) => { this.header = input; }}
 		                    cellRenderer={this.renderLeftHeaderCell}
 		                    className={'HeaderGrid'}
+												style={{backgroundColor: colorPack.headerGridBackground}}
 		                    width={columnWidth}
 		                    height={rowHeight * headerCounter}
 		                    rowHeight={rowHeight}
