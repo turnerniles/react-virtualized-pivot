@@ -66,6 +66,31 @@ a {
   border-top: 3px solid #EFEFFA;
 }
 
+.select-container{
+	width: 200px;
+	display: inline-block;
+
+	@media (min-width: 768px){width: 200px}
+	@media (min-width: 992px){width: 200px}
+	@media (min-width: 1220px){width: 200px}
+
+	.Select{
+		margin-top: -8px;
+		margin-left: 10px;
+		margin-bottom: 8px;
+	}
+	
+	.title {
+		color: #fff;
+		padding: 3px 10px;
+		margin-left: 5px;
+		display: inline-block;
+		position: relative;
+		background-color: #FF7373;
+		z-index: 1;
+	}
+}
+
 @keyframes rotate-one {
   0% {
     transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);

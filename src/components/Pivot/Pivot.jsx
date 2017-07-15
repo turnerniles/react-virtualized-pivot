@@ -44,7 +44,7 @@ export default class Pivot extends PureComponent {
       	overscanRowCount: 5,
       	rowHeight: 40,
       	rowCount: 0,
-				data:{},
+				data:[],
 				header:{},
 				headerCounter: 0,
     };
@@ -78,16 +78,28 @@ export default class Pivot extends PureComponent {
 			new QuickPivot(nextProps.data, [], [],
 				nextProps.selectedAggregationDimension || '', 'sum') : {};
 
+		// Reset entire state execpt selectedAggregationType
     this.setState({
 			aggregationDimensions,
 			dataArray,
 			fields,
 			pivot,
-			data: {},
-			headers: {},
-			selectedAggregationDimension: nextProps.selectedAggregationDimension || '',
 			colFields: [],
 			rowFields: [],
+			selectedAggregationDimension: nextProps.selectedAggregationDimension || '',
+			currentFilter: '',
+			currentValues: {},
+			currentValues: {},
+			filters: {},
+			columnWidth: 75,
+			columnCount: 0,
+			overscanColumnCount: 0,
+			overscanRowCount: 5,
+			rowHeight: 40,
+			rowCount: 0,
+			data:[],
+			header:{},
+			headerCounter: 0,
 		})
   }
 
@@ -687,6 +699,7 @@ export default class Pivot extends PureComponent {
 							    options={aggregationTypes}
 							    onChange={this.onSelectAggregationType}
 									menuContainerStyle={{ zIndex: 2 }}
+									clearable={false}
 							/>
          	</div>
 
@@ -706,6 +719,7 @@ export default class Pivot extends PureComponent {
 									options={aggregationDimensions}
 									onChange={this.onSelectAggregationDimension}
 									menuContainerStyle={{ zIndex: 2 }}
+									clearable={false}
 							/>
 	      	</div>
 	       </div>
