@@ -141,7 +141,8 @@ section.virtualized-pivot .pivot-options .fields-drag-container .columns {
 
 section.virtualized-pivot .title {
   color: #fff;
-  padding: 3px 10px;
+  padding: 2px 4px;
+  font-size: 11px;
   margin-left: 5px;
   display: inline-block;
   position: relative;
@@ -296,6 +297,10 @@ section.virtualized-pivot .inner-filter-container {
   padding: 5px 10px 5px 5px;
 }
 
+section.virtualized-pivot .inner-filter-container .filter-text {
+  font-size: 11px;
+}
+
 section.virtualized-pivot .inner-filter-container .filter-button {
   position: absolute;
   font-size: 10px;
@@ -324,6 +329,7 @@ section.virtualized-pivot .filter-menu .filters-container {
 }
 
 section.virtualized-pivot .filter-menu .filters-container .filter-container {
+  font-size: 11px;
   margin-top: 3px;
   height: 20px;
   float: left;
@@ -340,6 +346,7 @@ section.virtualized-pivot .filter-menu .filters-container .filter-container .fil
 }
 
 section.virtualized-pivot .filter-submit {
+  font-size: 11px;
   border-top: 1px solid black;
   height: 20%;
   line-height: 1.7;

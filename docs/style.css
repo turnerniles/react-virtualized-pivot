@@ -141,7 +141,8 @@ section.virtualized-pivot .pivot-options .fields-drag-container .columns {
 
 section.virtualized-pivot .title {
   color: #fff;
-  padding: 3px 10px;
+  padding: 2px 4px;
+  font-size: 11px;
   margin-left: 5px;
   display: inline-block;
   position: relative;
@@ -296,6 +297,10 @@ section.virtualized-pivot .inner-filter-container {
   padding: 5px 10px 5px 5px;
 }
 
+section.virtualized-pivot .inner-filter-container .filter-text {
+  font-size: 11px;
+}
+
 section.virtualized-pivot .inner-filter-container .filter-button {
   position: absolute;
   font-size: 10px;
@@ -324,6 +329,7 @@ section.virtualized-pivot .filter-menu .filters-container {
 }
 
 section.virtualized-pivot .filter-menu .filters-container .filter-container {
+  font-size: 11px;
   margin-top: 3px;
   height: 20px;
   float: left;
@@ -340,6 +346,7 @@ section.virtualized-pivot .filter-menu .filters-container .filter-container .fil
 }
 
 section.virtualized-pivot .filter-submit {
+  font-size: 11px;
   border-top: 1px solid black;
   height: 20%;
   line-height: 1.7;
@@ -417,6 +424,76 @@ a {
   bottom: 0%;
   animation: rotate-three 1s linear infinite;
   border-top: 3px solid #EFEFFA;
+}
+
+.app-menu .select-container {
+  width: 200px;
+  display: inline-block;
+  float: left;
+}
+
+@media (min-width: 768px) {
+  .app-menu .select-container {
+    width: 200px;
+  }
+}
+
+@media (min-width: 992px) {
+  .app-menu .select-container {
+    width: 200px;
+  }
+}
+
+@media (min-width: 1220px) {
+  .app-menu .select-container {
+    width: 200px;
+  }
+}
+
+.app-menu .select-container .Select {
+  margin-top: -8px;
+  margin-left: 10px;
+  margin-bottom: 8px;
+}
+
+.app-menu .select-container .Select .Select-control {
+  height: 20px;
+}
+
+.app-menu .select-container .Select .Select-control .Select-placeholder {
+  line-height: 20px;
+}
+
+.app-menu .select-container .Select .Select-control .Select-value {
+  line-height: 20px !important;
+}
+
+.app-menu .select-container .Select .Select-control .Select-value .Select-value-label {
+  line-height: 30px;
+}
+
+.app-menu .select-container .Select .Select-control .Select-input {
+  height: 26px;
+}
+
+.app-menu .select-container .Select .Select-control .Select-arrow-zone {
+  vertical-align: inherit;
+  top: 4px;
+}
+
+.app-menu .select-container .title {
+  color: #fff;
+  padding: 2px 4px;
+  font-size: 11px;
+  margin-left: 5px;
+  display: inline-block;
+  position: relative;
+  background-color: #FF7373;
+  z-index: 1;
+}
+
+.app-menu .input {
+  display: inline-block;
 }
 
 @keyframes rotate-one {
