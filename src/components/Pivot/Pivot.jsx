@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react'
-import { Grid, List, AutoSizer, ScrollSync } from 'react-virtualized'
+import React, { PureComponent } from 'react';
+import { Grid, List, AutoSizer, ScrollSync } from 'react-virtualized';
 import { ContentBox }
-	from '../ContentBox/ContentBox.jsx'
-import cn from 'classnames'
-import scrollbarSize from 'dom-helpers/util/scrollbarSize'
+	from '../ContentBox/ContentBox.jsx';
+import cn from 'classnames';
+import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import QuickPivot from 'quick-pivot';
 import Select from 'react-select-plus';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
@@ -12,7 +12,7 @@ import 'react-select-plus/dist/react-select-plus.css';
 import './styles.scss';
 
 export default class Pivot extends PureComponent {
-	constructor(props){
+	constructor(props) {
 		super(props);
 
 		const aggregationDimensions = this.props.data !== undefined ?
@@ -266,9 +266,9 @@ export default class Pivot extends PureComponent {
 		const {
 			pivot
 		} = this.state;
-		//row index headerCount because we remove/slice the header off the data we
-		//render in the renderBodyCell
 
+		//row index + headerCount because we remove/slice the header off the data we
+		//render in the renderBodyCell
 		const newPivot = pivot.toggle(rowIndex + this.state.headerCounter);
 
 		this.setState(
@@ -450,43 +450,46 @@ export default class Pivot extends PureComponent {
 			pivot,
 		} = this.state;
 
-		if (currentFilter in filters) {
-			pivot.filter((elem, index, array) => {
-				return filters[currentFilter].findIndex((field) => {
-					return field == elem[currentFilter]
-				}
-			) === -1
-			});
+		// create new pivot and apply all filters. Because quick-pivot does not
+		// account for removal of filters
+		const newPivot = this.props.data !== undefined ?
+			new QuickPivot(this.props.data, this.state.rowFields, this.state.colFields,
+			this.props.selectedAggregationDimension || '', 'sum') :
+			{};
 
-			let headerCounter = 0;
-
-			if (pivot.data) {
-				while(true) {
-					if (pivot.data.table[headerCounter].type === 'colHeader') {
-						headerCounter += 1;
-					} else {
-						break
+		Object.keys(filters).forEach((filter) => {
+				newPivot.filter((elem, index, array) => {
+					return filters[filter].findIndex((field) => {
+						return field == elem[filter]
 					}
+				) === -1
+				});
+		})
+
+		let headerCounter = 0;
+
+		if (newPivot.data) {
+			while(true) {
+				if (newPivot.data.table[headerCounter].type === 'colHeader') {
+					headerCounter += 1;
+				} else {
+					break
 				}
 			}
-
-			this.setState(
-			{
-				headerCounter,
-				pivot,
-				columnCount: (pivot.data.table.length &&
-					pivot.data.table[0].value.length) ?
-				pivot.data.table[0].value.length : 0,
-				rowCount: pivot.data.table.length || 0,
-				data: pivot.data.table,
-				header: pivot.data.table[0],
-				currentFilter: '',
-			});
-		} else {
-			this.setState({
-				currentFilter: '',
-			})
 		}
+
+		this.setState(
+		{
+			headerCounter,
+			pivot: newPivot,
+			columnCount: (newPivot.data.table.length &&
+				newPivot.data.table[0].value.length) ?
+			newPivot.data.table[0].value.length : 0,
+			rowCount: newPivot.data.table.length || 0,
+			data: newPivot.data.table,
+			header: newPivot.data.table[0],
+			currentFilter: '',
+		});
 	}
 
 	showFilterMenu(field){

@@ -65,29 +65,58 @@ a {
   animation: rotate-three 1s linear infinite;
   border-top: 3px solid #EFEFFA;
 }
-
-.select-container{
-	width: 200px;
-	display: inline-block;
-
-	@media (min-width: 768px){width: 200px}
-	@media (min-width: 992px){width: 200px}
-	@media (min-width: 1220px){width: 200px}
-
-	.Select{
-		margin-top: -8px;
-		margin-left: 10px;
-		margin-bottom: 8px;
-	}
-	
-	.title {
-		color: #fff;
-		padding: 3px 10px;
-		margin-left: 5px;
+.app-menu{
+	.select-container{
+		width: 200px;
 		display: inline-block;
-		position: relative;
-		background-color: #FF7373;
-		z-index: 1;
+		float: left;
+
+		@media (min-width: 768px){width: 200px}
+		@media (min-width: 992px){width: 200px}
+		@media (min-width: 1220px){width: 200px}
+
+		.Select{
+			margin-top: -8px;
+			margin-left: 10px;
+			margin-bottom: 8px;
+
+			.Select-control {
+		    height: 20px;
+
+		    .Select-placeholder {
+		      line-height: 20px;
+		    }
+
+		    .Select-value {
+		      line-height: 20px !important;
+
+		      .Select-value-label {
+		        line-height: 30px;
+		      }
+		    }
+		    .Select-input {
+		      height: 26px;
+		    }
+				.Select-arrow-zone{
+					vertical-align: inherit;
+					top: 4px;
+				}
+		  }
+		}
+		.title {
+			color: #fff;
+			padding: 2px 4px;
+			font-size: 11px;
+			margin-left: 5px;
+			display: inline-block;
+			position: relative;
+			background-color: #FF7373;
+			z-index: 1;
+		}
+	}
+
+	.input{
+		display: inline-block;
 	}
 }
 
