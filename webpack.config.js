@@ -21,12 +21,6 @@ loaders.push({
 	exclude: ['node_modules']
 });
 
-loaders.push({
-  test: /\.jsx?$/,
-  exclude: /node_modules/,
-  loaders: ['babel-loader?presets[]=react,presets[]=es2015,presets[]=stage-2'],
-})
-
 module.exports = {
 	entry: [
 		'react-hot-loader/patch',

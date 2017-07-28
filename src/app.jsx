@@ -13,10 +13,10 @@ export default class App extends React.Component {
     super(props, context)
 
     this.state = {
-				data: data.smallData,
-       dataSize: 'small',
-       selectedAggregationDimension: 'age',
-       isLoaded: true,
+    	data: data.smallData,
+      dataSize: 'small',
+      selectedAggregationDimension: 'age',
+      isLoaded: true,
     };
 
     this.handleFileSelect = this.handleFileSelect.bind(this);

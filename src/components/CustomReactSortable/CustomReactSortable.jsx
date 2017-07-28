@@ -1,18 +1,20 @@
-import React from 'react';
+/* eslint consistent-return: 0 */
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import Sortable from './CustomSortable';
+import SortableJS from './CustomSortable';
 
 const store = {
     nextSibling: null,
     activeComponent: null
 };
 
-module.exports = class extends React.Component {
+class Sortable extends Component {
     static propTypes = {
-        options: React.PropTypes.object,
-        onChange: React.PropTypes.func,
-        tag: React.PropTypes.string,
-        style: React.PropTypes.object
+        options: PropTypes.object,
+        onChange: PropTypes.func,
+        tag: PropTypes.string,
+        style: PropTypes.object
     };
     static defaultProps = {
         options: {},
@@ -49,8 +51,8 @@ module.exports = class extends React.Component {
                     const remote = store.activeComponent;
                     const remoteItems = remote.sortable.toArray();
 
-                    evt.from.insertBefore(evt.item, store.nextSibling);
-
+                    const referenceNode = (store.nextSibling && store.nextSibling.parentNode !== null) ? store.nextSibling : null;
+                    evt.from.insertBefore(evt.item, referenceNode);
                     if (remote !== this) {
                         const remoteOptions = remote.props.options || {};
 
@@ -74,10 +76,10 @@ module.exports = class extends React.Component {
                 setTimeout(() => {
                     eventHandler && eventHandler(evt);
                 }, 0);
-            }
+            };
         });
 
-        this.sortable = Sortable.create(ReactDOM.findDOMNode(this), options);
+        this.sortable = SortableJS.create(ReactDOM.findDOMNode(this), options);
     }
     componentWillUnmount() {
         if (this.sortable) {
@@ -86,7 +88,15 @@ module.exports = class extends React.Component {
         }
     }
     render() {
-        const { children, className, tag, style } = this.props;
-        return React.DOM[tag]({ className, style }, children);
+        const { tag: Component, ...props } = this.props;
+
+        delete props.options;
+        delete props.onChange;
+
+        return (
+            <Component {...props} />
+        );
     }
 }
+
+export default Sortable;
