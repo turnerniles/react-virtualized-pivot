@@ -4,7 +4,11 @@ module.exports = [
 		exclude: /(node_modules|bower_components|public\/)/,
 		loader: "babel-loader",
 		query: {
-			presets:[ 'es2015', 'react', 'stage-2' ]
+			'plugins': [
+				'transform-runtime',
+				'transform-decorators-legacy',
+			],
+			presets: ['es2015', 'stage-2', 'react'],
 		}
 	},
 	{

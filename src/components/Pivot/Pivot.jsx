@@ -741,12 +741,10 @@ export default class Pivot extends PureComponent {
 			        <ReactSortable
 								className="sortable-container block__list block__list_tags"
                 style={{backgroundColor: colorPack.sortableContainerBackground}}
-								handle='.my-handle'
 								onChange={fields => this.setState({fields})}
 		            options={{
 		              group: 'shared',
 		              onAdd: this.onAddUpdateField,
-					       // onChoose: () => {this.setState({currentFilter: ''})},
 		            }}
 		            tag="ul"
 							>
