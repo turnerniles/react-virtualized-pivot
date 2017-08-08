@@ -7,6 +7,7 @@ import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import QuickPivot from 'quick-pivot';
 import Select from 'react-select-plus';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
+import Table from '../Table/Table.jsx';
 
 import 'react-select-plus/dist/react-select-plus.css';
 import './styles.scss';
@@ -88,7 +89,6 @@ export default class Pivot extends PureComponent {
 			rowFields: [],
 			selectedAggregationDimension: nextProps.selectedAggregationDimension || '',
 			currentFilter: '',
-			currentValues: {},
 			currentValues: {},
 			filters: {},
 			columnWidth: 75,
@@ -520,7 +520,9 @@ export default class Pivot extends PureComponent {
 			currentValues,
 			displayFilterMenu,
 			currentFilter,
-			filters
+			filters,
+			rowFields,
+			data,
 		} = this.state;
 
     const colorPack = this.props.colorPack !== undefined ? this.props.colorPack :
@@ -597,7 +599,7 @@ export default class Pivot extends PureComponent {
 			</li>
 			)}
 		) : ''
-		const rowFieldsRender = this.state.rowFields.map((field, index) =>
+		const rowFieldsRender = rowFields.map((field, index) =>
 			(
 				<li
 					key={index}
@@ -806,8 +808,21 @@ export default class Pivot extends PureComponent {
 	        </div>
 				</div>
 				<div className="pivot-grid">
-
 					<section className='pivot-grid'>
+						<Table
+							colorPack={colorPack}
+							rowHeight={rowHeight}
+							headerCounter={headerCounter}
+							columnWidth={columnWidth}
+							overscanColumnCount={overscanColumnCount}
+							overscanRowCount={overscanRowCount}
+							data={data !== undefined ? data : [[]]}
+							onToggleRow={this.onToggleRow}
+							checkIfInCollapsed={this.checkIfInCollapsed}
+							rowFields={rowFields}
+						>
+						</Table>
+						{/*
 		        <ContentBox>
 		        <ScrollSync>
 		          {({
@@ -930,6 +945,7 @@ export default class Pivot extends PureComponent {
 		          }}
 		        </ScrollSync>
 		      </ContentBox>
+					*/}
 		    </section>
 				</div>
 			</section>
