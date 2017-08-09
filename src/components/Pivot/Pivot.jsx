@@ -1,13 +1,12 @@
 import React, { PureComponent } from 'react';
-import { Grid, List, AutoSizer, ScrollSync } from 'react-virtualized';
-import { ContentBox }
-	from '../ContentBox/ContentBox.jsx';
+import { List } from 'react-virtualized';
 import cn from 'classnames';
-import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import QuickPivot from 'quick-pivot';
 import Select from 'react-select-plus';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 import Table from '../Table/Table.jsx';
+
+window.pivot = QuickPivot;
 
 import 'react-select-plus/dist/react-select-plus.css';
 import './styles.scss';
@@ -57,10 +56,6 @@ export default class Pivot extends PureComponent {
 		this.onToggleRow = this.onToggleRow.bind(this);
 		this.checkIfInCollapsed = this.checkIfInCollapsed.bind(this);
 		this.forceRenderGrid = this.forceRenderGrid.bind(this);
-		this.renderBodyCell = this.renderBodyCell.bind(this);
-    this.renderHeaderCell = this.renderHeaderCell.bind(this);
-    this.renderLeftHeaderCell = this.renderLeftHeaderCell.bind(this);
-    this.renderLeftSideCell = this.renderLeftSideCell.bind(this);
 		this.displayFilter = this.displayFilter.bind(this);
 		this.addToFilters = this.addToFilters.bind(this);
 		this.submitFilters = this.submitFilters.bind(this);
@@ -294,7 +289,9 @@ export default class Pivot extends PureComponent {
 	}
 
 	forceRenderGrid() {
+		console.log('force rendering', this.header, this.leftHeader, this.grid, this.bodyGrid)
 		if (this.header) {
+			console.log('header', this.header)
 			this.header.recomputeGridSize({columnIndex: 0, rowIndex: 0});
 		}
 		if (this.leftHeader) {
@@ -323,93 +320,6 @@ export default class Pivot extends PureComponent {
 				<div className='filter-name'>
 					{currentValues[index]}
 				</div>
-			</div>
-		)
-	}
-
-	renderBodyCell({ columnIndex, key, rowIndex, style }) {
-		if (columnIndex < 1) {
-			return
-		}
-
-		return this.renderLeftSideCell({ columnIndex, key, rowIndex, style })
-	}
-
-	renderHeaderCell({ columnIndex, key, rowIndex, style }) {
-		if (columnIndex < 1) {
-			return
-		}
-		return this.renderLeftHeaderCell({ columnIndex, key, rowIndex, style })
-	}
-
-	renderLeftHeaderCell({ columnIndex, key, rowIndex, style }) {
-		const {
-			data,
-		} = this.state;
-
-		return (
-			<div
-				className={'headerCell'}
-				key={key}
-				style={style}
-			>
-				{`${data.length ?
-					data[rowIndex].value[columnIndex] : ''}`}
-			</div>
-		)
-	}
-
-	renderLeftSideCell({ columnIndex, key, rowIndex, style }) {
-		const {
-			data,
-			headerCounter,
-			rowFields,
-		} = this.state;
-
-    const {
-      colorPack
-    } = this.props;
-
-    const evenOddRowStyle = rowIndex % 2 === 0
-      ? columnIndex % 2 === 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground}
-      : columnIndex % 2 !== 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground};
-		const classNames = cn('cell');
-		const firstColumnStyle = {};
-			if (columnIndex === 0) {
-				firstColumnStyle['paddingLeft'] =
-					`${20 * data.slice(headerCounter)[rowIndex].depth}px`;
-				if (rowFields.length === 1 ||
-						data.slice(headerCounter)[rowIndex].depth <
-							rowFields.length - 1) {
-						firstColumnStyle['cursor'] = 'pointer';
-				}
-			}
-		const arrowStyle = (rowIndex) => {
-			if(this.checkIfInCollapsed(rowIndex)){
-				return '▶';
-			}
-			if (data.slice(headerCounter)[rowIndex].depth < rowFields.length - 1) {
-				return '▼';
-			}
-			return '';
-		}
-
-		return (
-			<div
-				className={classNames}
-				key={key}
-				style={Object.assign({}, firstColumnStyle, evenOddRowStyle, style)}
-				onClick={columnIndex === 0 ? this.onToggleRow.bind(this, rowIndex) : ''}
-			>
-				<div className="cell-text-container">
-				<div className="arrow">
-					{ columnIndex === 0 ? arrowStyle(rowIndex) : ''}
-				</div>
-				<div className="cell-data">
-					{`${data.length ?
-						data.slice(headerCounter)[rowIndex].value[columnIndex] : ''}`}
-				</div>
-			</div>
 			</div>
 		)
 	}
@@ -808,7 +718,7 @@ export default class Pivot extends PureComponent {
 	        </div>
 				</div>
 				<div className="pivot-grid">
-					<section className='pivot-grid'>
+					<section className="pivot-grid">
 						<Table
 							colorPack={colorPack}
 							rowHeight={rowHeight}
@@ -820,132 +730,10 @@ export default class Pivot extends PureComponent {
 							onToggleRow={this.onToggleRow}
 							checkIfInCollapsed={this.checkIfInCollapsed}
 							rowFields={rowFields}
+							rowCount={rowCount}
+							columnCount={columnCount}
 						>
 						</Table>
-						{/*
-		        <ContentBox>
-		        <ScrollSync>
-		          {({
-								clientHeight,
-								clientWidth,
-								onScroll,
-								scrollHeight,
-								scrollLeft,
-								scrollTop,
-								scrollWidth
-							}) => {
-		            return (
-		              <div className="GridRow">
-		                <div
-		                  className="LeftSideGridContainer"
-		                  style={{
-		                    position: 'absolute',
-		                    left: 0,
-		                    top: 0,
-		                    color: colorPack.leftHeaderCellText,
-												height: rowHeight * headerCounter,
-												width: columnWidth,
-		                  }}
-		                >
-		                  <Grid
-		                    ref={(input) => { this.header = input; }}
-		                    cellRenderer={this.renderLeftHeaderCell}
-		                    className={'HeaderGrid'}
-												style={{backgroundColor: colorPack.headerGridBackground}}
-		                    width={columnWidth}
-		                    height={rowHeight * headerCounter}
-		                    rowHeight={rowHeight}
-		                    columnWidth={columnWidth}
-		                    rowCount={headerCounter}
-		                    columnCount={1}
-		                  />
-		                </div>
-		                <div
-		                  className="LeftSideGridContainer"
-		                  style={{
-		                    position: 'absolute',
-		                    left: 0,
-		                    top: rowHeight * headerCounter,
-		                    color: colorPack.leftSideGridText,
-		                  }}
-		                >
-		                  <Grid
-		                    ref={(input) => { this.leftHeader = input; }}
-		                    overscanColumnCount={overscanColumnCount}
-		                    overscanRowCount={overscanRowCount}
-		                    cellRenderer={this.renderLeftSideCell}
-		                    columnWidth={columnWidth}
-		                    columnCount={1}
-		                    className={'LeftSideGrid'}
-                        style={{backgroundColor: colorPack.leftHeaderCellBackground}}
-		                    height={height - scrollbarSize()}
-		                    rowHeight={rowHeight}
-		                    rowCount={rowCount === 0 ? 0 : (rowCount - headerCounter)}
-		                    scrollTop={scrollTop}
-		                    width={columnWidth}
-		                  />
-		                </div>
-		                <div className="GridColumn">
-		                  <AutoSizer
-		                    disableHeight
-		                  >
-		                    {({ width }) => (
-		                      <div>
-		                        <div
-		                          style={{
-		                            color: colorPack.headerGridText,
-                                backgroundColor: colorPack.headerGridBackground,
-		                            height: rowHeight * headerCounter,
-		                            width: width - scrollbarSize(),
-		                          }}
-		                        >
-		                          <Grid
-		                            ref={(input) => { this.grid = input; }}
-		                            className="HeaderGrid"
-		                            columnWidth={columnWidth}
-		                            columnCount={columnCount}
-		                            height={rowHeight * headerCounter}
-		                            overscanColumnCount={overscanColumnCount}
-		                            cellRenderer={this.renderHeaderCell}
-		                            rowHeight={rowHeight}
-		                            rowCount={headerCounter}
-		                            scrollLeft={scrollLeft}
-		                            width={width - scrollbarSize()}
-		                          />
-		                        </div>
-		                        <div
-		                          style={{
-		                            color: colorPack.bodyGridText,
-		                            height,
-		                            width,
-		                          }}
-		                        >
-		                          <Grid
-		                            ref={(input) => { this.bodyGrid = input; }}
-		                            className="BodyGrid"
-                                style={{backgroundColor: colorPack.bodyGridBackground}}
-		                            columnWidth={columnWidth}
-		                            columnCount={columnCount}
-		                            height={height}
-		                            onScroll={onScroll}
-		                            overscanColumnCount={overscanColumnCount}
-		                            overscanRowCount={overscanRowCount}
-		                            cellRenderer={this.renderBodyCell}
-		                            rowHeight={rowHeight}
-		                            rowCount={rowCount === 0 ? 0 : (rowCount - headerCounter)}
-		                            width={width}
-		                          />
-		                        </div>
-		                      </div>
-		                    )}
-		                  </AutoSizer>
-		                </div>
-		              </div>
-		            )
-		          }}
-		        </ScrollSync>
-		      </ContentBox>
-					*/}
 		    </section>
 				</div>
 			</section>

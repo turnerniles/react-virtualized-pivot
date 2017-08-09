@@ -1,129 +1,21 @@
 import React, { PureComponent } from 'react';
-import { Grid, List, AutoSizer, ScrollSync } from 'react-virtualized';
+import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
 import { ContentBox }
 	from '../ContentBox/ContentBox.jsx';
 import cn from 'classnames';
 import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import QuickPivot from 'quick-pivot';
-import Select from 'react-select-plus';
-import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 
-import 'react-select-plus/dist/react-select-plus.css';
 import './styles.scss';
 
 export default class Table extends PureComponent {
 	constructor(props) {
 		super(props);
 
-		const dataArray = this.props.data !== undefined ? this.props.data : [];
-		const pivot = this.props.data !== undefined ?
-			new QuickPivot(this.props.data, [], [],
-			this.props.selectedAggregationDimension || '', 'sum') :
-			{};
-
-		this.state = {
-				dataArray,
-				pivot,
-				selectedAggregationType: 'sum',
-				selectedAggregationDimension: this.props.selectedAggregationDimension || '',
-				currentFilter: '',
-				filters: {},
-				columnWidth: 75,
-      	columnCount: 0,
-      	rowHeight: 40,
-      	rowCount: 0,
-				data:[],
-				header:{},
-				headerCounter: 0,
-    };
-
-		// this.onToggleRow = this.onToggleRow.bind(this);
-		this.checkIfInCollapsed = this.checkIfInCollapsed.bind(this);
-		this.forceRenderGrid = this.forceRenderGrid.bind(this);
 		this.renderBodyCell = this.renderBodyCell.bind(this);
     this.renderHeaderCell = this.renderHeaderCell.bind(this);
     this.renderLeftHeaderCell = this.renderLeftHeaderCell.bind(this);
     this.renderLeftSideCell = this.renderLeftSideCell.bind(this);
-	}
-
-	componentWillReceiveProps(nextProps) {
-		// const aggregationDimensions = nextProps.data !== undefined ?
-		// 	nextProps.data[0].map((item, index) => {
-		// 		return {value: item, label: item}
-		// }) : [];
-		// const dataArray = nextProps.data !== undefined ? nextProps.data : [];
-		// const fields = nextProps.data !== undefined ? nextProps.data[0] : [];
-		// const pivot = nextProps.data !== undefined ?
-		// 	new QuickPivot(nextProps.data, [], [],
-		// 		nextProps.selectedAggregationDimension || '', 'sum') : {};
-
-		// Reset entire state execpt selectedAggregationType
-    // this.setState({
-		// 	aggregationDimensions,
-		// 	dataArray,
-		// 	fields,
-		// 	pivot,
-		// 	colFields: [],
-		// 	rowFields: [],
-		// 	selectedAggregationDimension: nextProps.selectedAggregationDimension || '',
-		// 	currentFilter: '',
-		// 	filters: {},
-		// 	columnWidth: 75,
-		// 	columnCount: 0,
-		// 	overscanColumnCount: 0,
-		// 	overscanRowCount: 5,
-		// 	rowHeight: 40,
-		// 	rowCount: 0,
-		// 	data:[],
-		// 	header:{},
-		// 	headerCounter: 0,
-		// })
-  }
-
-	// onToggleRow(rowIndex) {
-	// 	const {
-	// 		pivot
-	// 	} = this.state;
-  //
-	// 	//row index + headerCount because we remove/slice the header off the data we
-	// 	//render in the renderBodyCell
-	// 	const newPivot = pivot.toggle(rowIndex + this.state.headerCounter);
-  //
-	// 	this.setState(
-	// 	{
-	// 		pivot: newPivot,
-	// 		columnCount: (newPivot.data.table.length &&
-	// 			newPivot.data.table[0].value.length) ?
-	// 		newPivot.data.table[0].value.length : 0,
-	// 		rowCount: newPivot.data.table.length || 0,
-	// 		data: newPivot.data.table,
-	// 		header: newPivot.data.table[0],
-	// 	});
-	// 	this.forceRenderGrid();
-	// }
-
-	checkIfInCollapsed(rowIndex) {
-		const {
-			pivot,
-			headerCounter
-		} = this.state;
-
-		return pivot.data.table[rowIndex + headerCounter].row in pivot.collapsedRows
-	}
-
-	forceRenderGrid() {
-		if (this.header) {
-			this.header.recomputeGridSize({columnIndex: 0, rowIndex: 0});
-		}
-		if (this.leftHeader) {
-			this.leftHeader.recomputeGridSize({columnIndex: 0, rowIndex: 0});
-		}
-		if (this.grid) {
-			this.grid.recomputeGridSize({columnIndex: 0, rowIndex: 0});
-		}
-		if (this.bodyGrid) {
-			this.bodyGrid.recomputeGridSize({columnIndex: 0, rowIndex: 0});
-		}
 	}
 
 	renderBodyCell({ columnIndex, key, rowIndex, style }) {
@@ -144,7 +36,7 @@ export default class Table extends PureComponent {
 	renderLeftHeaderCell({ columnIndex, key, rowIndex, style }) {
 		const {
 			data,
-		} = this.state;
+		} = this.props;
 
 		return (
 			<div
@@ -181,9 +73,9 @@ export default class Table extends PureComponent {
 							rowFields.length - 1) {
 						firstColumnStyle['cursor'] = 'pointer';
 				}
-			}
+			}``
 		const arrowStyle = (rowIndex) => {
-			if(checkIfInCollapsed(rowIndex)){
+			if (checkIfInCollapsed(rowIndex)) {
 				return '▶';
 			}
 			if (data.slice(headerCounter)[rowIndex].depth < rowFields.length - 1) {
@@ -199,42 +91,28 @@ export default class Table extends PureComponent {
 				style={Object.assign({}, firstColumnStyle, evenOddRowStyle, style)}
 				onClick={columnIndex === 0 ? onToggleRow.bind(this, rowIndex) : ''}
 			>
-				<div className="cell-text-container">
-				<div className="arrow">
-					{ columnIndex === 0 ? arrowStyle(rowIndex) : ''}
-				</div>
-				<div className="cell-data">
-					{`${data.length ?
-						data.slice(headerCounter)[rowIndex].value[columnIndex] : ''}`}
-				</div>
-			</div>
+		    <div className="cell-text-container">
+  				<div className="arrow">
+  					{columnIndex === 0 ? arrowStyle(rowIndex) : ''}
+  				</div>
+  				<div className="cell-data">
+  					{`${data.length ?
+  						data.slice(headerCounter)[rowIndex].value[columnIndex] : ''}`}
+  				</div>
+  			</div>
 			</div>
 		)
 	}
 
 	render() {
-		// const {
-		// 	aggregationDimensions,
-		// 	selectedAggregationType,
-		// 	selectedAggregationDimension,
-		// 	columnCount,
-    //   columnWidth,
-		// 	headerCounter,
-    //   overscanColumnCount,
-    //   overscanRowCount,
-    //   rowHeight,
-    //   rowCount,
-		// 	currentFilter,
-		// 	filters
-		// } = this.state;
-
     const {
       headerCounter,
       rowHeight,
       columnWidth,
       overscanColumnCount,
       overscanRowCount,
-      rowCount,      
+      rowCount,
+      columnCount,
 		} = this.props;
 
     const colorPack = this.props.colorPack !== undefined ? this.props.colorPack :
@@ -259,7 +137,7 @@ export default class Table extends PureComponent {
 		const height = (window.innerHeight - 240 - (headerCounter * 40));
 
 		return(
-			<section className="virtualized-pivot">
+			<section className="virtualized-table">
 				<div className="pivot-grid">
 					<section className='pivot-grid'>
 		        <ContentBox>
