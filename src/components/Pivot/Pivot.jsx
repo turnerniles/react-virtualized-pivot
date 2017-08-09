@@ -55,7 +55,6 @@ export default class Pivot extends PureComponent {
 		this.onAddUpdateField = this.onAddUpdateField.bind(this);
 		this.onToggleRow = this.onToggleRow.bind(this);
 		this.checkIfInCollapsed = this.checkIfInCollapsed.bind(this);
-		this.forceRenderGrid = this.forceRenderGrid.bind(this);
 		this.displayFilter = this.displayFilter.bind(this);
 		this.addToFilters = this.addToFilters.bind(this);
 		this.submitFilters = this.submitFilters.bind(this);
@@ -147,8 +146,6 @@ export default class Pivot extends PureComponent {
 			data: pivotedData.data.table,
 			header: pivotedData.data.table[0]
 		})
-
-		this.forceRenderGrid();
 	}
 
 	onSelectAggregationDimension (selectedAggregationDimension) {
@@ -200,8 +197,6 @@ export default class Pivot extends PureComponent {
 			data: pivotedData.data.table,
 			header: pivotedData.data.table[0]
 		})
-
-		this.forceRenderGrid();
 	}
 
 	onAddUpdateField() {
@@ -253,8 +248,6 @@ export default class Pivot extends PureComponent {
 			data: pivotedData.data.table,
 			header: pivotedData.data.table[0],
 		});
-
-		this.forceRenderGrid();
 	}
 
 	onToggleRow(rowIndex) {
@@ -276,7 +269,6 @@ export default class Pivot extends PureComponent {
 			data: newPivot.data.table,
 			header: newPivot.data.table[0],
 		});
-		this.forceRenderGrid();
 	}
 
 	checkIfInCollapsed(rowIndex) {
@@ -287,9 +279,6 @@ export default class Pivot extends PureComponent {
 
 		return pivot.data.table[rowIndex + headerCounter].row in pivot.collapsedRows
 	}
-
-	forceRenderGrid() {
-		console.log('force rendering', this.header, this.leftHeader, this.grid, this.bodyGrid)
 		if (this.header) {
 			console.log('header', this.header)
 			this.header.recomputeGridSize({columnIndex: 0, rowIndex: 0});
