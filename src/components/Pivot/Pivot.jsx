@@ -279,19 +279,6 @@ export default class Pivot extends PureComponent {
 
 		return pivot.data.table[rowIndex + headerCounter].row in pivot.collapsedRows
 	}
-		if (this.header) {
-			this.header.recomputeGridSize({columnIndex: 0, rowIndex: 0});
-		}
-		if (this.leftHeader) {
-			this.leftHeader.recomputeGridSize({columnIndex: 0, rowIndex: 0});
-		}
-		if (this.grid) {
-			this.grid.recomputeGridSize({columnIndex: 0, rowIndex: 0});
-		}
-		if (this.bodyGrid) {
-			this.bodyGrid.recomputeGridSize({columnIndex: 0, rowIndex: 0});
-		}
-	}
 
 	listRowRenderer({ index, isScrolling, key, style }){
 		const { currentValues, currentFilter, filters, } = this.state;
