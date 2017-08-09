@@ -280,7 +280,6 @@ export default class Pivot extends PureComponent {
 		return pivot.data.table[rowIndex + headerCounter].row in pivot.collapsedRows
 	}
 		if (this.header) {
-			console.log('header', this.header)
 			this.header.recomputeGridSize({columnIndex: 0, rowIndex: 0});
 		}
 		if (this.leftHeader) {
