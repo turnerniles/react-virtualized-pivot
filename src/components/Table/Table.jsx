@@ -19,6 +19,7 @@ export default class Table extends PureComponent {
 	}
 
 	renderBodyCell({ columnIndex, key, rowIndex, style }) {
+		/** first column is for pivoted row headers */
 		if (columnIndex < 1) {
 			return '';
 		}
@@ -45,7 +46,6 @@ export default class Table extends PureComponent {
 					...evenOddRowStyle,
 					...style,
 				}}
-				onClick={columnIndex === 0 ? onToggleRow.bind(this, rowIndex) : ''}
 			>
 		    <div className="cell-text-container">
   				<div className="body-cell-data">
@@ -74,7 +74,7 @@ export default class Table extends PureComponent {
 
 		return (
 			<div
-				className={'headerCell'}
+				className="header-cell"
 				key={key}
 				style={{
 					...style,
@@ -152,6 +152,7 @@ export default class Table extends PureComponent {
 	render() {
     const {
       headerCounter,
+      headerHeight,
       rowHeight,
       columnWidth,
       overscanColumnCount,
@@ -205,7 +206,7 @@ export default class Table extends PureComponent {
 		                    left: 0,
 		                    top: 0,
 		                    color: colorPack.leftHeaderCellText,
-												height: rowHeight * headerCounter,
+												height: headerHeight * headerCounter,
 												width: columnWidth,
 		                  }}
 		                >
@@ -215,8 +216,8 @@ export default class Table extends PureComponent {
 		                    className={'HeaderGrid'}
 												style={{backgroundColor: colorPack.headerGridBackground}}
 		                    width={columnWidth}
-		                    height={rowHeight * headerCounter}
-		                    rowHeight={rowHeight}
+		                    height={headerHeight * headerCounter}
+		                    rowHeight={headerHeight}
 		                    columnWidth={columnWidth}
 		                    rowCount={headerCounter}
 		                    columnCount={1}
@@ -227,7 +228,7 @@ export default class Table extends PureComponent {
 		                  style={{
 		                    position: 'absolute',
 		                    left: 0,
-		                    top: rowHeight * headerCounter,
+		                    top: headerHeight * headerCounter,
 		                    color: colorPack.leftSideGridText,
 		                  }}
 		                >
@@ -257,7 +258,7 @@ export default class Table extends PureComponent {
 		                          style={{
 		                            color: colorPack.headerGridText,
                                 backgroundColor: colorPack.headerGridBackground,
-		                            height: rowHeight * headerCounter,
+		                            height: headerHeight * headerCounter,
 		                            width: width - scrollbarSize(),
 		                          }}
 		                        >
@@ -266,10 +267,10 @@ export default class Table extends PureComponent {
 		                            className="HeaderGrid"
 		                            columnWidth={columnWidth}
 		                            columnCount={columnCount}
-		                            height={rowHeight * headerCounter}
+		                            height={headerHeight * headerCounter}
 		                            overscanColumnCount={overscanColumnCount}
 		                            cellRenderer={this.renderHeaderCell}
-		                            rowHeight={rowHeight}
+		                            rowHeight={headerHeight}
 		                            rowCount={headerCounter}
 		                            scrollLeft={scrollLeft}
 		                            width={width - scrollbarSize()}
