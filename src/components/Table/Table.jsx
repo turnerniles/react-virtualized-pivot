@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react';
 import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
-import { ContentBox }
-	from '../ContentBox/ContentBox.jsx';
 import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import QuickPivot from 'quick-pivot';
 
@@ -186,7 +184,6 @@ export default class Table extends PureComponent {
 			<section className="virtualized-table">
 				<div className="pivot-grid">
 					<section className='pivot-grid'>
-		        <ContentBox>
 		        <ScrollSync>
 		          {({
 								clientHeight,
@@ -307,7 +304,6 @@ export default class Table extends PureComponent {
 		            )
 		          }}
 		        </ScrollSync>
-		      </ContentBox>
 		    </section>
 				</div>
 			</section>
