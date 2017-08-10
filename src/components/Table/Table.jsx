@@ -9,10 +9,30 @@ export default class Table extends PureComponent {
 	constructor(props) {
 		super(props);
 
+		this.evenOddRowStyle = this.evenOddRowStyle.bind(this);
 		this.renderBodyCell = this.renderBodyCell.bind(this);
     this.renderHeaderCell = this.renderHeaderCell.bind(this);
     this.renderLeftHeaderCell = this.renderLeftHeaderCell.bind(this);
     this.renderLeftSideCell = this.renderLeftSideCell.bind(this);
+	}
+
+	evenOddRowStyle({rowIndex = 0, columnIndex = 0}) {
+		const {
+			colorPack: {
+				evenRowBackground,
+				oddRowBackground,
+			}
+		} = this.props;
+
+		if (rowIndex % 2 === 0) {
+			return columnIndex % 2 === 0 ?
+				{backgroundColor: evenRowBackground} :
+				{backgroundColor: oddRowBackground};
+		}
+
+		return columnIndex % 2 !== 0 ?
+			{backgroundColor: evenRowBackground} :
+			{backgroundColor: oddRowBackground};
 	}
 
 	renderBodyCell({ columnIndex, key, rowIndex, style }) {
@@ -23,23 +43,18 @@ export default class Table extends PureComponent {
 
     const {
       data,
-      colorPack,
       onToggleRow,
       rowFields,
       checkIfInCollapsed,
       headerCounter,
     } = this.props;
 
-    const evenOddRowStyle = rowIndex % 2 === 0
-      ? columnIndex % 2 === 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground}
-      : columnIndex % 2 !== 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground};
-
 		return (
 			<div
 				className="cell"
 				key={key}
 				style={{
-					...evenOddRowStyle,
+					...this.evenOddRowStyle({ rowIndex, columnIndex }),
 					...style,
 				}}
 			>
@@ -89,16 +104,12 @@ export default class Table extends PureComponent {
 	renderLeftSideCell({ columnIndex, key, rowIndex, style }) {
     const {
       data,
-      colorPack,
       onToggleRow,
       rowFields,
       checkIfInCollapsed,
       headerCounter,
     } = this.props;
 
-    const evenOddRowStyle = rowIndex % 2 === 0
-      ? columnIndex % 2 === 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground}
-      : columnIndex % 2 !== 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground};
 		const firstColumnStyle = {};
 
 		if (columnIndex === 0) {
@@ -126,7 +137,7 @@ export default class Table extends PureComponent {
 				key={key}
 				style={{
 					...firstColumnStyle,
-					...evenOddRowStyle,
+					...this.evenOddRowStyle({ rowIndex, columnIndex }),
 					...style,
 				}}
 				onClick={columnIndex === 0 ? onToggleRow.bind(this, rowIndex) : ''}
