@@ -20,10 +20,44 @@ export default class Table extends PureComponent {
 
 	renderBodyCell({ columnIndex, key, rowIndex, style }) {
 		if (columnIndex < 1) {
-			return
+			return '';
 		}
 
-		return this.renderLeftSideCell({ columnIndex, key, rowIndex, style })
+    const {
+      data,
+      colorPack,
+      onToggleRow,
+      rowFields,
+      checkIfInCollapsed,
+      headerCounter,
+    } = this.props;
+
+    const evenOddRowStyle = rowIndex % 2 === 0
+      ? columnIndex % 2 === 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground}
+      : columnIndex % 2 !== 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground};
+		const classNames = cn('cell');
+
+		return (
+			<div
+				className={classNames}
+				key={key}
+				style={{
+					...evenOddRowStyle,
+					...style,
+				}}
+				onClick={columnIndex === 0 ? onToggleRow.bind(this, rowIndex) : ''}
+			>
+		    <div className="cell-text-container">
+  				<div className="body-cell-data">
+  					{
+  						data.length ?
+  							data.slice(headerCounter)[rowIndex].value[columnIndex] :
+  							''
+  					}
+  				</div>
+  			</div>
+			</div>
+		)
 	}
 
 	renderHeaderCell({ columnIndex, key, rowIndex, style }) {
@@ -42,7 +76,10 @@ export default class Table extends PureComponent {
 			<div
 				className={'headerCell'}
 				key={key}
-				style={style}
+				style={{
+					...style,
+					overflow: 'hidden',
+				}}
 			>
 				{`${data.length ?
 					data[rowIndex].value[columnIndex] : ''}`}
@@ -65,15 +102,16 @@ export default class Table extends PureComponent {
       : columnIndex % 2 !== 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground};
 		const classNames = cn('cell');
 		const firstColumnStyle = {};
-			if (columnIndex === 0) {
-				firstColumnStyle['paddingLeft'] =
-					`${20 * data.slice(headerCounter)[rowIndex].depth}px`;
-				if (rowFields.length === 1 ||
-						data.slice(headerCounter)[rowIndex].depth <
-							rowFields.length - 1) {
-						firstColumnStyle['cursor'] = 'pointer';
-				}
-			}``
+
+		if (columnIndex === 0) {
+			firstColumnStyle.paddingLeft =
+				`${20 * data.slice(headerCounter)[rowIndex].depth}px`;
+			if (rowFields.length === 1 ||
+					data.slice(headerCounter)[rowIndex].depth < rowFields.length - 1) {
+					firstColumnStyle.cursor = 'pointer';
+			}
+		}
+
 		const arrowStyle = (rowIndex) => {
 			if (checkIfInCollapsed(rowIndex)) {
 				return '▶';
@@ -88,7 +126,11 @@ export default class Table extends PureComponent {
 			<div
 				className={classNames}
 				key={key}
-				style={Object.assign({}, firstColumnStyle, evenOddRowStyle, style)}
+				style={{
+					...firstColumnStyle,
+					...evenOddRowStyle,
+					...style,
+				}}
 				onClick={columnIndex === 0 ? onToggleRow.bind(this, rowIndex) : ''}
 			>
 		    <div className="cell-text-container">
@@ -96,8 +138,11 @@ export default class Table extends PureComponent {
   					{columnIndex === 0 ? arrowStyle(rowIndex) : ''}
   				</div>
   				<div className="cell-data">
-  					{`${data.length ?
-  						data.slice(headerCounter)[rowIndex].value[columnIndex] : ''}`}
+  					{
+  						data.length ?
+  							data.slice(headerCounter)[rowIndex].value[columnIndex] :
+  							''
+  					}
   				</div>
   			</div>
 			</div>
