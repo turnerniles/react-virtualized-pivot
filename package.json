@@ -22,7 +22,7 @@
   "dependencies": {
     "node-sass": "^4.3.0",
     "papaparse": "^4.1.4",
-    "quick-pivot": "^2.2.5",
+    "quick-pivot": "^2.2.6",
     "react": "^16.0.0-beta.2",
     "react-dom": "^16.0.0-beta.2",
     "react-hot-loader": "^3.0.0-beta.7",
