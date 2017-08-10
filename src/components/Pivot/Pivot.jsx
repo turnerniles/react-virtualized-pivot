@@ -23,7 +23,7 @@ export default class Pivot extends PureComponent {
 		const fields = this.props.data !== undefined ? this.props.data[0] : [];
 		const pivot = this.props.data !== undefined ?
 			new QuickPivot(this.props.data, [], [],
-			this.props.selectedAggregationDimension || '', 'sum') :
+			this.props.selectedAggregationDimension || '', 'sum', '') :
 			{};
 
 		this.state = {
@@ -71,7 +71,7 @@ export default class Pivot extends PureComponent {
 		const fields = nextProps.data !== undefined ? nextProps.data[0] : [];
 		const pivot = nextProps.data !== undefined ?
 			new QuickPivot(nextProps.data, [], [],
-				nextProps.selectedAggregationDimension || '', 'sum') : {};
+				nextProps.selectedAggregationDimension || '', 'sum', '') : {};
 
 		// Reset entire state execpt selectedAggregationType
     this.setState({
@@ -111,7 +111,8 @@ export default class Pivot extends PureComponent {
 			rowFields,
 			colFields,
 			selectedAggregationDimension,
-			selectedAggregationType.value
+			selectedAggregationType.value,
+			'',
 		);
 
 		Object.keys(filters).forEach((filter) => {
@@ -162,7 +163,8 @@ export default class Pivot extends PureComponent {
 			rowFields,
 			colFields,
 			selectedAggregationDimension.value,
-			selectedAggregationType
+			selectedAggregationType,
+			'',
 		);
 
 		Object.keys(filters).forEach((filter) => {
@@ -214,7 +216,8 @@ export default class Pivot extends PureComponent {
 			rowFields,
 			colFields,
 			selectedAggregationDimension,
-			selectedAggregationType
+			selectedAggregationType,
+			'',
 		);
 
 		Object.keys(filters).forEach((filter) => {
@@ -333,13 +336,17 @@ export default class Pivot extends PureComponent {
 			currentFilter,
 			filters,
 			pivot,
+			rowFields,
+			colFields,
+			selectedAggregationDimension,
+			selectedAggregationType,
 		} = this.state;
 
 		// create new pivot and apply all filters. Because quick-pivot does not
 		// account for removal of filters
 		const newPivot = this.props.data !== undefined ?
-			new QuickPivot(this.props.data, this.state.rowFields, this.state.colFields,
-			this.props.selectedAggregationDimension || '', 'sum') :
+			new QuickPivot(this.props.data, rowFields, colFields,
+			selectedAggregationDimension || '', selectedAggregationType, '') :
 			{};
 
 		Object.keys(filters).forEach((filter) => {
@@ -355,10 +362,15 @@ export default class Pivot extends PureComponent {
 
 		if (newPivot.data) {
 			while(true) {
-				if (newPivot.data.table[headerCounter].type === 'colHeader') {
-					headerCounter += 1;
-				} else {
-					break
+				if(newPivot.data.table) {
+					if (newPivot.data.table[headerCounter].type === 'colHeader') {
+						headerCounter += 1;
+					} else {
+						break;
+					}
+				}
+				else {
+					break;
 				}
 			}
 		}
@@ -377,9 +389,9 @@ export default class Pivot extends PureComponent {
 		});
 	}
 
-	showFilterMenu(field){
+	showFilterMenu(field) {
 		const {
-			pivot
+			pivot,
 		} = this.state;
 
 		const uniqueValues = pivot.getUniqueValues(field);
@@ -408,6 +420,7 @@ export default class Pivot extends PureComponent {
 			filters,
 			rowFields,
 			data,
+			fields,
 		} = this.state;
 
     const colorPack = this.props.colorPack !== undefined ? this.props.colorPack :
@@ -429,7 +442,7 @@ export default class Pivot extends PureComponent {
 			oddRowBackground: 'rgba(0, 0, 0, .1)',
 		};
 
-		const height = (window.innerHeight - 240 - (this.state.headerCounter * 40))
+		const height = (window.innerHeight - 240 - (headerCounter * 40))
 
 		const aggregationTypes = [
 	    { value: 'sum', label: 'sum' },
@@ -441,7 +454,7 @@ export default class Pivot extends PureComponent {
 
 		//We are not using deconstructed state consts here due to
 		// react-sortablejs bug
-		const fields = this.state.fields.length ? this.state.fields.map((field, index) =>
+		const fieldsRenderer = fields.length ? fields.map((field, index) =>
 			{ return (
 				<li
 					key={index}
@@ -635,7 +648,7 @@ export default class Pivot extends PureComponent {
 		            }}
 		            tag="ul"
 							>
-			        	{fields}
+			        	{fieldsRenderer}
 			        </ReactSortable>
 		        </div>
 
