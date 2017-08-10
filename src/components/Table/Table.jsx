@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
 import { ContentBox }
 	from '../ContentBox/ContentBox.jsx';
-import cn from 'classnames';
 import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import QuickPivot from 'quick-pivot';
 
@@ -36,11 +35,10 @@ export default class Table extends PureComponent {
     const evenOddRowStyle = rowIndex % 2 === 0
       ? columnIndex % 2 === 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground}
       : columnIndex % 2 !== 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground};
-		const classNames = cn('cell');
 
 		return (
 			<div
-				className={classNames}
+				className="cell"
 				key={key}
 				style={{
 					...evenOddRowStyle,
@@ -81,8 +79,11 @@ export default class Table extends PureComponent {
 					overflow: 'hidden',
 				}}
 			>
-				{`${data.length ?
-					data[rowIndex].value[columnIndex] : ''}`}
+				{
+					data.length ?
+						data[rowIndex].value[columnIndex] :
+						''
+				}
 			</div>
 		)
 	}
@@ -100,7 +101,6 @@ export default class Table extends PureComponent {
     const evenOddRowStyle = rowIndex % 2 === 0
       ? columnIndex % 2 === 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground}
       : columnIndex % 2 !== 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground};
-		const classNames = cn('cell');
 		const firstColumnStyle = {};
 
 		if (columnIndex === 0) {
@@ -124,7 +124,7 @@ export default class Table extends PureComponent {
 
 		return (
 			<div
-				className={classNames}
+				className="cell"
 				key={key}
 				style={{
 					...firstColumnStyle,
