@@ -11,12 +11,17 @@ export default class Table extends PureComponent {
 		super(props);
 
 		this.state = {
-			columnWidths: Array(props.columnCount).fill(props.columnWidth),
+			leftColumnWidth: props.columnWidth,
+			columnWidths: [],
+			selectedColumn: null,
+			startPos: null,
 		};
 
+		console.log('this is state', this.state);
 		this.getColumnWidth = this.getColumnWidth.bind(this);
 		this.onStart = this.onStart.bind(this);
 		this.onStop = this.onStop.bind(this);
+		this.setSelectedColumn = this.setSelectedColumn.bind(this);
 
 		this.evenOddRowStyle = this.evenOddRowStyle.bind(this);
 		this.renderBodyCell = this.renderBodyCell.bind(this);
@@ -27,24 +32,56 @@ export default class Table extends PureComponent {
 
 	componentWillReceiveProps(nextProps) {
 		console.log('receiving new props', nextProps);
+		this.setState({
+			columnWidths: Array(nextProps.columnCount).fill(nextProps.columnWidth),
+		});
 	}
 
-	getColumnWidth(index) {
-		console.log('updating column width?', index);
-		if (this.state.columnWidths.length === 0) return 0;
+	getColumnWidth({ index = 0 }) {
+		if (this.state.columnWidths.length === 0) {
+			return this.props.columnWidth;
+		}
 		return this.state.columnWidths[index];
 	}
 
-	onStart(e, x, y) {
-		console.log('dragging started!', e);
-		console.log('x started!', x);
-		console.log('y started!', y);
+	onStart(e, ui) {
+		console.log('e', e, ui);
+		this.setState({
+			startPos: ui.x,
+		});
 	}
 
-	onStop(e, x, y) {
-		console.log('dragging stoped!', e);
-		console.log('x stoped!', x);
-		console.log('y stoped!', y);
+	onStop(e, ui) {
+		console.log('ui end', e, ui);
+		const {
+			columnWidths,
+			leftColumnWidth,
+			selectedColumn,
+			startPos,
+		} = this.state;
+
+		if (selectedColumn === 'left') {
+			return this.setState({
+				leftColumnWidth: leftColumnWidth + (ui.x - startPos),
+			});
+		}
+
+		const newColumnWidths = [...columnWidths];
+
+		newColumnWidths[selectedColumn - 1] = columnWidths[selectedColumn - 1] + (ui.x - startPos);
+
+		console.log('newColumnWidths', newColumnWidths);
+
+		this.setState({
+			columnWidths: newColumnWidths,
+		});
+
+    this.bodyGrid.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
+	}
+
+	setSelectedColumn(selectedColumn) {
+		console.log('setting column?', selectedColumn);
+		this.setState({ selectedColumn });
 	}
 
 	evenOddRowStyle({rowIndex = 0, columnIndex = 0}) {
@@ -106,7 +143,42 @@ export default class Table extends PureComponent {
 		if (columnIndex < 1) {
 			return
 		}
-		return this.renderLeftHeaderCell({ columnIndex, key, rowIndex, style })
+
+		const {
+			colorPack,
+			data,
+		} = this.props;
+
+		return (
+			<div
+				className="header-container"
+				key={key}
+				style={{
+					...style,
+					overflow: 'hidden',
+				}}
+			>
+				<div className="header-cell">
+					{
+						data.length ?
+							data[rowIndex].value[columnIndex] :
+							''
+					}
+				</div>
+				<Draggable
+					axis="x"
+					onStart={this.onStart}
+					onStop={this.onStop}
+				>
+					<div
+						className="column-sizer"
+						style={{backgroundColor: colorPack.columnResizer}}
+						onMouseEnter={this.setSelectedColumn.bind(this, columnIndex)}
+					>
+					</div>
+				</Draggable>
+			</div>
+		)
 	}
 
 	renderLeftHeaderCell({ columnIndex, key, rowIndex, style }) {
@@ -139,6 +211,7 @@ export default class Table extends PureComponent {
 					<div
 						className="column-sizer"
 						style={{backgroundColor: colorPack.columnResizer}}
+						onMouseEnter={this.setSelectedColumn.bind(this, 'left')}
 					>
 					</div>
 				</Draggable>
@@ -214,6 +287,10 @@ export default class Table extends PureComponent {
       columnCount,
 		} = this.props;
 
+		const {
+			leftColumnWidth,
+		} = this.state;
+
     const colorPack = this.props.colorPack !== undefined ? this.props.colorPack :
 		{
 			sortableFieldBackground: '#5F9EDF',
@@ -259,7 +336,7 @@ export default class Table extends PureComponent {
 		                    top: 0,
 		                    color: colorPack.leftHeaderCellText,
 												height: headerHeight * headerCounter,
-												width: this.getColumnWidth(0),
+												width: leftColumnWidth,
 		                  }}
 		                >
 		                  <Grid
@@ -267,10 +344,10 @@ export default class Table extends PureComponent {
 		                    cellRenderer={this.renderLeftHeaderCell}
 		                    className={'HeaderGrid'}
 												style={{backgroundColor: colorPack.headerGridBackground}}
-		                    width={this.getColumnWidth(0)}
+		                    width={leftColumnWidth}
 		                    height={headerHeight * headerCounter}
 		                    rowHeight={headerHeight}
-		                    columnWidth={this.getColumnWidth(0)}
+		                    columnWidth={leftColumnWidth}
 		                    rowCount={headerCounter}
 		                    columnCount={1}
 		                  />
@@ -289,7 +366,7 @@ export default class Table extends PureComponent {
 		                    overscanColumnCount={overscanColumnCount}
 		                    overscanRowCount={overscanRowCount}
 		                    cellRenderer={this.renderLeftSideCell}
-		                    columnWidth={this.getColumnWidth(0)}
+		                    columnWidth={leftColumnWidth}
 		                    columnCount={1}
 		                    className={'LeftSideGrid'}
                         style={{backgroundColor: colorPack.leftHeaderCellBackground}}
@@ -297,7 +374,7 @@ export default class Table extends PureComponent {
 		                    rowHeight={rowHeight}
 		                    rowCount={rowCount === 0 ? 0 : (rowCount - headerCounter)}
 		                    scrollTop={scrollTop}
-		                    width={this.getColumnWidth(0)}
+		                    width={leftColumnWidth}
 		                  />
 		                </div>
 		                <div className="GridColumn">
