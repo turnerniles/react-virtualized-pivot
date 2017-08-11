@@ -42,7 +42,8 @@ export default class Pivot extends PureComponent {
       	columnCount: 0,
       	overscanColumnCount: 0,
       	overscanRowCount: 5,
-      	rowHeight: 40,
+      	headerHeight: 40,
+      	rowHeight: 20,
       	rowCount: 0,
 				data:[],
 				header:{},
@@ -89,7 +90,7 @@ export default class Pivot extends PureComponent {
 			columnCount: 0,
 			overscanColumnCount: 0,
 			overscanRowCount: 5,
-			rowHeight: 40,
+			rowHeight: 20,
 			rowCount: 0,
 			data:[],
 			header:{},
@@ -412,6 +413,7 @@ export default class Pivot extends PureComponent {
 			headerCounter,
       overscanColumnCount,
       overscanRowCount,
+      headerHeight,
       rowHeight,
       rowCount,
 			currentValues,
@@ -709,6 +711,7 @@ export default class Pivot extends PureComponent {
 					<section className="pivot-grid">
 						<Table
 							colorPack={colorPack}
+							headerHeight={headerHeight}
 							rowHeight={rowHeight}
 							headerCounter={headerCounter}
 							columnWidth={columnWidth}

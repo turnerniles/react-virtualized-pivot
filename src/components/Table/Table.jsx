@@ -1,8 +1,5 @@
 import React, { PureComponent } from 'react';
 import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
-import { ContentBox }
-	from '../ContentBox/ContentBox.jsx';
-import cn from 'classnames';
 import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import QuickPivot from 'quick-pivot';
 
@@ -12,18 +9,66 @@ export default class Table extends PureComponent {
 	constructor(props) {
 		super(props);
 
+		this.evenOddRowStyle = this.evenOddRowStyle.bind(this);
 		this.renderBodyCell = this.renderBodyCell.bind(this);
     this.renderHeaderCell = this.renderHeaderCell.bind(this);
     this.renderLeftHeaderCell = this.renderLeftHeaderCell.bind(this);
     this.renderLeftSideCell = this.renderLeftSideCell.bind(this);
 	}
 
-	renderBodyCell({ columnIndex, key, rowIndex, style }) {
-		if (columnIndex < 1) {
-			return
+	evenOddRowStyle({rowIndex = 0, columnIndex = 0}) {
+		const {
+			colorPack: {
+				evenRowBackground,
+				oddRowBackground,
+			}
+		} = this.props;
+
+		if (rowIndex % 2 === 0) {
+			return columnIndex % 2 === 0 ?
+				{backgroundColor: evenRowBackground} :
+				{backgroundColor: oddRowBackground};
 		}
 
-		return this.renderLeftSideCell({ columnIndex, key, rowIndex, style })
+		return columnIndex % 2 !== 0 ?
+			{backgroundColor: evenRowBackground} :
+			{backgroundColor: oddRowBackground};
+	}
+
+	renderBodyCell({ columnIndex, key, rowIndex, style }) {
+		/** first column is for pivoted row headers */
+		if (columnIndex < 1) {
+			return '';
+		}
+
+    const {
+      data,
+      onToggleRow,
+      rowFields,
+      checkIfInCollapsed,
+      headerCounter,
+    } = this.props;
+
+		return (
+			<div
+				className="cell"
+				key={key}
+				style={{
+					...this.evenOddRowStyle({ rowIndex, columnIndex }),
+					...style,
+				}}
+			>
+		    <div className="cell-text-container">
+  				<div className="body-cell-data">
+  					{
+  						data.length ?
+  							data.slice(headerCounter)[rowIndex].value[columnIndex] :
+  							''
+  					}
+  				</div>
+  			</div>
+			</div>
+		)
 	}
 
 	renderHeaderCell({ columnIndex, key, rowIndex, style }) {
@@ -40,12 +85,18 @@ export default class Table extends PureComponent {
 
 		return (
 			<div
-				className={'headerCell'}
+				className="header-cell"
 				key={key}
-				style={style}
+				style={{
+					...style,
+					overflow: 'hidden',
+				}}
 			>
-				{`${data.length ?
-					data[rowIndex].value[columnIndex] : ''}`}
+				{
+					data.length ?
+						data[rowIndex].value[columnIndex] :
+						''
+				}
 			</div>
 		)
 	}
@@ -53,27 +104,23 @@ export default class Table extends PureComponent {
 	renderLeftSideCell({ columnIndex, key, rowIndex, style }) {
     const {
       data,
-      colorPack,
       onToggleRow,
       rowFields,
       checkIfInCollapsed,
       headerCounter,
     } = this.props;
 
-    const evenOddRowStyle = rowIndex % 2 === 0
-      ? columnIndex % 2 === 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground}
-      : columnIndex % 2 !== 0 ? {backgroundColor: colorPack.evenRowBackground} : {backgroundColor: colorPack.oddRowBackground};
-		const classNames = cn('cell');
 		const firstColumnStyle = {};
-			if (columnIndex === 0) {
-				firstColumnStyle['paddingLeft'] =
-					`${20 * data.slice(headerCounter)[rowIndex].depth}px`;
-				if (rowFields.length === 1 ||
-						data.slice(headerCounter)[rowIndex].depth <
-							rowFields.length - 1) {
-						firstColumnStyle['cursor'] = 'pointer';
-				}
-			}``
+
+		if (columnIndex === 0) {
+			firstColumnStyle.paddingLeft =
+				`${20 * data.slice(headerCounter)[rowIndex].depth}px`;
+			if (rowFields.length === 1 ||
+					data.slice(headerCounter)[rowIndex].depth < rowFields.length - 1) {
+					firstColumnStyle.cursor = 'pointer';
+			}
+		}
+
 		const arrowStyle = (rowIndex) => {
 			if (checkIfInCollapsed(rowIndex)) {
 				return '▶';
@@ -86,9 +133,13 @@ export default class Table extends PureComponent {
 
 		return (
 			<div
-				className={classNames}
+				className="cell"
 				key={key}
-				style={Object.assign({}, firstColumnStyle, evenOddRowStyle, style)}
+				style={{
+					...firstColumnStyle,
+					...this.evenOddRowStyle({ rowIndex, columnIndex }),
+					...style,
+				}}
 				onClick={columnIndex === 0 ? onToggleRow.bind(this, rowIndex) : ''}
 			>
 		    <div className="cell-text-container">
@@ -96,8 +147,11 @@ export default class Table extends PureComponent {
   					{columnIndex === 0 ? arrowStyle(rowIndex) : ''}
   				</div>
   				<div className="cell-data">
-  					{`${data.length ?
-  						data.slice(headerCounter)[rowIndex].value[columnIndex] : ''}`}
+  					{
+  						data.length ?
+  							data.slice(headerCounter)[rowIndex].value[columnIndex] :
+  							''
+  					}
   				</div>
   			</div>
 			</div>
@@ -107,6 +161,7 @@ export default class Table extends PureComponent {
 	render() {
     const {
       headerCounter,
+      headerHeight,
       rowHeight,
       columnWidth,
       overscanColumnCount,
@@ -140,7 +195,6 @@ export default class Table extends PureComponent {
 			<section className="virtualized-table">
 				<div className="pivot-grid">
 					<section className='pivot-grid'>
-		        <ContentBox>
 		        <ScrollSync>
 		          {({
 								clientHeight,
@@ -160,7 +214,7 @@ export default class Table extends PureComponent {
 		                    left: 0,
 		                    top: 0,
 		                    color: colorPack.leftHeaderCellText,
-												height: rowHeight * headerCounter,
+												height: headerHeight * headerCounter,
 												width: columnWidth,
 		                  }}
 		                >
@@ -170,8 +224,8 @@ export default class Table extends PureComponent {
 		                    className={'HeaderGrid'}
 												style={{backgroundColor: colorPack.headerGridBackground}}
 		                    width={columnWidth}
-		                    height={rowHeight * headerCounter}
-		                    rowHeight={rowHeight}
+		                    height={headerHeight * headerCounter}
+		                    rowHeight={headerHeight}
 		                    columnWidth={columnWidth}
 		                    rowCount={headerCounter}
 		                    columnCount={1}
@@ -182,7 +236,7 @@ export default class Table extends PureComponent {
 		                  style={{
 		                    position: 'absolute',
 		                    left: 0,
-		                    top: rowHeight * headerCounter,
+		                    top: headerHeight * headerCounter,
 		                    color: colorPack.leftSideGridText,
 		                  }}
 		                >
@@ -212,7 +266,7 @@ export default class Table extends PureComponent {
 		                          style={{
 		                            color: colorPack.headerGridText,
                                 backgroundColor: colorPack.headerGridBackground,
-		                            height: rowHeight * headerCounter,
+		                            height: headerHeight * headerCounter,
 		                            width: width - scrollbarSize(),
 		                          }}
 		                        >
@@ -221,10 +275,10 @@ export default class Table extends PureComponent {
 		                            className="HeaderGrid"
 		                            columnWidth={columnWidth}
 		                            columnCount={columnCount}
-		                            height={rowHeight * headerCounter}
+		                            height={headerHeight * headerCounter}
 		                            overscanColumnCount={overscanColumnCount}
 		                            cellRenderer={this.renderHeaderCell}
-		                            rowHeight={rowHeight}
+		                            rowHeight={headerHeight}
 		                            rowCount={headerCounter}
 		                            scrollLeft={scrollLeft}
 		                            width={width - scrollbarSize()}
@@ -261,7 +315,6 @@ export default class Table extends PureComponent {
 		            )
 		          }}
 		        </ScrollSync>
-		      </ContentBox>
 		    </section>
 				</div>
 			</section>
