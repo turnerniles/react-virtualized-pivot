@@ -77,6 +77,9 @@ export default class Table extends PureComponent {
 		});
 
     this.bodyGrid.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
+    this.grid.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
+    this.header.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
+    this.leftHeader.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
 	}
 
 	setSelectedColumn(selectedColumn) {
@@ -155,7 +158,6 @@ export default class Table extends PureComponent {
 				key={key}
 				style={{
 					...style,
-					overflow: 'hidden',
 				}}
 			>
 				<div className="header-cell">
@@ -193,7 +195,6 @@ export default class Table extends PureComponent {
 				key={key}
 				style={{
 					...style,
-					overflow: 'hidden',
 				}}
 			>
 				<div className="header-cell">
@@ -342,7 +343,7 @@ export default class Table extends PureComponent {
 		                  <Grid
 		                    ref={(input) => { this.header = input; }}
 		                    cellRenderer={this.renderLeftHeaderCell}
-		                    className={'HeaderGrid'}
+		                    className="HeaderGrid"
 												style={{backgroundColor: colorPack.headerGridBackground}}
 		                    width={leftColumnWidth}
 		                    height={headerHeight * headerCounter}
@@ -368,7 +369,7 @@ export default class Table extends PureComponent {
 		                    cellRenderer={this.renderLeftSideCell}
 		                    columnWidth={leftColumnWidth}
 		                    columnCount={1}
-		                    className={'LeftSideGrid'}
+		                    className="LeftSideGrid"
                         style={{backgroundColor: colorPack.leftHeaderCellBackground}}
 		                    height={height - scrollbarSize()}
 		                    rowHeight={rowHeight}
