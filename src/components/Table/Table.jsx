@@ -61,20 +61,20 @@ export default class Table extends PureComponent {
 		} = this.state;
 
 		if (selectedColumn === 'left') {
-			return this.setState({
-				leftColumnWidth: leftColumnWidth + (ui.x - startPos),
+			this.setState({
+				leftColumnWidth: leftColumnWidth + ui.deltaX,
+			});
+		} else {
+			const newColumnWidths = [...columnWidths];
+
+			newColumnWidths[selectedColumn] = columnWidths[selectedColumn] + ui.deltaX;
+
+			console.log('newColumnWidths', newColumnWidths);
+
+			this.setState({
+				columnWidths: newColumnWidths,
 			});
 		}
-
-		const newColumnWidths = [...columnWidths];
-
-		newColumnWidths[selectedColumn - 1] = columnWidths[selectedColumn - 1] + (ui.x - startPos);
-
-		console.log('newColumnWidths', newColumnWidths);
-
-		this.setState({
-			columnWidths: newColumnWidths,
-		});
 
     this.bodyGrid.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
     this.grid.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
@@ -169,8 +169,7 @@ export default class Table extends PureComponent {
 				</div>
 				<Draggable
 					axis="x"
-					onStart={this.onStart}
-					onStop={this.onStop}
+					onDrag={this.onStop}
 				>
 					<div
 						className="column-sizer"
@@ -206,8 +205,7 @@ export default class Table extends PureComponent {
 				</div>
 				<Draggable
 					axis="x"
-					onStart={this.onStart}
-					onStop={this.onStop}
+					onDrag={this.onStop}
 				>
 					<div
 						className="column-sizer"
