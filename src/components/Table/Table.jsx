@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
 import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import QuickPivot from 'quick-pivot';
+import Draggable from 'react-draggable';
 
 import './styles.scss';
 
@@ -9,11 +10,41 @@ export default class Table extends PureComponent {
 	constructor(props) {
 		super(props);
 
+		this.state = {
+			columnWidths: Array(props.columnCount).fill(props.columnWidth),
+		};
+
+		this.getColumnWidth = this.getColumnWidth.bind(this);
+		this.onStart = this.onStart.bind(this);
+		this.onStop = this.onStop.bind(this);
+
 		this.evenOddRowStyle = this.evenOddRowStyle.bind(this);
 		this.renderBodyCell = this.renderBodyCell.bind(this);
     this.renderHeaderCell = this.renderHeaderCell.bind(this);
     this.renderLeftHeaderCell = this.renderLeftHeaderCell.bind(this);
     this.renderLeftSideCell = this.renderLeftSideCell.bind(this);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		console.log('receiving new props', nextProps);
+	}
+
+	getColumnWidth(index) {
+		console.log('updating column width?', index);
+		if (this.state.columnWidths.length === 0) return 0;
+		return this.state.columnWidths[index];
+	}
+
+	onStart(e, x, y) {
+		console.log('dragging started!', e);
+		console.log('x started!', x);
+		console.log('y started!', y);
+	}
+
+	onStop(e, x, y) {
+		console.log('dragging stoped!', e);
+		console.log('x stoped!', x);
+		console.log('y stoped!', y);
 	}
 
 	evenOddRowStyle({rowIndex = 0, columnIndex = 0}) {
@@ -80,23 +111,37 @@ export default class Table extends PureComponent {
 
 	renderLeftHeaderCell({ columnIndex, key, rowIndex, style }) {
 		const {
+			colorPack,
 			data,
 		} = this.props;
 
 		return (
 			<div
-				className="header-cell"
+				className="header-container"
 				key={key}
 				style={{
 					...style,
 					overflow: 'hidden',
 				}}
 			>
-				{
-					data.length ?
-						data[rowIndex].value[columnIndex] :
-						''
-				}
+				<div className="header-cell">
+					{
+						data.length ?
+							data[rowIndex].value[columnIndex] :
+							''
+					}
+				</div>
+				<Draggable
+					axis="x"
+					onStart={this.onStart}
+					onStop={this.onStop}
+				>
+					<div
+						className="column-sizer"
+						style={{backgroundColor: colorPack.columnResizer}}
+					>
+					</div>
+				</Draggable>
 			</div>
 		)
 	}
@@ -163,7 +208,6 @@ export default class Table extends PureComponent {
       headerCounter,
       headerHeight,
       rowHeight,
-      columnWidth,
       overscanColumnCount,
       overscanRowCount,
       rowCount,
@@ -215,7 +259,7 @@ export default class Table extends PureComponent {
 		                    top: 0,
 		                    color: colorPack.leftHeaderCellText,
 												height: headerHeight * headerCounter,
-												width: columnWidth,
+												width: this.getColumnWidth(0),
 		                  }}
 		                >
 		                  <Grid
@@ -223,10 +267,10 @@ export default class Table extends PureComponent {
 		                    cellRenderer={this.renderLeftHeaderCell}
 		                    className={'HeaderGrid'}
 												style={{backgroundColor: colorPack.headerGridBackground}}
-		                    width={columnWidth}
+		                    width={this.getColumnWidth(0)}
 		                    height={headerHeight * headerCounter}
 		                    rowHeight={headerHeight}
-		                    columnWidth={columnWidth}
+		                    columnWidth={this.getColumnWidth(0)}
 		                    rowCount={headerCounter}
 		                    columnCount={1}
 		                  />
@@ -245,7 +289,7 @@ export default class Table extends PureComponent {
 		                    overscanColumnCount={overscanColumnCount}
 		                    overscanRowCount={overscanRowCount}
 		                    cellRenderer={this.renderLeftSideCell}
-		                    columnWidth={columnWidth}
+		                    columnWidth={this.getColumnWidth(0)}
 		                    columnCount={1}
 		                    className={'LeftSideGrid'}
                         style={{backgroundColor: colorPack.leftHeaderCellBackground}}
@@ -253,7 +297,7 @@ export default class Table extends PureComponent {
 		                    rowHeight={rowHeight}
 		                    rowCount={rowCount === 0 ? 0 : (rowCount - headerCounter)}
 		                    scrollTop={scrollTop}
-		                    width={columnWidth}
+		                    width={this.getColumnWidth(0)}
 		                  />
 		                </div>
 		                <div className="GridColumn">
@@ -273,7 +317,7 @@ export default class Table extends PureComponent {
 		                          <Grid
 		                            ref={(input) => { this.grid = input; }}
 		                            className="HeaderGrid"
-		                            columnWidth={columnWidth}
+		                            columnWidth={this.getColumnWidth}
 		                            columnCount={columnCount}
 		                            height={headerHeight * headerCounter}
 		                            overscanColumnCount={overscanColumnCount}
@@ -295,7 +339,7 @@ export default class Table extends PureComponent {
 		                            ref={(input) => { this.bodyGrid = input; }}
 		                            className="BodyGrid"
                                 style={{backgroundColor: colorPack.bodyGridBackground}}
-		                            columnWidth={columnWidth}
+		                            columnWidth={this.getColumnWidth}
 		                            columnCount={columnCount}
 		                            height={height}
 		                            onScroll={onScroll}

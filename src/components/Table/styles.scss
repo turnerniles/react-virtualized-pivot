@@ -194,7 +194,7 @@ section.virtualized-table{
 	  .cell,
 	  .header-cell,
 	  .leftCell {
-	    width: 100%;
+	    width: calc(100% - 4px);
 	    height: 100%;
 	    display: flex;
 	    flex-direction: column;
@@ -207,7 +207,18 @@ section.virtualized-table{
 
 	  .header-cell {
 	  	justify-content: flex-start;
+
 	  }
+
+	  .header-container {
+	  	display: flex;
+	  	justify-content: space-between;
+	  }
+  	.column-sizer {
+  		width: 4px;
+  		height: 100%;
+  		cursor: col-resize;
+  	}
 
 	  .header-cell,
 	  .leftCell {
