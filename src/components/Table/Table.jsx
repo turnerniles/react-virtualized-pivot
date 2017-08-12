@@ -19,7 +19,6 @@ export default class Table extends PureComponent {
 
 		this.forceTableUpdate = this.forceTableUpdate.bind(this);
 		this.getColumnWidth = this.getColumnWidth.bind(this);
-		this.onStart = this.onStart.bind(this);
 		this.onStop = this.onStop.bind(this);
 		this.setSelectedColumn = this.setSelectedColumn.bind(this);
 
@@ -52,12 +51,6 @@ export default class Table extends PureComponent {
 		return this.state.columnWidths[index];
 	}
 
-	onStart(e, ui) {
-		this.setState({
-			startPos: ui.x,
-		});
-	}
-
 	onStop(e, ui) {
 		const {
 			columnWidths,
@@ -68,12 +61,12 @@ export default class Table extends PureComponent {
 
 		if (selectedColumn === 'left') {
 			this.setState({
-				leftColumnWidth: leftColumnWidth + (ui.x - startPos),
+				leftColumnWidth: leftColumnWidth + (ui.deltaX),
 			});
 		} else {
 			const newColumnWidths = [...columnWidths];
 
-			newColumnWidths[selectedColumn] = columnWidths[selectedColumn] + (ui.x - startPos);
+			newColumnWidths[selectedColumn] = columnWidths[selectedColumn] + (ui.deltaX);
 
 			this.setState({
 				columnWidths: newColumnWidths,
@@ -160,8 +153,7 @@ export default class Table extends PureComponent {
 				</div>
 				<Draggable
 					axis="x"
-					onStart={this.onStart}
-					onStop={this.onStop}
+					onDrag={this.onStop}
 					position={{ x: 0, y: 0 }}
 				>
 					<div
@@ -198,13 +190,12 @@ export default class Table extends PureComponent {
 				</div>
 				<Draggable
 					axis="x"
-					onStart={this.onStart}
-					onStop={this.onStop}
+					onDrag={this.onStop}
 					position={{ x: 0, y: 0 }}
 				>
 					<div
 						className="column-sizer"
-						style={{backgroundColor: colorPack.columnResizer}}
+						style={{ backgroundColor: colorPack.columnResizer }}
 						onMouseEnter={this.setSelectedColumn.bind(this, 'left')}
 					>
 					</div>

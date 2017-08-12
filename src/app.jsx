@@ -120,7 +120,7 @@ export default class App extends React.Component {
           data={this.state.data}
           selectedAggregationDimension={selectedAggregationDimension}
           colorPack={{
-            columnResizer: 'orange',
+            columnResizer: 'none',
             sortableFieldBackground: '#5F9EDF',
             sortableFieldText: '#fff',
             sortableContainerBackground: '#fff',

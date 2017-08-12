@@ -154,7 +154,7 @@ section.virtualized-table{
 	  }
 	  .HeaderGrid {
 	    width: 100%;
-	    overflow: visible !important;
+	    overflow: hidden !important;
 	  }
 	  .BodyGrid {
 	    width: 100%;
@@ -220,6 +220,7 @@ section.virtualized-table{
   		width: 4px;
   		height: 100%;
   		cursor: col-resize;
+  		transform: translate(0px, 0px) !important;
   	}
 
 	  .header-cell,
