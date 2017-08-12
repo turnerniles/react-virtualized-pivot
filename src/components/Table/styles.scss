@@ -146,7 +146,6 @@ section.virtualized-table{
 	    flex: 1 1 auto;
 	  }
 	  .LeftSideGridContainer {
-	    flex: 0 0 75px;
 	    z-index: 1;
 	  }
 
@@ -221,7 +220,6 @@ section.virtualized-table{
   		width: 4px;
   		height: 100%;
   		cursor: col-resize;
-  		z-index: 10;
   	}
 
 	  .header-cell,

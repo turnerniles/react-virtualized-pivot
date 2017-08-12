@@ -17,7 +17,7 @@ export default class Table extends PureComponent {
 			startPos: null,
 		};
 
-		console.log('this is state', this.state);
+		this.forceTableUpdate = this.forceTableUpdate.bind(this);
 		this.getColumnWidth = this.getColumnWidth.bind(this);
 		this.onStart = this.onStart.bind(this);
 		this.onStop = this.onStop.bind(this);
@@ -35,6 +35,15 @@ export default class Table extends PureComponent {
 		this.setState({
 			columnWidths: Array(nextProps.columnCount).fill(nextProps.columnWidth),
 		});
+
+		this.forceTableUpdate();
+	}
+
+	forceTableUpdate() {
+    this.bodyGrid.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
+    this.grid.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
+    this.header.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
+    this.leftHeader.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
 	}
 
 	getColumnWidth({ index = 0 }) {
@@ -45,14 +54,12 @@ export default class Table extends PureComponent {
 	}
 
 	onStart(e, ui) {
-		console.log('e', e, ui);
 		this.setState({
 			startPos: ui.x,
 		});
 	}
 
 	onStop(e, ui) {
-		console.log('ui end', e, ui);
 		const {
 			columnWidths,
 			leftColumnWidth,
@@ -62,12 +69,12 @@ export default class Table extends PureComponent {
 
 		if (selectedColumn === 'left') {
 			this.setState({
-				leftColumnWidth: leftColumnWidth + ui.deltaX,
+				leftColumnWidth: leftColumnWidth + (ui.x - startPos),
 			});
 		} else {
 			const newColumnWidths = [...columnWidths];
 
-			newColumnWidths[selectedColumn] = columnWidths[selectedColumn] + ui.deltaX;
+			newColumnWidths[selectedColumn] = columnWidths[selectedColumn] + (ui.x - startPos);
 
 			console.log('newColumnWidths', newColumnWidths);
 
@@ -76,14 +83,10 @@ export default class Table extends PureComponent {
 			});
 		}
 
-    this.bodyGrid.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
-    this.grid.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
-    this.header.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
-    this.leftHeader.recomputeGridSize({ columnIndex: 0, rowIndex: 0 });
+		this.forceTableUpdate();
 	}
 
 	setSelectedColumn(selectedColumn) {
-		console.log('setting column?', selectedColumn);
 		this.setState({ selectedColumn });
 	}
 
@@ -169,7 +172,9 @@ export default class Table extends PureComponent {
 				</div>
 				<Draggable
 					axis="x"
-					onDrag={this.onStop}
+					onStart={this.onStart}
+					onStop={this.onStop}
+					position={{ x: 0, y: 0 }}
 				>
 					<div
 						className="column-sizer"
@@ -205,7 +210,9 @@ export default class Table extends PureComponent {
 				</div>
 				<Draggable
 					axis="x"
-					onDrag={this.onStop}
+					onStart={this.onStart}
+					onStop={this.onStop}
+					position={{ x: 0, y: 0 }}
 				>
 					<div
 						className="column-sizer"
@@ -311,6 +318,8 @@ export default class Table extends PureComponent {
 
 		const height = (window.innerHeight - 240 - (headerCounter * 40));
 
+		console.log('leftColumnWidth', leftColumnWidth);
+
 		return(
 			<section className="virtualized-table">
 				<div className="pivot-grid">
@@ -330,9 +339,6 @@ export default class Table extends PureComponent {
 		                <div
 		                  className="LeftSideGridContainer"
 		                  style={{
-		                    position: 'absolute',
-		                    left: 0,
-		                    top: 0,
 		                    color: colorPack.leftHeaderCellText,
 												height: headerHeight * headerCounter,
 												width: leftColumnWidth,
