@@ -2,13 +2,15 @@ import React, { PureComponent } from 'react';
 import { List } from 'react-virtualized';
 import cn from 'classnames';
 import QuickPivot from 'quick-pivot';
-import Select from 'react-select-plus';
+import Select from 'react-select';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 import Table from '../Table/Table.jsx';
+import PropTypes from 'prop-types';
+import Menu from '../Menu/Menu.jsx';
 
 window.pivot = QuickPivot;
 
-import 'react-select-plus/dist/react-select-plus.css';
+import 'react-select/dist/react-select.css';
 import './styles.scss';
 
 export default class Pivot extends PureComponent {
@@ -425,24 +427,9 @@ export default class Pivot extends PureComponent {
 			fields,
 		} = this.state;
 
-    const colorPack = this.props.colorPack !== undefined ? this.props.colorPack :
-		{
-			sortableFieldBackground: '#5F9EDF',
-			sortableFieldText: '#fff',
-			sortableContainerBackground: '#fff',
-			selectorContainerTitleBackground: '#FF7373',
-			selectorContainerTitleText: '#fff',
-			leftHeaderCellBackground:'rgb(188, 57, 89)',
-			leftHeaderCellText:'#fff',
-			headerGridBackground:'rgb(51, 51, 51)',
-			headerGridText:'#fff',
-			leftSideGridBackground: 'rgb(188, 57, 89)',
-			leftSideGridText:'#fff',
-			bodyGridBackground: 'rgb(120, 54, 70)',
-			bodyGridText:'#fff',
-			evenRowBackground: '',
-			oddRowBackground: 'rgba(0, 0, 0, .1)',
-		};
+		const {
+			colorPack
+		} = this.props;
 
 		const height = (window.innerHeight - 240 - (headerCounter * 40))
 
@@ -587,6 +574,7 @@ export default class Pivot extends PureComponent {
 		return(
 			<section className="virtualized-pivot">
 				<div className="pivot-options">
+				<Menu></Menu>
 	       <div className="selectors-container">
 						<div className="select-container">
 	          <div
@@ -730,4 +718,30 @@ export default class Pivot extends PureComponent {
 			</section>
 		);
 	}
+}
+
+Pivot.propTypes = {
+	colorPack: PropTypes.object,
+	data: PropTypes.array.isRequired,
+	selectedAggregationDimension: PropTypes.string,
+}
+
+Pivot.defaultProps = {
+	colorPack: {
+		sortableFieldBackground: '#5F9EDF',
+		sortableFieldText: '#fff',
+		sortableContainerBackground: '#fff',
+		selectorContainerTitleBackground: '#FF7373',
+		selectorContainerTitleText: '#fff',
+		leftHeaderCellBackground:'rgb(188, 57, 89)',
+		leftHeaderCellText:'#fff',
+		headerGridBackground:'rgb(51, 51, 51)',
+		headerGridText:'#fff',
+		leftSideGridBackground: 'rgb(188, 57, 89)',
+		leftSideGridText:'#fff',
+		bodyGridBackground: 'rgb(120, 54, 70)',
+		bodyGridText:'#fff',
+		evenRowBackground: '',
+		oddRowBackground: 'rgba(0, 0, 0, .1)',
+	},
 }

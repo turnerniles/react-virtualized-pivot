@@ -1,9 +1,9 @@
 import React from 'react';
 import Pivot from './components/Pivot/Pivot.jsx';
-import Select from 'react-select-plus';
+import Select from 'react-select';
 import Papa from 'papaparse/papaparse.js';
 
-import 'react-select-plus/dist/react-select-plus.css';
+import 'react-select/dist/react-select.css';
 import '../styles/index.scss';
 
 var data = require('./sampledata/data.js');

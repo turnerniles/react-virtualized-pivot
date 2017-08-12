@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
 import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import QuickPivot from 'quick-pivot';
+import PropTypes from 'prop-types';
 
 import './styles.scss';
 
@@ -168,26 +169,8 @@ export default class Table extends PureComponent {
       overscanRowCount,
       rowCount,
       columnCount,
+			colorPack,
 		} = this.props;
-
-    const colorPack = this.props.colorPack !== undefined ? this.props.colorPack :
-		{
-			sortableFieldBackground: '#5F9EDF',
-			sortableFieldText: '#fff',
-			sortableContainerBackground: '#fff',
-			selectorContainerTitleBackground: '#FF7373',
-			selectorContainerTitleText: '#fff',
-			leftHeaderCellBackground:'rgb(188, 57, 89)',
-			leftHeaderCellText:'#fff',
-			headerGridBackground:'rgb(51, 51, 51)',
-			headerGridText:'#fff',
-			leftSideGridBackground: 'rgb(188, 57, 89)',
-			leftSideGridText:'#fff',
-			bodyGridBackground: 'rgb(120, 54, 70)',
-			bodyGridText:'#fff',
-			evenRowBackground: '',
-			oddRowBackground: 'rgba(0, 0, 0, .1)',
-		};
 
 		const height = (window.innerHeight - 240 - (headerCounter * 40));
 
@@ -320,4 +303,40 @@ export default class Table extends PureComponent {
 			</section>
 		);
 	}
+}
+
+Table.propTypes = {
+	colorPack: PropTypes.object,
+	headerHeight: PropTypes.number.isRequired,
+	rowHeight: PropTypes.number.isRequired,
+	headerCounter: PropTypes.number.isRequired,
+	columnWidth: PropTypes.number.isRequired,
+	overscanColumnCount: PropTypes.number.isRequired,
+	overscanRowCount: PropTypes.number.isRequired,
+	data: PropTypes.array.isRequired,
+	onToggleRow: PropTypes.func.isRequired,
+	checkIfInCollapsed: PropTypes.func.isRequired,
+	rowFields: PropTypes.array.isRequired,
+	rowCount: PropTypes.number.isRequired,
+	columnCount: PropTypes.number.isRequired,
+}
+
+Table.defaultProps = {
+	colorPack: {
+		sortableFieldBackground: '#5F9EDF',
+		sortableFieldText: '#fff',
+		sortableContainerBackground: '#fff',
+		selectorContainerTitleBackground: '#FF7373',
+		selectorContainerTitleText: '#fff',
+		leftHeaderCellBackground:'rgb(188, 57, 89)',
+		leftHeaderCellText:'#fff',
+		headerGridBackground:'rgb(51, 51, 51)',
+		headerGridText:'#fff',
+		leftSideGridBackground: 'rgb(188, 57, 89)',
+		leftSideGridText:'#fff',
+		bodyGridBackground: 'rgb(120, 54, 70)',
+		bodyGridText:'#fff',
+		evenRowBackground: '',
+		oddRowBackground: 'rgba(0, 0, 0, .1)',
+	},
 }
