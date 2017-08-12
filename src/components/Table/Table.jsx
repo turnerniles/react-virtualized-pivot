@@ -32,7 +32,7 @@ export default class Table extends PureComponent {
 
 	componentWillReceiveProps(nextProps) {
 		this.setState({
-			columnWidths: Array(nextProps.columnCount).fill(nextProps.columnWidth),
+			columnWidths: Array(nextProps.columnCount > 1 ? nextProps.columnCount - 1 : 1).fill(nextProps.columnWidth),
 		});
 
 		this.forceTableUpdate();
@@ -284,6 +284,8 @@ export default class Table extends PureComponent {
 		const {
 			leftColumnWidth,
 		} = this.state;
+
+		console.log('columnWidths', this.state.columnWidths);
 
     const colorPack = this.props.colorPack !== undefined ? this.props.colorPack :
 		{
