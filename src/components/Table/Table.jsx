@@ -31,7 +31,6 @@ export default class Table extends PureComponent {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		console.log('receiving new props', nextProps);
 		this.setState({
 			columnWidths: Array(nextProps.columnCount).fill(nextProps.columnWidth),
 		});
@@ -76,8 +75,6 @@ export default class Table extends PureComponent {
 
 			newColumnWidths[selectedColumn] = columnWidths[selectedColumn] + (ui.x - startPos);
 
-			console.log('newColumnWidths', newColumnWidths);
-
 			this.setState({
 				columnWidths: newColumnWidths,
 			});
@@ -110,11 +107,6 @@ export default class Table extends PureComponent {
 	}
 
 	renderBodyCell({ columnIndex, key, rowIndex, style }) {
-		/** first column is for pivoted row headers */
-		if (columnIndex < 1) {
-			return '';
-		}
-
     const {
       data,
       onToggleRow,
@@ -135,8 +127,8 @@ export default class Table extends PureComponent {
 		    <div className="cell-text-container">
   				<div className="body-cell-data">
   					{
-  						data.length ?
-  							data.slice(headerCounter)[rowIndex].value[columnIndex] :
+  						data.length > 0 ?
+  							data.slice(headerCounter)[rowIndex].value[columnIndex + 1] :
   							''
   					}
   				</div>
@@ -146,10 +138,6 @@ export default class Table extends PureComponent {
 	}
 
 	renderHeaderCell({ columnIndex, key, rowIndex, style }) {
-		if (columnIndex < 1) {
-			return
-		}
-
 		const {
 			colorPack,
 			data,
@@ -165,8 +153,8 @@ export default class Table extends PureComponent {
 			>
 				<div className="header-cell">
 					{
-						data.length ?
-							data[rowIndex].value[columnIndex] :
+						data.length > 0 ?
+							data[rowIndex].value[columnIndex + 1] :
 							''
 					}
 				</div>
@@ -318,8 +306,6 @@ export default class Table extends PureComponent {
 
 		const height = (window.innerHeight - 240 - (headerCounter * 40));
 
-		console.log('leftColumnWidth', leftColumnWidth);
-
 		return(
 			<section className="virtualized-table">
 				<div className="pivot-grid">
@@ -400,7 +386,7 @@ export default class Table extends PureComponent {
 		                            ref={(input) => { this.grid = input; }}
 		                            className="HeaderGrid"
 		                            columnWidth={this.getColumnWidth}
-		                            columnCount={columnCount}
+		                            columnCount={columnCount > 0 ? columnCount - 1 : 0}
 		                            height={headerHeight * headerCounter}
 		                            overscanColumnCount={overscanColumnCount}
 		                            cellRenderer={this.renderHeaderCell}
@@ -422,7 +408,7 @@ export default class Table extends PureComponent {
 		                            className="BodyGrid"
                                 style={{backgroundColor: colorPack.bodyGridBackground}}
 		                            columnWidth={this.getColumnWidth}
-		                            columnCount={columnCount}
+		                            columnCount={columnCount > 0 ? columnCount - 1 : 0}
 		                            height={height}
 		                            onScroll={onScroll}
 		                            overscanColumnCount={overscanColumnCount}
