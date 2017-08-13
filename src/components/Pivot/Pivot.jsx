@@ -423,7 +423,10 @@ export default class Pivot extends PureComponent {
 			rowFields,
 			data,
 			fields,
+			pivot,
 		} = this.state;
+
+		console.log('pivot', this.state.pivot);
 
     const colorPack = this.props.colorPack !== undefined ? this.props.colorPack :
 		{
@@ -710,7 +713,8 @@ export default class Pivot extends PureComponent {
 				<div className="pivot-grid">
 					<section className="pivot-grid">
 						<Table
-							onGridCellClick={({rowIndex, columnIndex}) => console.log('grid', rowIndex, columnIndex)}
+							collapsedRows={pivot.collapsedRows}
+							onGridCellClick={({rowIndex, columnIndex, children}) => console.log('grid', rowIndex, columnIndex, children)}
 							onGridHeaderCellClick={({rowIndex, columnIndex}) => console.log('header', rowIndex, columnIndex)}
 							onLeftGridCellClick={({rowIndex, columnIndex}) => console.log('leftGrid', rowIndex, columnIndex)}
 							onLeftHeaderCellClick={({rowIndex, columnIndex}) => console.log('leftHeader', rowIndex, columnIndex)}

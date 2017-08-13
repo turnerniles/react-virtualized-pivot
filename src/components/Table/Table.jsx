@@ -102,12 +102,44 @@ export default class Table extends PureComponent {
 	renderBodyCell({ columnIndex, key, rowIndex, style }) {
     const {
       checkIfInCollapsed,
+      collapsedRows,
       data,
       headerCounter,
       onGridCellClick,
       onToggleRow,
       rowFields,
     } = this.props;
+
+    function getCollapsedRows(rowNum) {
+	    const collapsedData = rowNum in collapsedRows ? collapsedRows[rowNum].table : [];
+
+	    return collapsedData.reduce((acc, { type, value, row }) => {
+	    	if (type === 'data') return acc.concat([value]);
+	    	return acc.concat(getCollapsedRows(row));
+	    }, []);
+    }
+
+    function getChildren(rowIndex, acc, startingDepth) {
+    	const dataRow = data.slice(headerCounter)[rowIndex];
+
+    	if (!dataRow || (acc.length > 0 && startingDepth >= dataRow.depth)) {
+    		return acc;
+    	}
+
+    	if (dataRow.type === 'data') {
+    		return getChildren(rowIndex + 1, acc.concat([dataRow.value]), startingDepth);
+    	}
+
+			return getChildren(rowIndex + 1, acc.concat(getCollapsedRows(dataRow.row)), startingDepth);
+    }
+
+    function onClick() {
+	    const children = data.length > 0 ?
+	    	getChildren(rowIndex, [], data.slice(headerCounter)[rowIndex].depth) :
+	    	[];
+
+    	onGridCellClick({ rowIndex, columnIndex, children: children });
+    }
 
 		return (
 			<div
@@ -117,7 +149,7 @@ export default class Table extends PureComponent {
 					...this.evenOddRowStyle({ rowIndex, columnIndex }),
 					...style,
 				}}
-				onClick={onGridCellClick.bind(this, { rowIndex, columnIndex })}
+				onClick={onClick}
 			>
 		    <div className="cell-text-container">
   				<div className="body-cell-data">
@@ -242,7 +274,7 @@ export default class Table extends PureComponent {
 		}
 
 		function onClick() {
-			columnIndex === 0 ? onToggleRow.bind(this, rowIndex) : '';
+			columnIndex === 0 ? onToggleRow.call(null, rowIndex) : '';
 			onLeftGridCellClick({ rowIndex, columnIndex });
 		}
 
@@ -287,8 +319,6 @@ export default class Table extends PureComponent {
 		const {
 			leftColumnWidth,
 		} = this.state;
-
-		console.log('columnWidths', this.state.columnWidths);
 
     const colorPack = this.props.colorPack !== undefined ? this.props.colorPack :
 		{
