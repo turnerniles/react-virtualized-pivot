@@ -107,38 +107,53 @@ export default class Table extends PureComponent {
       headerCounter,
       onGridCellClick,
       onToggleRow,
+      rawData,
       rowFields,
     } = this.props;
 
-    function getCollapsedRows(rowNum) {
-	    const collapsedData = rowNum in collapsedRows ? collapsedRows[rowNum].table : [];
+    function getCollapsedRows(rowNum, dataStr) {
+	    const rows = rowNum in collapsedRows ? collapsedRows[rowNum].table : [];
+	    const collapsedData = rowNum in collapsedRows ? collapsedRows[rowNum][dataStr] : [];
 
-	    return collapsedData.reduce((acc, { type, value, row }) => {
+	    return collapsedData.reduce((acc, { type, value }, index) => {
+	    	const row = rows[index].row;
+
 	    	if (type === 'data') return acc.concat([value]);
-	    	return acc.concat(getCollapsedRows(row));
+	    	return acc.concat(getCollapsedRows(row, dataStr));
 	    }, []);
     }
 
     function getChildren(rowIndex, acc, startingDepth) {
     	const dataRow = data.slice(headerCounter)[rowIndex];
+    	const rawDataRow = rawData.slice(headerCounter)[rowIndex];
 
-    	if (!dataRow || (acc.length > 0 && startingDepth >= dataRow.depth)) {
+    	if (!dataRow || (acc.children.length > 0 && startingDepth >= dataRow.depth)) {
     		return acc;
     	}
 
     	if (dataRow.type === 'data') {
-    		return getChildren(rowIndex + 1, acc.concat([dataRow.value]), startingDepth);
+    		const obj = {
+    			children: acc.children.concat([dataRow.value]),
+    			childrenData: acc.childrenData.concat([rawDataRow.value]),
+    		};
+
+    		return getChildren(rowIndex + 1, obj, startingDepth);
     	}
 
-			return getChildren(rowIndex + 1, acc.concat(getCollapsedRows(dataRow.row)), startingDepth);
+    	const obj = {
+    		children: acc.children.concat(getCollapsedRows(dataRow.row, 'table')),
+    		childrenData: acc.children.concat(getCollapsedRows(dataRow.row, 'rawData')),
+    	}
+
+			return getChildren(rowIndex + 1, obj, startingDepth);
     }
 
     function onClick() {
-	    const children = data.length > 0 ?
-	    	getChildren(rowIndex, [], data.slice(headerCounter)[rowIndex].depth) :
+	    const { children, childrenData } = data.length > 0 ?
+	    	getChildren(rowIndex, {children: [], childrenData: []}, data.slice(headerCounter)[rowIndex].depth) :
 	    	[];
 
-    	onGridCellClick({ rowIndex, columnIndex, children: children });
+    	onGridCellClick({ rowIndex, columnIndex, children, childrenData });
     }
 
 		return (
