@@ -80,7 +80,7 @@ export default class Table extends PureComponent {
 		this.setState({ selectedColumn });
 	}
 
-	evenOddRowStyle({rowIndex = 0, columnIndex = 0}) {
+	evenOddRowStyle({ rowIndex = 0, columnIndex = 0 }) {
 		const {
 			colorPack: {
 				evenRowBackground,
@@ -101,11 +101,12 @@ export default class Table extends PureComponent {
 
 	renderBodyCell({ columnIndex, key, rowIndex, style }) {
     const {
+      checkIfInCollapsed,
       data,
+      headerCounter,
+      onGridCellClick,
       onToggleRow,
       rowFields,
-      checkIfInCollapsed,
-      headerCounter,
     } = this.props;
 
 		return (
@@ -116,6 +117,7 @@ export default class Table extends PureComponent {
 					...this.evenOddRowStyle({ rowIndex, columnIndex }),
 					...style,
 				}}
+				onClick={onGridCellClick.bind(this, { rowIndex, columnIndex })}
 			>
 		    <div className="cell-text-container">
   				<div className="body-cell-data">
@@ -134,12 +136,14 @@ export default class Table extends PureComponent {
 		const {
 			colorPack,
 			data,
+			onGridHeaderCellClick,
 		} = this.props;
 
 		return (
 			<div
 				className="header-container"
 				key={key}
+				onClick={onGridHeaderCellClick.bind(this, { rowIndex, columnIndex })}
 				style={{
 					...style,
 				}}
@@ -171,12 +175,14 @@ export default class Table extends PureComponent {
 		const {
 			colorPack,
 			data,
+			onLeftHeaderCellClick
 		} = this.props;
 
 		return (
 			<div
 				className="header-container"
 				key={key}
+				onClick={onLeftHeaderCellClick.bind(this, { rowIndex, columnIndex })}
 				style={{
 					...style,
 				}}
@@ -206,11 +212,12 @@ export default class Table extends PureComponent {
 
 	renderLeftSideCell({ columnIndex, key, rowIndex, style }) {
     const {
+      checkIfInCollapsed,
       data,
+      headerCounter,
+      onLeftGridCellClick,
       onToggleRow,
       rowFields,
-      checkIfInCollapsed,
-      headerCounter,
     } = this.props;
 
 		const firstColumnStyle = {};
@@ -234,6 +241,11 @@ export default class Table extends PureComponent {
 			return '';
 		}
 
+		function onClick() {
+			columnIndex === 0 ? onToggleRow.bind(this, rowIndex) : '';
+			onLeftGridCellClick({ rowIndex, columnIndex });
+		}
+
 		return (
 			<div
 				className="cell"
@@ -243,7 +255,7 @@ export default class Table extends PureComponent {
 					...this.evenOddRowStyle({ rowIndex, columnIndex }),
 					...style,
 				}}
-				onClick={columnIndex === 0 ? onToggleRow.bind(this, rowIndex) : ''}
+				onClick={onClick}
 			>
 		    <div className="cell-text-container">
   				<div className="arrow">

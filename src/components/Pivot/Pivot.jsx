@@ -710,6 +710,10 @@ export default class Pivot extends PureComponent {
 				<div className="pivot-grid">
 					<section className="pivot-grid">
 						<Table
+							onGridCellClick={({rowIndex, columnIndex}) => console.log('grid', rowIndex, columnIndex)}
+							onGridHeaderCellClick={({rowIndex, columnIndex}) => console.log('header', rowIndex, columnIndex)}
+							onLeftGridCellClick={({rowIndex, columnIndex}) => console.log('leftGrid', rowIndex, columnIndex)}
+							onLeftHeaderCellClick={({rowIndex, columnIndex}) => console.log('leftHeader', rowIndex, columnIndex)}
 							colorPack={colorPack}
 							headerHeight={headerHeight}
 							rowHeight={rowHeight}
