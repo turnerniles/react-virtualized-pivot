@@ -717,7 +717,7 @@ export default class Pivot extends PureComponent {
 							rawData={pivot.data.rawData}
 							onGridCellClick={({rowIndex, columnIndex, children, childrenData}) => console.log('grid', rowIndex, columnIndex, children, childrenData)}
 							onGridHeaderCellClick={({rowIndex, columnIndex}) => console.log('header', rowIndex, columnIndex)}
-							onLeftGridCellClick={({rowIndex, columnIndex}) => console.log('leftGrid', rowIndex, columnIndex)}
+							onLeftGridCellClick={({rowIndex, columnIndex, children, childrenData}) => console.log('grid', rowIndex, columnIndex, children, childrenData)}
 							onLeftHeaderCellClick={({rowIndex, columnIndex}) => console.log('leftHeader', rowIndex, columnIndex)}
 							colorPack={colorPack}
 							headerHeight={headerHeight}

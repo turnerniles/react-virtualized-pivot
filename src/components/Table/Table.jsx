@@ -118,7 +118,7 @@ export default class Table extends PureComponent {
 	    return collapsedData.reduce((acc, { type, value }, index) => {
 	    	const row = rows[index].row;
 
-	    	if (type === 'data') return acc.concat([value]);
+	    	if (type === 'data') return acc.concat([value.slice(0, 1).concat([value[columnIndex + 1]])]);
 	    	return acc.concat(getCollapsedRows(row, dataStr));
 	    }, []);
     }
@@ -133,8 +133,8 @@ export default class Table extends PureComponent {
 
     	if (dataRow.type === 'data') {
     		const obj = {
-    			children: acc.children.concat([dataRow.value]),
-    			childrenData: acc.childrenData.concat([rawDataRow.value]),
+    			children: acc.children.concat([dataRow.value.slice(0, 1).concat([dataRow.value[columnIndex + 1]])]),
+    			childrenData: acc.childrenData.concat([rawDataRow.value.slice(0, 1).concat([rawDataRow.value[columnIndex + 1]])]),
     		};
 
     		return getChildren(rowIndex + 1, obj, startingDepth);
@@ -260,12 +260,61 @@ export default class Table extends PureComponent {
 	renderLeftSideCell({ columnIndex, key, rowIndex, style }) {
     const {
       checkIfInCollapsed,
+      collapsedRows,
       data,
       headerCounter,
       onLeftGridCellClick,
       onToggleRow,
+      rawData,
       rowFields,
     } = this.props;
+
+    function getCollapsedRows(rowNum, dataStr) {
+	    const rows = rowNum in collapsedRows ? collapsedRows[rowNum].table : [];
+	    const collapsedData = rowNum in collapsedRows ? collapsedRows[rowNum][dataStr] : [];
+
+	    return collapsedData.reduce((acc, { type, value }, index) => {
+	    	const row = rows[index].row;
+
+	    	if (type === 'data') return acc.concat([value]);
+	    	return acc.concat(getCollapsedRows(row, dataStr));
+	    }, []);
+    }
+
+    function getChildren(rowIndex, acc, startingDepth) {
+    	const dataRow = data.slice(headerCounter)[rowIndex];
+    	const rawDataRow = rawData.slice(headerCounter)[rowIndex];
+
+    	if (!dataRow || (acc.children.length > 0 && startingDepth >= dataRow.depth)) {
+    		return acc;
+    	}
+
+    	if (dataRow.type === 'data') {
+    		const obj = {
+    			children: acc.children.concat([dataRow.value]),
+    			childrenData: acc.childrenData.concat([rawDataRow.value]),
+    		};
+
+    		return getChildren(rowIndex + 1, obj, startingDepth);
+    	}
+
+    	const obj = {
+    		children: acc.children.concat(getCollapsedRows(dataRow.row, 'table')),
+    		childrenData: acc.children.concat(getCollapsedRows(dataRow.row, 'rawData')),
+    	}
+
+			return getChildren(rowIndex + 1, obj, startingDepth);
+    }
+
+    function onClick() {
+    	if (columnIndex === 0) onToggleRow(rowIndex);
+
+	    const { children, childrenData } = data.length > 0 ?
+	    	getChildren(rowIndex, {children: [], childrenData: []}, data.slice(headerCounter)[rowIndex].depth) :
+	    	[];
+
+    	onLeftGridCellClick({ rowIndex, columnIndex, children, childrenData });
+    }
 
 		const firstColumnStyle = {};
 
@@ -286,11 +335,6 @@ export default class Table extends PureComponent {
 				return '▼';
 			}
 			return '';
-		}
-
-		function onClick() {
-			columnIndex === 0 ? onToggleRow.call(null, rowIndex) : '';
-			onLeftGridCellClick({ rowIndex, columnIndex });
 		}
 
 		return (
