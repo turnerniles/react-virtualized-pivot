@@ -280,7 +280,7 @@ export default class Table extends PureComponent {
 			<div
 				className="header-container"
 				key={key}
-				onClick={onLeftHeaderCellClick.bind(this, { rowIndex, columnIndex })}
+				onClick={onLeftHeaderCellClick}
 				style={{
 					...style,
 				}}
@@ -316,6 +316,7 @@ export default class Table extends PureComponent {
       headerCounter,
       onLeftGridCellClick,
       onToggleRow,
+      originalArgs,
       rawData,
       rowFields,
     } = this.props;
@@ -357,6 +358,32 @@ export default class Table extends PureComponent {
 			return getChildren(rowIndex + 1, obj, startingDepth);
     }
 
+    function getRowHeaders(rowIndex) {
+    	if (originalArgs.rows.length === 0) return {};
+
+    	const slicedData = data.slice(headerCounter);
+    	const { value, depth } = slicedData[rowIndex];
+    	const acc = { [originalArgs.rows[depth]]: value[0] };
+    	let nextDepth = depth - 1;
+    	let counter = rowIndex - 1;
+
+    	while (nextDepth >= 0) {
+    		let nextValue = null;
+
+    		while (nextValue === null) {
+    			if(slicedData[counter].depth === nextDepth) {
+    				nextValue = slicedData[counter].value[0]
+    			}
+    			counter--;
+    		}
+
+    		acc[originalArgs.rows[nextDepth]] = nextValue;
+    		nextDepth--;
+    	}
+
+    	return acc;
+    }
+
     function onClick() {
     	if (columnIndex === 0) onToggleRow(rowIndex);
 
@@ -364,7 +391,9 @@ export default class Table extends PureComponent {
 	    	getChildren(rowIndex, {children: [], childrenData: []}, data.slice(headerCounter)[rowIndex].depth) :
 	    	[];
 
-    	onLeftGridCellClick({ rowIndex, columnIndex, children, childrenData });
+			const rowHeaders = getRowHeaders(rowIndex);
+
+    	onLeftGridCellClick({ rowIndex, columnIndex, children, childrenData, rowHeaders });
     }
 
 		const firstColumnStyle = {};
