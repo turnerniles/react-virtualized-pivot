@@ -107,6 +107,7 @@ export default class Table extends PureComponent {
       headerCounter,
       onGridCellClick,
       onToggleRow,
+      originalArgs,
       rawData,
       rowFields,
     } = this.props;
@@ -142,10 +143,50 @@ export default class Table extends PureComponent {
 
     	const obj = {
     		children: acc.children.concat(getCollapsedRows(dataRow.row, 'table')),
-    		childrenData: acc.children.concat(getCollapsedRows(dataRow.row, 'rawData')),
+    		childrenData: acc.childrenData.concat(getCollapsedRows(dataRow.row, 'rawData')),
     	}
 
 			return getChildren(rowIndex + 1, obj, startingDepth);
+    }
+
+    function getRowHeaders(rowIndex) {
+    	if (originalArgs.rows.length === 0) return {};
+
+    	const slicedData = data.slice(headerCounter);
+    	const { value, depth } = slicedData[rowIndex];
+    	const acc = { [originalArgs.rows[depth]]: value[0] };
+    	let nextDepth = depth - 1;
+    	let counter = rowIndex - 1;
+
+    	while (nextDepth >= 0) {
+    		let nextValue = null;
+
+    		while (nextValue === null) {
+    			if(slicedData[counter].depth === nextDepth) {
+    				nextValue = slicedData[counter].value[0]
+    			}
+    			counter--;
+    		}
+
+    		acc[originalArgs.rows[nextDepth]] = nextValue;
+    		nextDepth--;
+    	}
+
+    	return acc;
+    }
+
+    function getColumnHeaders(columnIndex) {
+    	if (originalArgs.cols.length === 0) return {};
+
+    	let currRow = 0;
+    	const acc = {};
+
+    	while (data[currRow].type === 'colHeader') {
+    		acc[originalArgs.cols[currRow]] = data[currRow].value[columnIndex];
+    		currRow++;
+    	}
+
+    	return acc;
     }
 
     function onClick() {
@@ -153,7 +194,17 @@ export default class Table extends PureComponent {
 	    	getChildren(rowIndex, {children: [], childrenData: []}, data.slice(headerCounter)[rowIndex].depth) :
 	    	[];
 
-    	onGridCellClick({ rowIndex, columnIndex, children, childrenData });
+	    const rowHeaders = getRowHeaders(rowIndex);
+	    const columnHeaders = getColumnHeaders(columnIndex + 1);
+
+    	onGridCellClick({
+    		children,
+    		childrenData,
+    		columnHeaders,
+    		columnIndex,
+    		rowHeaders,
+    		rowIndex,
+    	});
     }
 
 		return (
