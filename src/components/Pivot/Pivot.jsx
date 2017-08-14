@@ -3,7 +3,6 @@ import { List } from 'react-virtualized';
 import cn from 'classnames';
 import QuickPivot from 'quick-pivot';
 import Select from 'react-select';
-import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 import Table from '../Table/Table.jsx';
 import PropTypes from 'prop-types';
 import Menu from '../Menu/Menu.jsx';
@@ -425,6 +424,7 @@ export default class Pivot extends PureComponent {
 			rowFields,
 			data,
 			fields,
+			colFields,
 		} = this.state;
 
 		const {
@@ -441,260 +441,25 @@ export default class Pivot extends PureComponent {
 			{ value: 'average', label: 'average' },
 		];
 
-		//We are not using deconstructed state consts here due to
-		// react-sortablejs bug
-		const fieldsRenderer = fields.length ? fields.map((field, index) =>
-			{ return (
-				<li
-					key={index}
-					data-id={field}
-          style={{
-            backgroundColor: colorPack.sortableFieldBackground,
-            color: colorPack.sortableFieldText
-          }}
-				>
-					{(currentValues.length > 0 && currentFilter === field) &&
-						<div
-							className="filter-menu"
-							style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
-							<div className="filters-container">
-	  						<List
-	  							ref='List'
-	  							className={'virtualized-list'}
-	  							height={80}
-	  							overscanRowCount={10}
-	  							rowCount={currentValues.length}
-	  							rowHeight={20}
-	  							rowRenderer={this.listRowRenderer}
-	  							width={100}
-	  						/>
-						 	</div>
-						<div onClick={this.submitFilters} className="filter-submit">Submit</div>
-					</div>
-					}
-				<div className="inner-filter-container">
-					<div className="filter-text">
-					{field}
-					</div>
-					<div
-	  				className="filter-button"
-	  				onClick={this.showFilterMenu.bind(this, field)}
-	  			>
-	  				✎
-	  			</div>
-				</div>
-			</li>
-			)}
-		) : ''
-		const rowFieldsRender = rowFields.map((field, index) =>
-			(
-				<li
-					key={index}
-					data-id={field}
-          style={{
-            backgroundColor: colorPack.sortableFieldBackground,
-            color: colorPack.sortableFieldText
-          }}
-				>
-				<div className="inner-filter-container">
-					<div className="filter-text">
-					{field}
-					</div>
-					<div
-	  				className="filter-button"
-	  				onClick={this.showFilterMenu.bind(this, field)}
-	  			>
-	  				✎
-	  			</div>
-				</div>
-				{(currentValues.length > 0 && currentFilter === field) &&
-					<div
-						className="filter-menu"
-						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
-						<div className="filters-container">
-							<List
-  							ref='List'
-  							className={'virtualized-list'}
-  							height={80}
-  							overscanRowCount={10}
-  							rowCount={currentValues.length}
-  							rowHeight={20}
-  							rowRenderer={this.listRowRenderer}
-  							width={100}
-  						/>
-						</div>
-					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
-				</div>
-				}
-			</li>
-		));
-
-		const colFieldsRender = this.state.colFields.map((field, index) =>
-			(
-				<li
-					key={index}
-					data-id={field}
-          style={{
-            backgroundColor: colorPack.sortableFieldBackground,
-            color: colorPack.sortableFieldText
-          }}
-				>
-				<div className="inner-filter-container">
-					<div className="filter-text">
-					{field}
-					</div>
-					<div
-	  				className="filter-button"
-	  				onClick={this.showFilterMenu.bind(this, field)}
-	  			>
-	  				✎
-	  			</div>
-				</div>
-				{(currentValues.length > 0 && currentFilter === field) &&
-					<div
-						className="filter-menu"
-						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
-						<div className="filters-container">
-							<List
-  							ref='List'
-  							className={'virtualized-list'}
-  							height={80}
-  							overscanRowCount={10}
-  							rowCount={currentValues.length}
-  							rowHeight={20}
-  							rowRenderer={this.listRowRenderer}
-  							width={100}
-  						/>
-						</div>
-					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
-				</div>
-				}
-			</li>
-		));
 		return(
 			<section className="virtualized-pivot">
-				<div className="pivot-options">
-				<Menu></Menu>
-	       <div className="selectors-container">
-						<div className="select-container">
-	          <div
-              className="title"
-              style={{
-                'backgroundColor': colorPack.selectorContainerTitleBackground,
-                'color': colorPack.selectorContainerTitleText,
-              }}
-            >
-              Aggregation Type
-            </div>
-							<Select
-							    name="Aggregation Type"
-									value={selectedAggregationType}
-							    options={aggregationTypes}
-							    onChange={this.onSelectAggregationType}
-									menuContainerStyle={{ zIndex: 2 }}
-									clearable={false}
-							/>
-         	</div>
-
-         	<div className="select-container">
-            <div
-              className="title"
-              style={{
-                'backgroundColor': colorPack.selectorContainerTitleBackground,
-                'color': colorPack.selectorContainerTitleText,
-              }}
-            >
-              Aggregation Dimension
-            </div>
-							<Select
-									name="Aggregation Type"
-									value={selectedAggregationDimension}
-									options={aggregationDimensions}
-									onChange={this.onSelectAggregationDimension}
-									menuContainerStyle={{ zIndex: 2 }}
-									clearable={false}
-							/>
-	      	</div>
-	       </div>
-
-				 <div className="fields-drag-container">
-						<div className="fields">
-              <div
-                className="title"
-                style={{
-                  'backgroundColor': colorPack.selectorContainerTitleBackground,
-                  'color': colorPack.selectorContainerTitleText,
-                }}
-              >
-                Fields
-              </div>
-			        <ReactSortable
-								className="sortable-container block__list block__list_tags"
-                style={{backgroundColor: colorPack.sortableContainerBackground}}
-								onChange={fields => this.setState({fields})}
-		            options={{
-		              group: 'shared',
-		              onAdd: this.onAddUpdateField,
-		            }}
-		            tag="ul"
-							>
-			        	{fieldsRenderer}
-			        </ReactSortable>
-		        </div>
-
-		        <div className="rows">
-              <div
-                className="title"
-                style={{
-                  'backgroundColor': colorPack.selectorContainerTitleBackground,
-                  'color': colorPack.selectorContainerTitleText,
-                }}
-              >
-							 Rows
-              </div>
-			        <ReactSortable
-								className="sortable-container block__list block__list_tags"
-                style={{backgroundColor: colorPack.sortableContainerBackground}}
-            		onChange={rowFields => this.setState({rowFields})}
-		            options={{
-	                group: 'shared',
-	                onAdd: this.onAddUpdateField,
-	                onUpdate: this.onAddUpdateField,
-	                // onChoose: () => {this.setState({currentFilter: ''})},
-		            }}
-		            tag="ul"
-							>
-			          {rowFieldsRender}
-			        </ReactSortable>
-		        </div>
-
-		        <div className="columns">
-              <div
-                className="title"
-                style={{
-                  'backgroundColor': colorPack.selectorContainerTitleBackground,
-                  'color': colorPack.selectorContainerTitleText,
-                }}
-              >
-							 Columns
-              </div>
-			        <ReactSortable
-								className="sortable-container block__list block__list_tags"
-                style={{backgroundColor: colorPack.sortableContainerBackground}}
-                onChange={(colFields) => this.setState({colFields})}
-		            options={{
-	                group: 'shared',
-	                onAdd: this.onAddUpdateField,
-	                onUpdate: this.onAddUpdateField,
-					       // onChoose: () => {this.setState({currentFilter: ''})},
-		            }}
-		            tag="ul"
-							>
-			          {colFieldsRender}
-			        </ReactSortable>
-		        </div>
-	        </div>
-				</div>
+				<Menu
+					colorPack={colorPack}
+					selectedAggregationType={selectedAggregationType}
+					aggregationTypes={aggregationTypes}
+					onSelectAggregationType={this.onSelectAggregationType}
+					selectedAggregationDimension={selectedAggregationDimension}
+					aggregationDimensions={aggregationDimensions}
+					onSelectAggregationDimension={this.onSelectAggregationDimension}
+					fields={fields}
+					currentValues={currentValues}
+					listRowRenderer={this.listRowRenderer}
+					submitFilters={this.submitFilters}
+					showFilterMenu={this.showFilterMenu}
+					rowFields={rowFields}
+					colFields={colFields}
+					>
+				</Menu>
 				<div className="pivot-grid">
 					<section className="pivot-grid">
 						<Table
