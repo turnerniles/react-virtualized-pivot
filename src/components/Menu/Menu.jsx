@@ -4,10 +4,29 @@ import Drawer from 'material-ui/Drawer';
 import Button from 'material-ui/Button';
 import Select from 'react-select';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
+import { withStyles, createStyleSheet } from 'material-ui/styles';
+import Drawer2 from 'react-md/lib/Drawers';
+import Button2 from 'react-md/lib/Buttons/Button';
 
 import './styles.scss';
 
-export default class Menu extends PureComponent {
+const styleSheet = createStyleSheet({
+  selectorsContainer: {
+		width: '500px',
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    borderRadius: 3,
+    border: 0,
+    color: 'white',
+    height: 48,
+    padding: '0 30px',
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .30)',
+  },
+  label: {
+    textTransform: 'capitalize',
+  },
+});
+
+class Menu extends PureComponent {
 	constructor(props) {
 		super(props);
 
@@ -24,8 +43,8 @@ export default class Menu extends PureComponent {
     this.toggleDrawer(true)
   };
 
-  handleRightClose() {
-    this.toggleDrawer(false)
+  handleRightClose(e) {
+    // this.toggleDrawer(false)
   };
 
   toggleDrawer(open) {
@@ -310,24 +329,36 @@ export default class Menu extends PureComponent {
 
 		return(
 			<section className="menu">
-        <Button onClick={this.handleRightOpen}>Open Right</Button>
+        {/* <Button onClick={this.handleRightOpen}>Open Right</Button>
         <Drawer
 					style={{width: '1000px'}}
-          anchor="right"
+					className='pivot-options'
+          anchor='right'
           open={this.state.isDrawerOpen}
           onRequestClose={this.handleRightClose}
           onClick={this.handleRightClose}
         >
-          {menuItems}
-        </Drawer>
+        </Drawer> */}
+				<Button2 raised label="Toggle Drawer Right" onClick={this.handleRightOpen} />
+        <Drawer2
+          visible={this.state.isDrawerOpen}
+					position={'right'}
+					overlay={true}
+          onVisibilityToggle={this.handleRightClose}
+          type={Drawer2.DrawerTypes.TEMPORARY}
+          style={{ zIndex: 100 }}
+        >
+				{menuItems}
+			</Drawer2>
 			</section>
 		);
 	}
 }
 
 Menu.propTypes = {
-
 }
 
 Menu.defaultProps = {
 }
+
+export default withStyles(styleSheet)(Menu);
