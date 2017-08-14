@@ -426,8 +426,6 @@ export default class Pivot extends PureComponent {
 			pivot,
 		} = this.state;
 
-		console.log('pivot', this.state.pivot);
-
     const colorPack = this.props.colorPack !== undefined ? this.props.colorPack :
 		{
 			sortableFieldBackground: '#5F9EDF',
