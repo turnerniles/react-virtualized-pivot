@@ -61,7 +61,7 @@ section.virtualized-table{
 			display: flex;
 			align-items: center;
 			justify-content: flex-start;
-			overflow: visible;
+			overflow: hidden;
 
 			.arrow{
 				display: inline-block;
@@ -110,6 +110,7 @@ section.virtualized-table{
 	  .header-container {
 	  	display: flex;
 	  	justify-content: space-between;
+	  	overflow: hidden;
 	  }
   	.column-sizer {
   		width: 4px;

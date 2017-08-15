@@ -366,24 +366,3 @@ Menu.propTypes = {
 	setColFields: PropTypes.func.isRequired,
 	currentFilter: PropTypes.string.isRequired,
 }
-
-Menu.defaultProps = {
-	colorPack: {
-		columnResizer: 'none',
-		sortableFieldBackground: '#5F9EDF',
-		sortableFieldText: '#fff',
-		sortableContainerBackground: '#fff',
-		selectorContainerTitleBackground: '#FF7373',
-		selectorContainerTitleText: '#fff',
-		leftHeaderCellBackground:'rgb(188, 57, 89)',
-		leftHeaderCellText:'#fff',
-		headerGridBackground:'rgb(51, 51, 51)',
-		headerGridText:'#fff',
-		leftSideGridBackground: 'rgb(188, 57, 89)',
-		leftSideGridText:'#fff',
-		bodyGridBackground: 'rgb(120, 54, 70)',
-		bodyGridText:'#fff',
-		evenRowBackground: '',
-		oddRowBackground: 'rgba(0, 0, 0, .1)',
-	},
-}

@@ -81,7 +81,7 @@ export default class Table extends PureComponent {
 		this.setState({ selectedColumn });
 	}
 
-	evenOddRowStyle({rowIndex = 0, columnIndex = 0}) {
+	evenOddRowStyle({ rowIndex = 0, columnIndex = 0 }) {
 		const {
 			colorPack: {
 				evenRowBackground,
@@ -91,23 +91,130 @@ export default class Table extends PureComponent {
 
 		if (rowIndex % 2 === 0) {
 			return columnIndex % 2 === 0 ?
-				{backgroundColor: evenRowBackground} :
-				{backgroundColor: oddRowBackground};
+				{
+					backgroundColor: evenRowBackground,
+				} :
+				{
+					backgroundColor: oddRowBackground,
+				};
 		}
 
 		return columnIndex % 2 !== 0 ?
-			{backgroundColor: evenRowBackground} :
-			{backgroundColor: oddRowBackground};
+			{
+				backgroundColor: evenRowBackground
+			} :
+			{
+				backgroundColor: oddRowBackground
+			};
 	}
 
 	renderBodyCell({ columnIndex, key, rowIndex, style }) {
     const {
-      data,
-      onToggleRow,
-      rowFields,
       checkIfInCollapsed,
+      collapsedRows,
+      data,
       headerCounter,
+      onGridCellClick,
+      onToggleRow,
+      originalArgs,
+      rawData,
+      rowFields,
     } = this.props;
+
+    function getCollapsedRows(rowNum, dataStr) {
+	    const rows = rowNum in collapsedRows ? collapsedRows[rowNum].table : [];
+	    const collapsedData = rowNum in collapsedRows ? collapsedRows[rowNum][dataStr] : [];
+
+	    return collapsedData.reduce((acc, { type, value }, index) => {
+	    	const row = rows[index].row;
+
+	    	if (type === 'data') return acc.concat([value.slice(0, 1).concat([value[columnIndex + 1]])]);
+	    	return acc.concat(getCollapsedRows(row, dataStr));
+	    }, []);
+    }
+
+    function getChildren(rowIndex, acc, startingDepth) {
+    	const dataRow = data.slice(headerCounter)[rowIndex];
+    	const rawDataRow = rawData.slice(headerCounter)[rowIndex];
+
+    	if (!dataRow || (acc.children.length > 0 && startingDepth >= dataRow.depth)) {
+    		return acc;
+    	}
+
+    	if (dataRow.type === 'data') {
+    		const obj = {
+    			children: acc.children.concat([dataRow.value.slice(0, 1).concat([dataRow.value[columnIndex + 1]])]),
+    			childrenData: acc.childrenData.concat([rawDataRow.value.slice(0, 1).concat([rawDataRow.value[columnIndex + 1]])]),
+    		};
+
+    		return getChildren(rowIndex + 1, obj, startingDepth);
+    	}
+
+    	const obj = {
+    		children: acc.children.concat(getCollapsedRows(dataRow.row, 'table')),
+    		childrenData: acc.childrenData.concat(getCollapsedRows(dataRow.row, 'rawData')),
+    	}
+
+			return getChildren(rowIndex + 1, obj, startingDepth);
+    }
+
+    function getRowHeaders(rowIndex) {
+    	if (originalArgs.rows.length === 0) return {};
+
+    	const slicedData = data.slice(headerCounter);
+    	const { value, depth } = slicedData[rowIndex];
+    	const acc = { [originalArgs.rows[depth]]: value[0] };
+    	let nextDepth = depth - 1;
+    	let counter = rowIndex - 1;
+
+    	while (nextDepth >= 0) {
+    		let nextValue = null;
+
+    		while (nextValue === null) {
+    			if(slicedData[counter].depth === nextDepth) {
+    				nextValue = slicedData[counter].value[0]
+    			}
+    			counter--;
+    		}
+
+    		acc[originalArgs.rows[nextDepth]] = nextValue;
+    		nextDepth--;
+    	}
+
+    	return acc;
+    }
+
+    function getColumnHeaders(columnIndex) {
+    	if (originalArgs.cols.length === 0) return {};
+
+    	let currRow = 0;
+    	const acc = {};
+
+    	while (data[currRow].type === 'colHeader') {
+    		acc[originalArgs.cols[currRow]] = data[currRow].value[columnIndex];
+    		currRow++;
+    	}
+
+    	return acc;
+    }
+
+    function onClick() {
+	    const { children, childrenData } = data.length > 0 ?
+	    	getChildren(rowIndex, {children: [], childrenData: []}, data.slice(headerCounter)[rowIndex].depth) :
+	    	[];
+
+	    const rowHeaders = getRowHeaders(rowIndex);
+	    const columnHeaders = getColumnHeaders(columnIndex + 1);
+
+    	onGridCellClick({
+    		children,
+    		childrenData,
+    		columnHeaders,
+    		columnIndex,
+    		rowHeaders,
+    		rowIndex,
+    	});
+    }
 
 		return (
 			<div
@@ -116,7 +223,10 @@ export default class Table extends PureComponent {
 				style={{
 					...this.evenOddRowStyle({ rowIndex, columnIndex }),
 					...style,
+					borderRight: `1px solid ${this.props.colorPack.gridBorders}`,
+					borderBottom: `1px solid ${this.props.colorPack.gridBorders}`,
 				}}
+				onClick={onClick}
 			>
 		    <div className="cell-text-container">
   				<div className="body-cell-data">
@@ -135,17 +245,25 @@ export default class Table extends PureComponent {
 		const {
 			colorPack,
 			data,
+			onGridHeaderCellClick,
 		} = this.props;
 
 		return (
 			<div
 				className="header-container"
 				key={key}
+				onClick={onGridHeaderCellClick.bind(this, { rowIndex, columnIndex })}
 				style={{
 					...style,
 				}}
 			>
-				<div className="header-cell">
+				<div
+					className="header-cell"
+					style={{
+						borderRight: `1px solid ${colorPack.gridBorders}`,
+						borderBottom: `1px solid ${colorPack.gridBorders}`,
+					}}
+				>
 					{
 						data.length > 0 ?
 							data[rowIndex].value[columnIndex + 1] :
@@ -172,12 +290,14 @@ export default class Table extends PureComponent {
 		const {
 			colorPack,
 			data,
+			onLeftHeaderCellClick
 		} = this.props;
 
 		return (
 			<div
 				className="header-container"
 				key={key}
+				onClick={onLeftHeaderCellClick}
 				style={{
 					...style,
 				}}
@@ -207,12 +327,91 @@ export default class Table extends PureComponent {
 
 	renderLeftSideCell({ columnIndex, key, rowIndex, style }) {
     const {
-      data,
-      onToggleRow,
-      rowFields,
       checkIfInCollapsed,
+      collapsedRows,
+      data,
       headerCounter,
+      onLeftGridCellClick,
+      onToggleRow,
+      originalArgs,
+      rawData,
+      rowFields,
     } = this.props;
+
+    function getCollapsedRows(rowNum, dataStr) {
+	    const rows = rowNum in collapsedRows ? collapsedRows[rowNum].table : [];
+	    const collapsedData = rowNum in collapsedRows ? collapsedRows[rowNum][dataStr] : [];
+
+	    return collapsedData.reduce((acc, { type, value }, index) => {
+	    	const row = rows[index].row;
+
+	    	if (type === 'data') return acc.concat([value]);
+	    	return acc.concat(getCollapsedRows(row, dataStr));
+	    }, []);
+    }
+
+    function getChildren(rowIndex, acc, startingDepth) {
+    	const dataRow = data.slice(headerCounter)[rowIndex];
+    	const rawDataRow = rawData.slice(headerCounter)[rowIndex];
+
+    	if (!dataRow || (acc.children.length > 0 && startingDepth >= dataRow.depth)) {
+    		return acc;
+    	}
+
+    	if (dataRow.type === 'data') {
+    		const obj = {
+    			children: acc.children.concat([dataRow.value]),
+    			childrenData: acc.childrenData.concat([rawDataRow.value]),
+    		};
+
+    		return getChildren(rowIndex + 1, obj, startingDepth);
+    	}
+
+    	const obj = {
+    		children: acc.children.concat(getCollapsedRows(dataRow.row, 'table')),
+    		childrenData: acc.children.concat(getCollapsedRows(dataRow.row, 'rawData')),
+    	}
+
+			return getChildren(rowIndex + 1, obj, startingDepth);
+    }
+
+    function getRowHeaders(rowIndex) {
+    	if (originalArgs.rows.length === 0) return {};
+
+    	const slicedData = data.slice(headerCounter);
+    	const { value, depth } = slicedData[rowIndex];
+    	const acc = { [originalArgs.rows[depth]]: value[0] };
+    	let nextDepth = depth - 1;
+    	let counter = rowIndex - 1;
+
+    	while (nextDepth >= 0) {
+    		let nextValue = null;
+
+    		while (nextValue === null) {
+    			if(slicedData[counter].depth === nextDepth) {
+    				nextValue = slicedData[counter].value[0]
+    			}
+    			counter--;
+    		}
+
+    		acc[originalArgs.rows[nextDepth]] = nextValue;
+    		nextDepth--;
+    	}
+
+    	return acc;
+    }
+
+    function onClick() {
+    	if (columnIndex === 0) onToggleRow(rowIndex);
+
+	    const { children, childrenData } = data.length > 0 ?
+	    	getChildren(rowIndex, {children: [], childrenData: []}, data.slice(headerCounter)[rowIndex].depth) :
+	    	[];
+
+			const rowHeaders = getRowHeaders(rowIndex);
+
+    	onLeftGridCellClick({ rowIndex, columnIndex, children, childrenData, rowHeaders });
+    }
 
 		const firstColumnStyle = {};
 
@@ -243,8 +442,10 @@ export default class Table extends PureComponent {
 					...firstColumnStyle,
 					...this.evenOddRowStyle({ rowIndex, columnIndex }),
 					...style,
+					borderRight: `1px solid ${this.props.colorPack.gridBorders}`,
+					borderBottom: `1px solid ${this.props.colorPack.gridBorders}`,
 				}}
-				onClick={columnIndex === 0 ? onToggleRow.bind(this, rowIndex) : ''}
+				onClick={onClick}
 			>
 		    <div className="cell-text-container">
   				<div className="arrow">
@@ -323,6 +524,7 @@ export default class Table extends PureComponent {
 		                    position: 'absolute',
 		                    left: 0,
 		                    top: headerHeight * headerCounter,
+												backgroundColor: colorPack.leftSideGridBackground,
 		                    color: colorPack.leftSideGridText,
 		                  }}
 		                >
@@ -334,7 +536,11 @@ export default class Table extends PureComponent {
 		                    columnWidth={leftColumnWidth}
 		                    columnCount={1}
 		                    className="LeftSideGrid"
-                        style={{backgroundColor: colorPack.leftHeaderCellBackground}}
+                        style={{
+													backgroundColor: colorPack.leftHeaderCellBackground,
+													borderLeft: `1px solid ${colorPack.gridBorders}`,
+													borderRight: `1px solid ${colorPack.gridBorders}`,
+												}}
 		                    height={height - scrollbarSize()}
 		                    rowHeight={rowHeight}
 		                    rowCount={rowCount === 0 ? 0 : (rowCount - headerCounter)}
@@ -380,7 +586,9 @@ export default class Table extends PureComponent {
 		                          <Grid
 		                            ref={(input) => { this.bodyGrid = input; }}
 		                            className="BodyGrid"
-                                style={{backgroundColor: colorPack.bodyGridBackground}}
+                                style={{
+																	backgroundColor: colorPack.bodyGridBackground
+																}}
 		                            columnWidth={this.getColumnWidth}
 		                            columnCount={columnCount > 0 ? columnCount - 1 : 0}
 		                            height={height}
@@ -422,25 +630,4 @@ Table.propTypes = {
 	rowFields: PropTypes.array.isRequired,
 	rowCount: PropTypes.number.isRequired,
 	columnCount: PropTypes.number.isRequired,
-}
-
-Table.defaultProps = {
-	colorPack: {
-		columnResizer: 'none',
-		sortableFieldBackground: '#5F9EDF',
-		sortableFieldText: '#fff',
-		sortableContainerBackground: '#fff',
-		selectorContainerTitleBackground: '#FF7373',
-		selectorContainerTitleText: '#fff',
-		leftHeaderCellBackground:'rgb(188, 57, 89)',
-		leftHeaderCellText:'#fff',
-		headerGridBackground:'rgb(51, 51, 51)',
-		headerGridText:'#fff',
-		leftSideGridBackground: 'rgb(188, 57, 89)',
-		leftSideGridText:'#fff',
-		bodyGridBackground: 'rgb(120, 54, 70)',
-		bodyGridText:'#fff',
-		evenRowBackground: '',
-		oddRowBackground: 'rgba(0, 0, 0, .1)',
-	},
 }

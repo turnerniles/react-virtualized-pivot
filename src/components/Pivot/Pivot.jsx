@@ -445,6 +445,7 @@ export default class Pivot extends PureComponent {
 			data,
 			fields,
 			colFields,
+			pivot
 		} = this.state;
 
 		const {
@@ -488,6 +489,13 @@ export default class Pivot extends PureComponent {
 				<div className="pivot-grid">
 					<section className="pivot-grid">
 						<Table
+							collapsedRows={pivot.collapsedRows}
+							originalArgs={pivot.originalArgs}
+							rawData={pivot.data.rawData}
+							onGridCellClick={({rowIndex, columnIndex, children, childrenData, rowHeaders, columnHeaders}) => console.log('grid', rowIndex, columnIndex, children, childrenData, rowHeaders, columnHeaders)}
+							onGridHeaderCellClick={({rowIndex, columnIndex}) => console.log('header', rowIndex, columnIndex)}
+							onLeftGridCellClick={({rowIndex, columnIndex, children, childrenData, rowHeaders}) => console.log('left grid', rowIndex, columnIndex, children, childrenData, rowHeaders)}
+							onLeftHeaderCellClick={() => console.log('clicking leftHeader')}
 							colorPack={colorPack}
 							headerHeight={headerHeight}
 							rowHeight={rowHeight}
@@ -522,6 +530,7 @@ Pivot.defaultProps = {
 		sortableFieldBackground: '#5F9EDF',
 		sortableFieldText: '#fff',
 		sortableContainerBackground: '#fff',
+		sortableContainerBorderColor: '#ccc',
 		selectorContainerTitleBackground: '#FF7373',
 		selectorContainerTitleText: '#fff',
 		leftHeaderCellBackground:'rgb(188, 57, 89)',
@@ -534,5 +543,6 @@ Pivot.defaultProps = {
 		bodyGridText:'#fff',
 		evenRowBackground: '',
 		oddRowBackground: 'rgba(0, 0, 0, .1)',
+		gridBorders: '#e0e0e0',
 	},
 }
