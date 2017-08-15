@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
-import { List } from 'react-virtualized';
 import cn from 'classnames';
 import QuickPivot from 'quick-pivot';
-import Select from 'react-select-plus';
-import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
+import Select from 'react-select';
 import Table from '../Table/Table.jsx';
+import PropTypes from 'prop-types';
+import Menu from '../Menu/Menu.jsx';
 
 window.pivot = QuickPivot;
 
-import 'react-select-plus/dist/react-select-plus.css';
+import 'react-select/dist/react-select.css';
 import './styles.scss';
 
 export default class Pivot extends PureComponent {
@@ -36,7 +36,7 @@ export default class Pivot extends PureComponent {
 				selectedAggregationType: 'sum',
 				selectedAggregationDimension: this.props.selectedAggregationDimension || '',
 				currentFilter: '',
-				currentValues: {},
+				currentValues: [],
 				filters: {},
 				columnWidth: 75,
       	columnCount: 0,
@@ -61,6 +61,9 @@ export default class Pivot extends PureComponent {
 		this.submitFilters = this.submitFilters.bind(this);
 		this.showFilterMenu = this.showFilterMenu.bind(this);
 		this.listRowRenderer = this.listRowRenderer.bind(this);
+		this.setFields = this.setFields.bind(this);
+		this.setRowFields = this.setRowFields.bind(this);
+		this.setColFields = this.setColFields.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -84,7 +87,7 @@ export default class Pivot extends PureComponent {
 			rowFields: [],
 			selectedAggregationDimension: nextProps.selectedAggregationDimension || '',
 			currentFilter: '',
-			currentValues: {},
+			currentValues: [],
 			filters: {},
 			columnWidth: 75,
 			columnCount: 0,
@@ -150,7 +153,7 @@ export default class Pivot extends PureComponent {
 		})
 	}
 
-	onSelectAggregationDimension (selectedAggregationDimension) {
+	onSelectAggregationDimension(selectedAggregationDimension) {
 		const {
 			colFields,
 			dataArray,
@@ -403,6 +406,24 @@ export default class Pivot extends PureComponent {
 		});
 	}
 
+	setFields(fields) {
+		this.setState({
+			fields,
+		})
+	}
+
+	setRowFields(rowFields) {
+		this.setState({
+			rowFields,
+		})
+	}
+
+	setColFields(colFields) {
+		this.setState({
+			colFields,
+		})
+	}
+
 	render() {
 		const {
 			aggregationDimensions,
@@ -423,27 +444,13 @@ export default class Pivot extends PureComponent {
 			rowFields,
 			data,
 			fields,
-			pivot,
+			colFields,
+			pivot
 		} = this.state;
 
-    const colorPack = this.props.colorPack !== undefined ? this.props.colorPack :
-		{
-			sortableFieldBackground: '#5F9EDF',
-			sortableFieldText: '#fff',
-			sortableContainerBackground: '#fff',
-			selectorContainerTitleBackground: '#FF7373',
-			selectorContainerTitleText: '#fff',
-			leftHeaderCellBackground:'rgb(188, 57, 89)',
-			leftHeaderCellText:'#fff',
-			headerGridBackground:'rgb(51, 51, 51)',
-			headerGridText:'#fff',
-			leftSideGridBackground: 'rgb(188, 57, 89)',
-			leftSideGridText:'#fff',
-			bodyGridBackground: 'rgb(120, 54, 70)',
-			bodyGridText:'#fff',
-			evenRowBackground: '',
-			oddRowBackground: 'rgba(0, 0, 0, .1)',
-		};
+		const {
+			colorPack
+		} = this.props;
 
 		const height = (window.innerHeight - 240 - (headerCounter * 40))
 
@@ -455,259 +462,30 @@ export default class Pivot extends PureComponent {
 			{ value: 'average', label: 'average' },
 		];
 
-		//We are not using deconstructed state consts here due to
-		// react-sortablejs bug
-		const fieldsRenderer = fields.length ? fields.map((field, index) =>
-			{ return (
-				<li
-					key={index}
-					data-id={field}
-          style={{
-            backgroundColor: colorPack.sortableFieldBackground,
-            color: colorPack.sortableFieldText
-          }}
-				>
-					{(currentValues.length > 0 && currentFilter === field) &&
-						<div
-							className="filter-menu"
-							style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
-							<div className="filters-container">
-	  						<List
-	  							ref='List'
-	  							className={'virtualized-list'}
-	  							height={80}
-	  							overscanRowCount={10}
-	  							rowCount={currentValues.length}
-	  							rowHeight={20}
-	  							rowRenderer={this.listRowRenderer}
-	  							width={100}
-	  						/>
-						 	</div>
-						<div onClick={this.submitFilters} className="filter-submit">Submit</div>
-					</div>
-					}
-				<div className="inner-filter-container">
-					<div className="filter-text">
-					{field}
-					</div>
-					<div
-	  				className="filter-button"
-	  				onClick={this.showFilterMenu.bind(this, field)}
-	  			>
-	  				✎
-	  			</div>
-				</div>
-			</li>
-			)}
-		) : ''
-		const rowFieldsRender = rowFields.map((field, index) =>
-			(
-				<li
-					key={index}
-					data-id={field}
-          style={{
-            backgroundColor: colorPack.sortableFieldBackground,
-            color: colorPack.sortableFieldText
-          }}
-				>
-				<div className="inner-filter-container">
-					<div className="filter-text">
-					{field}
-					</div>
-					<div
-	  				className="filter-button"
-	  				onClick={this.showFilterMenu.bind(this, field)}
-	  			>
-	  				✎
-	  			</div>
-				</div>
-				{(currentValues.length > 0 && currentFilter === field) &&
-					<div
-						className="filter-menu"
-						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
-						<div className="filters-container">
-							<List
-  							ref='List'
-  							className={'virtualized-list'}
-  							height={80}
-  							overscanRowCount={10}
-  							rowCount={currentValues.length}
-  							rowHeight={20}
-  							rowRenderer={this.listRowRenderer}
-  							width={100}
-  						/>
-						</div>
-					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
-				</div>
-				}
-			</li>
-		));
-
-		const colFieldsRender = this.state.colFields.map((field, index) =>
-			(
-				<li
-					key={index}
-					data-id={field}
-          style={{
-            backgroundColor: colorPack.sortableFieldBackground,
-            color: colorPack.sortableFieldText
-          }}
-				>
-				<div className="inner-filter-container">
-					<div className="filter-text">
-					{field}
-					</div>
-					<div
-	  				className="filter-button"
-	  				onClick={this.showFilterMenu.bind(this, field)}
-	  			>
-	  				✎
-	  			</div>
-				</div>
-				{(currentValues.length > 0 && currentFilter === field) &&
-					<div
-						className="filter-menu"
-						style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
-						<div className="filters-container">
-							<List
-  							ref='List'
-  							className={'virtualized-list'}
-  							height={80}
-  							overscanRowCount={10}
-  							rowCount={currentValues.length}
-  							rowHeight={20}
-  							rowRenderer={this.listRowRenderer}
-  							width={100}
-  						/>
-						</div>
-					<div onClick={this.submitFilters} className="filter-submit">Submit</div>
-				</div>
-				}
-			</li>
-		));
 		return(
 			<section className="virtualized-pivot">
-				<div className="pivot-options">
-	       <div className="selectors-container">
-						<div className="select-container">
-	          <div
-              className="title"
-              style={{
-                'backgroundColor': colorPack.selectorContainerTitleBackground,
-                'color': colorPack.selectorContainerTitleText,
-              }}
-            >
-              Aggregation Type
-            </div>
-							<Select
-							    name="Aggregation Type"
-									value={selectedAggregationType}
-							    options={aggregationTypes}
-							    onChange={this.onSelectAggregationType}
-									menuContainerStyle={{ zIndex: 2 }}
-									clearable={false}
-							/>
-         	</div>
-
-         	<div className="select-container">
-            <div
-              className="title"
-              style={{
-                'backgroundColor': colorPack.selectorContainerTitleBackground,
-                'color': colorPack.selectorContainerTitleText,
-              }}
-            >
-              Aggregation Dimension
-            </div>
-							<Select
-									name="Aggregation Type"
-									value={selectedAggregationDimension}
-									options={aggregationDimensions}
-									onChange={this.onSelectAggregationDimension}
-									menuContainerStyle={{ zIndex: 2 }}
-									clearable={false}
-							/>
-	      	</div>
-	       </div>
-
-				 <div className="fields-drag-container">
-						<div className="fields">
-              <div
-                className="title"
-                style={{
-                  'backgroundColor': colorPack.selectorContainerTitleBackground,
-                  'color': colorPack.selectorContainerTitleText,
-                }}
-              >
-                Fields
-              </div>
-			        <ReactSortable
-								className="sortable-container block__list block__list_tags"
-                style={{backgroundColor: colorPack.sortableContainerBackground}}
-								onChange={fields => this.setState({fields})}
-		            options={{
-		              group: 'shared',
-		              onAdd: this.onAddUpdateField,
-		            }}
-		            tag="ul"
-							>
-			        	{fieldsRenderer}
-			        </ReactSortable>
-		        </div>
-
-		        <div className="rows">
-              <div
-                className="title"
-                style={{
-                  'backgroundColor': colorPack.selectorContainerTitleBackground,
-                  'color': colorPack.selectorContainerTitleText,
-                }}
-              >
-							 Rows
-              </div>
-			        <ReactSortable
-								className="sortable-container block__list block__list_tags"
-                style={{backgroundColor: colorPack.sortableContainerBackground}}
-            		onChange={rowFields => this.setState({rowFields})}
-		            options={{
-	                group: 'shared',
-	                onAdd: this.onAddUpdateField,
-	                onUpdate: this.onAddUpdateField,
-	                // onChoose: () => {this.setState({currentFilter: ''})},
-		            }}
-		            tag="ul"
-							>
-			          {rowFieldsRender}
-			        </ReactSortable>
-		        </div>
-
-		        <div className="columns">
-              <div
-                className="title"
-                style={{
-                  'backgroundColor': colorPack.selectorContainerTitleBackground,
-                  'color': colorPack.selectorContainerTitleText,
-                }}
-              >
-							 Columns
-              </div>
-			        <ReactSortable
-								className="sortable-container block__list block__list_tags"
-                style={{backgroundColor: colorPack.sortableContainerBackground}}
-                onChange={(colFields) => this.setState({colFields})}
-		            options={{
-	                group: 'shared',
-	                onAdd: this.onAddUpdateField,
-	                onUpdate: this.onAddUpdateField,
-					       // onChoose: () => {this.setState({currentFilter: ''})},
-		            }}
-		            tag="ul"
-							>
-			          {colFieldsRender}
-			        </ReactSortable>
-		        </div>
-	        </div>
-				</div>
+				<Menu
+					colorPack={colorPack}
+					selectedAggregationType={selectedAggregationType}
+					aggregationTypes={aggregationTypes}
+					onSelectAggregationType={this.onSelectAggregationType}
+					selectedAggregationDimension={selectedAggregationDimension}
+					aggregationDimensions={aggregationDimensions}
+					onSelectAggregationDimension={this.onSelectAggregationDimension}
+					fields={fields}
+					currentValues={currentValues}
+					listRowRenderer={this.listRowRenderer}
+					submitFilters={this.submitFilters}
+					showFilterMenu={this.showFilterMenu}
+					rowFields={rowFields}
+					colFields={colFields}
+					onAddUpdateField={this.onAddUpdateField}
+					setFields={this.setFields}
+					setRowFields={this.setRowFields}
+					setColFields={this.setColFields}
+					currentFilter={currentFilter}
+					>
+				</Menu>
 				<div className="pivot-grid">
 					<section className="pivot-grid">
 						<Table
@@ -738,4 +516,33 @@ export default class Pivot extends PureComponent {
 			</section>
 		);
 	}
+}
+
+Pivot.propTypes = {
+	colorPack: PropTypes.object,
+	data: PropTypes.array.isRequired,
+	selectedAggregationDimension: PropTypes.string,
+}
+
+Pivot.defaultProps = {
+	colorPack: {
+		columnResizer: 'none',
+		sortableFieldBackground: '#5F9EDF',
+		sortableFieldText: '#fff',
+		sortableContainerBackground: '#fff',
+		sortableContainerBorderColor: '#ccc',
+		selectorContainerTitleBackground: '#FF7373',
+		selectorContainerTitleText: '#fff',
+		leftHeaderCellBackground:'rgb(188, 57, 89)',
+		leftHeaderCellText:'#fff',
+		headerGridBackground:'rgb(51, 51, 51)',
+		headerGridText:'#fff',
+		leftSideGridBackground: 'rgb(188, 57, 89)',
+		leftSideGridText:'#fff',
+		bodyGridBackground: 'rgb(120, 54, 70)',
+		bodyGridText:'#fff',
+		evenRowBackground: '',
+		oddRowBackground: 'rgba(0, 0, 0, .1)',
+		gridBorders: '#e0e0e0',
+	},
 }

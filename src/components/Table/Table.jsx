@@ -3,6 +3,7 @@ import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
 import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import QuickPivot from 'quick-pivot';
 import Draggable from 'react-draggable';
+import PropTypes from 'prop-types';
 
 import './styles.scss';
 
@@ -90,13 +91,21 @@ export default class Table extends PureComponent {
 
 		if (rowIndex % 2 === 0) {
 			return columnIndex % 2 === 0 ?
-				{backgroundColor: evenRowBackground} :
-				{backgroundColor: oddRowBackground};
+				{
+					backgroundColor: evenRowBackground,
+				} :
+				{
+					backgroundColor: oddRowBackground,
+				};
 		}
 
 		return columnIndex % 2 !== 0 ?
-			{backgroundColor: evenRowBackground} :
-			{backgroundColor: oddRowBackground};
+			{
+				backgroundColor: evenRowBackground
+			} :
+			{
+				backgroundColor: oddRowBackground
+			};
 	}
 
 	renderBodyCell({ columnIndex, key, rowIndex, style }) {
@@ -214,6 +223,8 @@ export default class Table extends PureComponent {
 				style={{
 					...this.evenOddRowStyle({ rowIndex, columnIndex }),
 					...style,
+					borderRight: `1px solid ${this.props.colorPack.gridBorders}`,
+					borderBottom: `1px solid ${this.props.colorPack.gridBorders}`,
 				}}
 				onClick={onClick}
 			>
@@ -246,7 +257,13 @@ export default class Table extends PureComponent {
 					...style,
 				}}
 			>
-				<div className="header-cell">
+				<div
+					className="header-cell"
+					style={{
+						borderRight: `1px solid ${colorPack.gridBorders}`,
+						borderBottom: `1px solid ${colorPack.gridBorders}`,
+					}}
+				>
 					{
 						data.length > 0 ?
 							data[rowIndex].value[columnIndex + 1] :
@@ -425,6 +442,8 @@ export default class Table extends PureComponent {
 					...firstColumnStyle,
 					...this.evenOddRowStyle({ rowIndex, columnIndex }),
 					...style,
+					borderRight: `1px solid ${this.props.colorPack.gridBorders}`,
+					borderBottom: `1px solid ${this.props.colorPack.gridBorders}`,
 				}}
 				onClick={onClick}
 			>
@@ -453,30 +472,12 @@ export default class Table extends PureComponent {
       overscanRowCount,
       rowCount,
       columnCount,
+			colorPack,
 		} = this.props;
 
 		const {
 			leftColumnWidth,
 		} = this.state;
-
-    const colorPack = this.props.colorPack !== undefined ? this.props.colorPack :
-		{
-			sortableFieldBackground: '#5F9EDF',
-			sortableFieldText: '#fff',
-			sortableContainerBackground: '#fff',
-			selectorContainerTitleBackground: '#FF7373',
-			selectorContainerTitleText: '#fff',
-			leftHeaderCellBackground:'rgb(188, 57, 89)',
-			leftHeaderCellText:'#fff',
-			headerGridBackground:'rgb(51, 51, 51)',
-			headerGridText:'#fff',
-			leftSideGridBackground: 'rgb(188, 57, 89)',
-			leftSideGridText:'#fff',
-			bodyGridBackground: 'rgb(120, 54, 70)',
-			bodyGridText:'#fff',
-			evenRowBackground: '',
-			oddRowBackground: 'rgba(0, 0, 0, .1)',
-		};
 
 		const height = (window.innerHeight - 240 - (headerCounter * 40));
 
@@ -523,6 +524,7 @@ export default class Table extends PureComponent {
 		                    position: 'absolute',
 		                    left: 0,
 		                    top: headerHeight * headerCounter,
+												backgroundColor: colorPack.leftSideGridBackground,
 		                    color: colorPack.leftSideGridText,
 		                  }}
 		                >
@@ -534,7 +536,11 @@ export default class Table extends PureComponent {
 		                    columnWidth={leftColumnWidth}
 		                    columnCount={1}
 		                    className="LeftSideGrid"
-                        style={{backgroundColor: colorPack.leftHeaderCellBackground}}
+                        style={{
+													backgroundColor: colorPack.leftHeaderCellBackground,
+													borderLeft: `1px solid ${colorPack.gridBorders}`,
+													borderRight: `1px solid ${colorPack.gridBorders}`,
+												}}
 		                    height={height - scrollbarSize()}
 		                    rowHeight={rowHeight}
 		                    rowCount={rowCount === 0 ? 0 : (rowCount - headerCounter)}
@@ -580,7 +586,9 @@ export default class Table extends PureComponent {
 		                          <Grid
 		                            ref={(input) => { this.bodyGrid = input; }}
 		                            className="BodyGrid"
-                                style={{backgroundColor: colorPack.bodyGridBackground}}
+                                style={{
+																	backgroundColor: colorPack.bodyGridBackground
+																}}
 		                            columnWidth={this.getColumnWidth}
 		                            columnCount={columnCount > 0 ? columnCount - 1 : 0}
 		                            height={height}
@@ -606,4 +614,20 @@ export default class Table extends PureComponent {
 			</section>
 		);
 	}
+}
+
+Table.propTypes = {
+	colorPack: PropTypes.object,
+	headerHeight: PropTypes.number.isRequired,
+	rowHeight: PropTypes.number.isRequired,
+	headerCounter: PropTypes.number.isRequired,
+	columnWidth: PropTypes.number.isRequired,
+	overscanColumnCount: PropTypes.number.isRequired,
+	overscanRowCount: PropTypes.number.isRequired,
+	data: PropTypes.array.isRequired,
+	onToggleRow: PropTypes.func.isRequired,
+	checkIfInCollapsed: PropTypes.func.isRequired,
+	rowFields: PropTypes.array.isRequired,
+	rowCount: PropTypes.number.isRequired,
+	columnCount: PropTypes.number.isRequired,
 }
