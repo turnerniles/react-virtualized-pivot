@@ -222,6 +222,10 @@ export default class App extends React.Component {
         <Pivot
           colorPack={colorPack}
           data={data}
+          onGridCellClick={({rowIndex, columnIndex, children, childrenData, rowHeaders, columnHeaders}) => console.log('grid', rowIndex, columnIndex, children, childrenData, rowHeaders, columnHeaders)}
+          onGridHeaderCellClick={({rowIndex, columnIndex}) => console.log('header', rowIndex, columnIndex)}
+          onLeftGridCellClick={({rowIndex, columnIndex, children, childrenData, rowHeaders}) => console.log('left grid', rowIndex, columnIndex, children, childrenData, rowHeaders)}
+          onLeftHeaderCellClick={() => console.log('clicking leftHeader')}
           selectedAggregationDimension={selectedAggregationDimension}
         />
       </div>
