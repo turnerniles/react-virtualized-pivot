@@ -260,7 +260,6 @@ export default class Table extends PureComponent {
 				<div
 					className="header-cell"
 					style={{
-						borderRight: `1px solid ${colorPack.gridBorders}`,
 						borderBottom: `1px solid ${colorPack.gridBorders}`,
 					}}
 				>
@@ -277,7 +276,11 @@ export default class Table extends PureComponent {
 				>
 					<div
 						className="column-sizer"
-						style={{backgroundColor: colorPack.columnResizer}}
+						style={{
+							backgroundColor: colorPack.leftHeaderCellBackground,
+							borderRight: `1px solid ${this.props.colorPack.columnResizer}`,
+							borderBottom: `1px solid ${this.props.colorPack.columnResizer}`,
+						}}
 						onMouseEnter={this.setSelectedColumn.bind(this, columnIndex)}
 					>
 					</div>
@@ -316,7 +319,11 @@ export default class Table extends PureComponent {
 				>
 					<div
 						className="column-sizer"
-						style={{ backgroundColor: colorPack.columnResizer }}
+						style={{
+							backgroundColor: colorPack.leftHeaderCellBackground,
+							borderRight: `1px solid ${this.props.colorPack.columnResizer}`,
+							borderBottom: `1px solid ${this.props.colorPack.columnResizer}`,
+						}}
 						onMouseEnter={this.setSelectedColumn.bind(this, 'left')}
 					>
 					</div>
