@@ -1,6 +1,232 @@
-section.menu{
-}
+@import '~react-md/src/scss/react-md';
 
+$md-primary-color: $md-teal-500;
+$md-secondary-color: $md-lime-a-400;
+$md-font-icon-size: 20px;
+.md-icon.fa { height: $md-font-icon-size; width: $md-font-icon-size; }
+
+@include react-md-everything;
+
+section.menu{
+  .block__list {
+    height: 119px;
+  }
+}
 .pivot-options{
-  width: 500px;
+  height: 150px;
+  width: 300px;
+  display: inline-block;
+
+  .Select{
+		margin-top: -8px;
+		margin-left: 10px;
+		margin-bottom: 8px;
+	}
+
+  .selectors-container{
+    width: 100%;
+    display: inline-block;
+
+    .select-container{
+      width: 100%;
+      display: inline-block;
+    }
+  }
+
+  .fields-drag-container{
+
+    .fields{
+      height: 46px;
+      width: 100%;
+      display: inline-block;
+    }
+
+    .rows{
+      height: 46px;
+      width: 100%;
+      display: inline-block;
+    }
+
+    .columns{
+      height: 46px;
+      width: 100%;
+      display: inline-block;
+    }
+  }
+  .block__list {
+		height: 119px;
+	  margin-top: -8px;
+	  margin-left: 10px;
+	  background-color: #fff;
+		overflow-y: auto;
+
+		@media (min-width: 768px){height: 76px;}
+		@media (min-width: 992px){height: 76px;}
+		@media (min-width: 1220px){height: 76px;}
+	}
+	.block__list-title {
+	  margin: -20px 0 0;
+	  padding: 10px;
+	  text-align: center;
+	  background: #5F9EDF;
+	}
+	.block__list li {
+		cursor: move;
+		list-style: none;
+	}
+
+	.block__list_words li {
+	  background-color: #fff;
+	  padding: 10px 40px;
+	}
+	.block__list_words .sortable-ghost {
+	  opacity: 0.4;
+	  background-color: #F4E2C9;
+	}
+
+	.block__list_tags {
+	  padding-left: 15px;
+    border-radius: 4px;
+    border: solid 1px #ccc;
+	}
+
+	.block__list_tags:after {
+	  clear: both;
+	  content: '';
+	  display: block;
+	}
+	.block__list_tags li {
+	  float: left;
+	  margin: 5px;
+		padding-left: 3px;
+    padding-right: 3px;
+		min-width: 10px;
+  	text-align: center;
+	  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+	}
+  .title {
+		color: #fff;
+		padding: 2px 4px;
+		font-size: 11px;
+		margin-left: 5px;
+		display: inline-block;
+		position: relative;
+		background-color: #FF7373;
+		z-index: 1;
+	}
+  .block__list {
+		height: 119px;
+	  margin-top: -8px;
+	  margin-left: 10px;
+	  background-color: #fff;
+		overflow-y: auto;
+
+		@media (min-width: 768px){height: 76px;}
+		@media (min-width: 992px){height: 76px;}
+		@media (min-width: 1220px){height: 76px;}
+	}
+	.block__list-title {
+	  margin: -20px 0 0;
+	  padding: 10px;
+	  text-align: center;
+	  background: #5F9EDF;
+	}
+	.block__list li {
+		cursor: move;
+		list-style: none;
+	}
+
+	.block__list_words li {
+	  background-color: #fff;
+	  padding: 10px 40px;
+	}
+	.block__list_words .sortable-ghost {
+	  opacity: 0.4;
+	  background-color: #F4E2C9;
+	}
+
+	.block__list_tags {
+	  padding-left: 15px;
+	}
+
+	.block__list_tags:after {
+	  clear: both;
+	  content: '';
+	  display: block;
+	}
+	.block__list_tags li {
+	  float: left;
+	  margin: 5px;
+		padding-left: 3px;
+    padding-right: 3px;
+		min-width: 10px;
+  	text-align: center;
+	  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+	}
+
+
+	.inner-filter-container{
+		position: relative;
+		padding: 5px 10px 5px 5px;
+
+		.filter-text{
+			font-size: 11px;
+		}
+
+		.filter-button{
+			position: absolute;
+			font-size: 10px;
+			display: inline-block;
+			cursor: pointer;
+			top: 0px;
+			right: 1px;
+		}
+	}
+
+	.filter-menu{
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: #fff;
+    z-index: 2;
+    color: black;
+
+		.filters-container{
+			height: 80px;
+			padding: 1px;
+			border-left: 1px solid black;
+			border-right: 1px solid black;
+			border-top: 1px solid black;
+			box-sizing: content-box;
+
+			.filter-container{
+				font-size: 11px;
+				margin-top: 3px;
+				height: 20px;
+				float: left;
+				text-align: left;
+				width: 100%;
+				.filter-name{
+					display: inline-block;
+				}
+				.filter-checkbox{
+					display: inline-block;
+				}
+			}
+		}
+  }
+	.filter-submit{
+		font-size: 11px;
+		border-top: 1px solid black;
+		height: 20%;
+		line-height: 1.7;
+		background-color: #5F9EDF;
+		cursor: pointer;
+		border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    color: white;
+	}
 }

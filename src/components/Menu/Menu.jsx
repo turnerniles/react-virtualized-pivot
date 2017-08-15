@@ -1,32 +1,14 @@
 import React, { PureComponent } from 'react';
+import { List } from 'react-virtualized';
 import PropTypes from 'prop-types';
-import Drawer from 'material-ui/Drawer';
-import Button from 'material-ui/Button';
 import Select from 'react-select';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
-import { withStyles, createStyleSheet } from 'material-ui/styles';
-import Drawer2 from 'react-md/lib/Drawers';
-import Button2 from 'react-md/lib/Buttons/Button';
+import Drawer from 'react-md/lib/Drawers';
+import Button from 'react-md/lib/Buttons/Button';
 
 import './styles.scss';
 
-const styleSheet = createStyleSheet({
-  selectorsContainer: {
-		width: '500px',
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-    borderRadius: 3,
-    border: 0,
-    color: 'white',
-    height: 48,
-    padding: '0 30px',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .30)',
-  },
-  label: {
-    textTransform: 'capitalize',
-  },
-});
-
-class Menu extends PureComponent {
+export default class Menu extends PureComponent {
 	constructor(props) {
 		super(props);
 
@@ -44,7 +26,7 @@ class Menu extends PureComponent {
   };
 
   handleRightClose(e) {
-    // this.toggleDrawer(false)
+    this.toggleDrawer(false)
   };
 
   toggleDrawer(open) {
@@ -67,6 +49,11 @@ class Menu extends PureComponent {
 			showFilterMenu,
 			colFields,
 			rowFields,
+			onAddUpdateField,
+			setFields,
+			setRowFields,
+			setColFields,
+			currentFilter,
 		} = this.props;
 
 		//We are not using deconstructed state consts here due to
@@ -257,11 +244,14 @@ class Menu extends PureComponent {
 						</div>
 						<ReactSortable
 							className="sortable-container block__list block__list_tags"
-							style={{backgroundColor: colorPack.sortableContainerBackground}}
-							onChange={fields => this.setState({fields})}
+							style={{
+								backgroundColor: colorPack.sortableContainerBackground,
+								borderColor: colorPack.sortableContainerBorderColor,
+							}}
+							onChange={fields => setFields(fields)}
 							options={{
 								group: 'shared',
-								onAdd: this.onAddUpdateField,
+								onAdd: onAddUpdateField,
 							}}
 							tag="ul"
 						>
@@ -281,12 +271,15 @@ class Menu extends PureComponent {
 						</div>
 						<ReactSortable
 							className="sortable-container block__list block__list_tags"
-							style={{backgroundColor: colorPack.sortableContainerBackground}}
-							onChange={rowFields => this.setState({rowFields})}
+							style={{
+								backgroundColor: colorPack.sortableContainerBackground,
+								borderColor: colorPack.sortableContainerBorderColor,
+							}}
+							onChange={rowFields => setRowFields(rowFields)}
 							options={{
 								group: 'shared',
-								onAdd: this.onAddUpdateField,
-								onUpdate: this.onAddUpdateField,
+								onAdd: onAddUpdateField,
+								onUpdate: onAddUpdateField,
 								// onChoose: () => {this.setState({currentFilter: ''})},
 							}}
 							tag="ul"
@@ -307,12 +300,15 @@ class Menu extends PureComponent {
 						</div>
 						<ReactSortable
 							className="sortable-container block__list block__list_tags"
-							style={{backgroundColor: colorPack.sortableContainerBackground}}
-							onChange={(colFields) => this.setState({colFields})}
+							style={{
+								backgroundColor: colorPack.sortableContainerBackground,
+								borderColor: colorPack.sortableContainerBorderColor,
+							}}
+							onChange={colFields => setColFields(colFields)}
 							options={{
 								group: 'shared',
-								onAdd: this.onAddUpdateField,
-								onUpdate: this.onAddUpdateField,
+								onAdd: onAddUpdateField,
+								onUpdate: onAddUpdateField,
 							 // onChoose: () => {this.setState({currentFilter: ''})},
 							}}
 							tag="ul"
@@ -322,43 +318,72 @@ class Menu extends PureComponent {
 					</div>
 				</div>
 			</div>
-      // <div>
-      //   hello
-      // </div>
     );
 
 		return(
 			<section className="menu">
-        {/* <Button onClick={this.handleRightOpen}>Open Right</Button>
+				<Button
+					raised
+					label="Toggle Drawer"
+					onClick={this.handleRightOpen}
+					style={{
+						marginBottom: '5px',
+					}}
+				/>
         <Drawer
-					style={{width: '1000px'}}
-					className='pivot-options'
-          anchor='right'
-          open={this.state.isDrawerOpen}
-          onRequestClose={this.handleRightClose}
-          onClick={this.handleRightClose}
-        >
-        </Drawer> */}
-				<Button2 raised label="Toggle Drawer Right" onClick={this.handleRightOpen} />
-        <Drawer2
           visible={this.state.isDrawerOpen}
 					position={'right'}
 					overlay={true}
           onVisibilityToggle={this.handleRightClose}
-          type={Drawer2.DrawerTypes.TEMPORARY}
+          type={Drawer.DrawerTypes.TEMPORARY}
           style={{ zIndex: 100 }}
         >
 				{menuItems}
-			</Drawer2>
+			</Drawer>
 			</section>
 		);
 	}
 }
 
 Menu.propTypes = {
+	colorPack: PropTypes.object,
+	selectedAggregationType: PropTypes.string.isRequired,
+	aggregationTypes: PropTypes.array.isRequired,
+	onSelectAggregationType: PropTypes.func.isRequired,
+	selectedAggregationDimension: PropTypes.string.isRequired,
+	aggregationDimensions: PropTypes.array.isRequired,
+	onSelectAggregationDimension: PropTypes.func.isRequired,
+	fields: PropTypes.array.isRequired,
+	currentValues: PropTypes.array.isRequired,
+	listRowRenderer: PropTypes.func.isRequired,
+	submitFilters: PropTypes.func.isRequired,
+	showFilterMenu: PropTypes.func.isRequired,
+	rowFields: PropTypes.array.isRequired,
+	colFields: PropTypes.array.isRequired,
+	onAddUpdateField: PropTypes.func.isRequired,
+	setFields: PropTypes.func.isRequired,
+	setRowFields: PropTypes.func.isRequired,
+	setColFields: PropTypes.func.isRequired,
+	currentFilter: PropTypes.string.isRequired,
 }
 
 Menu.defaultProps = {
+	colorPack: {
+		columnResizer: 'none',
+		sortableFieldBackground: '#5F9EDF',
+		sortableFieldText: '#fff',
+		sortableContainerBackground: '#fff',
+		selectorContainerTitleBackground: '#FF7373',
+		selectorContainerTitleText: '#fff',
+		leftHeaderCellBackground:'rgb(188, 57, 89)',
+		leftHeaderCellText:'#fff',
+		headerGridBackground:'rgb(51, 51, 51)',
+		headerGridText:'#fff',
+		leftSideGridBackground: 'rgb(188, 57, 89)',
+		leftSideGridText:'#fff',
+		bodyGridBackground: 'rgb(120, 54, 70)',
+		bodyGridText:'#fff',
+		evenRowBackground: '',
+		oddRowBackground: 'rgba(0, 0, 0, .1)',
+	},
 }
-
-export default withStyles(styleSheet)(Menu);

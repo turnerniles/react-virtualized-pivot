@@ -426,6 +426,7 @@ Table.propTypes = {
 
 Table.defaultProps = {
 	colorPack: {
+		columnResizer: 'none',
 		sortableFieldBackground: '#5F9EDF',
 		sortableFieldText: '#fff',
 		sortableContainerBackground: '#fff',

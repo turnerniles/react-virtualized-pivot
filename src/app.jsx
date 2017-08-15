@@ -17,10 +17,31 @@ export default class App extends React.Component {
       dataSize: 'small',
       selectedAggregationDimension: 'age',
       isLoaded: true,
+      selectedColorPack: 'standard',
+      colorPack: {
+        columnResizer: 'none',
+        sortableFieldBackground: '#fafafa',
+        sortableFieldText: '#000',
+        sortableContainerBackground: '#fff',
+        sortableContainerBorderColor: '#ccc',
+        selectorContainerTitleBackground: '#fafafa',
+        selectorContainerTitleText: '#000',
+        leftHeaderCellBackground:'#fff',
+        leftHeaderCellText:'#000',
+        headerGridBackground:'#fafafa',
+        headerGridText:'#000',
+        leftSideGridBackground: '#fff',
+        leftSideGridText:'#000',
+        bodyGridBackground: '#fff',
+        bodyGridText:'#000',
+        evenRowBackground: '#fff',
+        oddRowBackground: '#fafafa',
+      },
     };
 
     this.handleFileSelect = this.handleFileSelect.bind(this);
     this.onSelectData = this.onSelectData.bind(this);
+    this.onSelectColorPack = this.onSelectColorPack.bind(this);
   }
 
   handleFileSelect(evt) {
@@ -68,12 +89,67 @@ export default class App extends React.Component {
     }
   }
 
-  render () {
+  onSelectColorPack(colorPack){
+    if (colorPack.value === 'standard') {
+      this.setState({
+        selectedColorPack: colorPack.value,
+        colorPack: {
+          columnResizer: 'none',
+          sortableFieldBackground: '#fafafa',
+          sortableFieldText: '#000',
+          sortableContainerBackground: '#fff',
+          sortableContainerBorderColor: '#ccc',
+          selectorContainerTitleBackground: '#fafafa',
+          selectorContainerTitleText: '#000',
+          leftHeaderCellBackground:'#fff',
+          leftHeaderCellText:'#000',
+          headerGridBackground:'#fafafa',
+          headerGridText:'#000',
+          leftSideGridBackground: '#fff',
+          leftSideGridText:'#000',
+          bodyGridBackground: '#fff',
+          bodyGridText:'#000',
+          evenRowBackground: '#fff',
+          oddRowBackground: '#fafafa',
+        },
+      })
+    }
+    if (colorPack.value === 'funky') {
+      this.setState({
+        selectedColorPack: colorPack.value,
+        colorPack: {
+          columnResizer: 'none',
+          sortableFieldBackground: '#5F9EDF',
+          sortableFieldText: '#fff',
+          sortableContainerBackground: '#fff',
+          sortableContainerBorderColor: '#ccc',
+          selectorContainerTitleBackground: '#FF7373',
+          selectorContainerTitleText: '#fff',
+          leftHeaderCellBackground:'rgb(188, 57, 89)',
+          leftHeaderCellText:'#fff',
+          headerGridBackground:'rgb(51, 51, 51)',
+          headerGridText:'#fff',
+          leftSideGridBackground: 'rgb(188, 57, 89)',
+          leftSideGridText:'#fff',
+          bodyGridBackground: 'rgb(120, 54, 70)',
+          bodyGridText:'#fff',
+          evenRowBackground: '',
+          oddRowBackground: 'rgba(0, 0, 0, .1)',
+      },
+    })
+  }
+}
+
+  render() {
     const {
+      data,
       dataSize,
       isLoaded,
       selectedAggregationDimension,
+      colorPack,
+      selectedColorPack,
     } = this.state;
+
     return (
       <div>
         <div className="loader" style={{'display': isLoaded ? 'none' : 'inherit'}}>
@@ -86,8 +162,8 @@ export default class App extends React.Component {
             <div
               className="title"
               style={{
-                'backgroundColor': '#FF7373',
-                'color': '#fff',
+                'backgroundColor': colorPack.selectorContainerTitleBackground,
+                'color': colorPack.selectorContainerTitleText,
               }}
             >
               Dataset Select
@@ -107,6 +183,30 @@ export default class App extends React.Component {
               clearable={false}
             />
           </div>
+          <div className='select-container'>
+            <div
+              className="title"
+              style={{
+                'backgroundColor': colorPack.selectorContainerTitleBackground,
+                'color': colorPack.selectorContainerTitleText,
+              }}
+            >
+              Color Pack
+            </div>
+            <Select
+              name="Dataset"
+              value={selectedColorPack}
+              options={[
+          	    { value: 'standard', label: 'standard' },
+          	    { value: 'funky', label: 'funky' },
+          		]}
+              onChange={this.onSelectColorPack}
+              menuContainerStyle={{
+                  zIndex: 2,
+              }}
+              clearable={false}
+            />
+          </div>
           <div className="input">
             <input
               type="file"
@@ -117,26 +217,9 @@ export default class App extends React.Component {
           </div>
         </div>
         <Pivot
-          data={this.state.data}
+          colorPack={colorPack}
+          data={data}
           selectedAggregationDimension={selectedAggregationDimension}
-          colorPack={{
-            columnResizer: 'none',
-            sortableFieldBackground: '#5F9EDF',
-            sortableFieldText: '#fff',
-            sortableContainerBackground: '#fff',
-            selectorContainerTitleBackground: '#FF7373',
-            selectorContainerTitleText: '#fff',
-            leftHeaderCellBackground:'rgb(188, 57, 89)',
-            leftHeaderCellText:'#fff',
-            headerGridBackground:'rgb(51, 51, 51)',
-            headerGridText:'#fff',
-            leftSideGridBackground: 'rgb(188, 57, 89)',
-            leftSideGridText:'#fff',
-            bodyGridBackground: 'rgb(120, 54, 70)',
-            bodyGridText:'#fff',
-            evenRowBackground: '',
-            oddRowBackground: 'rgba(0, 0, 0, .1)',
-          }}
         />
       </div>
     )

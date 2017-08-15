@@ -20,8 +20,6 @@
   "license": "MIT",
   "homepage": "https://github.com/turnerniles/react-virtualized-pivot#readme",
   "dependencies": {
-    "material-ui": "^1.0.0-beta.4",
-    "material-ui-icons": "^1.0.0-alpha.19",
     "node-sass": "^4.5.3",
     "papaparse": "^4.1.4",
     "prop-types": "^15.5.10",

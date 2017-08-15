@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { List } from 'react-virtualized';
 import cn from 'classnames';
 import QuickPivot from 'quick-pivot';
 import Select from 'react-select';
@@ -37,7 +36,7 @@ export default class Pivot extends PureComponent {
 				selectedAggregationType: 'sum',
 				selectedAggregationDimension: this.props.selectedAggregationDimension || '',
 				currentFilter: '',
-				currentValues: {},
+				currentValues: [],
 				filters: {},
 				columnWidth: 75,
       	columnCount: 0,
@@ -62,6 +61,9 @@ export default class Pivot extends PureComponent {
 		this.submitFilters = this.submitFilters.bind(this);
 		this.showFilterMenu = this.showFilterMenu.bind(this);
 		this.listRowRenderer = this.listRowRenderer.bind(this);
+		this.setFields = this.setFields.bind(this);
+		this.setRowFields = this.setRowFields.bind(this);
+		this.setColFields = this.setColFields.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -85,7 +87,7 @@ export default class Pivot extends PureComponent {
 			rowFields: [],
 			selectedAggregationDimension: nextProps.selectedAggregationDimension || '',
 			currentFilter: '',
-			currentValues: {},
+			currentValues: [],
 			filters: {},
 			columnWidth: 75,
 			columnCount: 0,
@@ -151,7 +153,7 @@ export default class Pivot extends PureComponent {
 		})
 	}
 
-	onSelectAggregationDimension (selectedAggregationDimension) {
+	onSelectAggregationDimension(selectedAggregationDimension) {
 		const {
 			colFields,
 			dataArray,
@@ -404,6 +406,24 @@ export default class Pivot extends PureComponent {
 		});
 	}
 
+	setFields(fields) {
+		this.setState({
+			fields,
+		})
+	}
+
+	setRowFields(rowFields) {
+		this.setState({
+			rowFields,
+		})
+	}
+
+	setColFields(colFields) {
+		this.setState({
+			colFields,
+		})
+	}
+
 	render() {
 		const {
 			aggregationDimensions,
@@ -458,6 +478,11 @@ export default class Pivot extends PureComponent {
 					showFilterMenu={this.showFilterMenu}
 					rowFields={rowFields}
 					colFields={colFields}
+					onAddUpdateField={this.onAddUpdateField}
+					setFields={this.setFields}
+					setRowFields={this.setRowFields}
+					setColFields={this.setColFields}
+					currentFilter={currentFilter}
 					>
 				</Menu>
 				<div className="pivot-grid">
@@ -493,6 +518,7 @@ Pivot.propTypes = {
 
 Pivot.defaultProps = {
 	colorPack: {
+		columnResizer: 'none',
 		sortableFieldBackground: '#5F9EDF',
 		sortableFieldText: '#fff',
 		sortableContainerBackground: '#fff',
