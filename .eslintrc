@@ -27,7 +27,7 @@
   "parser": "babel-eslint",
 
   "plugins": [
-
+    "react"
   ],
 
   "rules": {
@@ -163,6 +163,9 @@
     "quote-props": 0,
     "quotes": [2, "single", "avoid-escape"],
     "radix": 2,
+    "react/jsx-uses-react": 2,
+    "react/jsx-uses-vars": 2,
+    "react/react-in-jsx-scope": 2,
     "semi": [2, "always"],
     "semi-spacing": 0,
     "sort-vars": 0,
