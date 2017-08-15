@@ -427,29 +427,33 @@ export default class Pivot extends PureComponent {
 	render() {
 		const {
 			aggregationDimensions,
-			selectedAggregationType,
-			selectedAggregationDimension,
+			colFields,
 			columnCount,
-      columnWidth,
+			currentFilter,
+			currentValues,
+			data,
+			displayFilterMenu,
+			fields,
+			filters,
 			headerCounter,
+			pivot,
+			rowFields,
+			selectedAggregationDimension,
+			selectedAggregationType,
+      columnWidth,
+      headerHeight,
       overscanColumnCount,
       overscanRowCount,
-      headerHeight,
-      rowHeight,
       rowCount,
-			currentValues,
-			displayFilterMenu,
-			currentFilter,
-			filters,
-			rowFields,
-			data,
-			fields,
-			colFields,
-			pivot
+      rowHeight,
 		} = this.state;
 
 		const {
-			colorPack
+			colorPack,
+			onGridCellClick,
+			onGridHeaderCellClick,
+			onLeftGridCellClick,
+			onLeftHeaderCellClick,
 		} = this.props;
 
 		const height = (window.innerHeight - 240 - (headerCounter * 40))
@@ -492,10 +496,10 @@ export default class Pivot extends PureComponent {
 							collapsedRows={pivot.collapsedRows}
 							originalArgs={pivot.originalArgs}
 							rawData={pivot.data.rawData}
-							onGridCellClick={({rowIndex, columnIndex, children, childrenData, rowHeaders, columnHeaders}) => console.log('grid', rowIndex, columnIndex, children, childrenData, rowHeaders, columnHeaders)}
-							onGridHeaderCellClick={({rowIndex, columnIndex}) => console.log('header', rowIndex, columnIndex)}
-							onLeftGridCellClick={({rowIndex, columnIndex, children, childrenData, rowHeaders}) => console.log('left grid', rowIndex, columnIndex, children, childrenData, rowHeaders)}
-							onLeftHeaderCellClick={() => console.log('clicking leftHeader')}
+							onGridCellClick={onGridCellClick}
+							onGridHeaderCellClick={onGridHeaderCellClick}
+							onLeftGridCellClick={onLeftGridCellClick}
+							onLeftHeaderCellClick={onLeftHeaderCellClick}
 							colorPack={colorPack}
 							headerHeight={headerHeight}
 							rowHeight={rowHeight}
@@ -521,28 +525,36 @@ export default class Pivot extends PureComponent {
 Pivot.propTypes = {
 	colorPack: PropTypes.object,
 	data: PropTypes.array.isRequired,
+	onGridCellClick: PropTypes.func,
+	onGridHeaderCellClick: PropTypes.func,
+	onLeftGridCellClick: PropTypes.func,
+	onLeftHeaderCellClick: PropTypes.func,
 	selectedAggregationDimension: PropTypes.string,
 }
 
 Pivot.defaultProps = {
 	colorPack: {
-		columnResizer: '#e0e0e0',
-		sortableFieldBackground: '#fafafa',
-		sortableFieldText: '#000',
-		sortableContainerBackground: '#fff',
-		sortableContainerBorderColor: '#ccc',
-		selectorContainerTitleBackground: '#fafafa',
-		selectorContainerTitleText: '#000',
-		leftHeaderCellBackground:'#fafafa',
-		leftHeaderCellText:'#000',
-		headerGridBackground:'#fafafa',
-		headerGridText:'#000',
-		leftSideGridBackground: '#fff',
-		leftSideGridText:'#000',
 		bodyGridBackground: '#fff',
 		bodyGridText:'#000',
+		columnResizer: '#e0e0e0',
 		evenRowBackground: '#fff',
-		oddRowBackground: '#fafafa',
 		gridBorders: '#e0e0e0',
+		headerGridBackground:'#fafafa',
+		headerGridText:'#000',
+		leftHeaderCellBackground:'#fafafa',
+		leftHeaderCellText:'#000',
+		leftSideGridBackground: '#fff',
+		leftSideGridText:'#000',
+		oddRowBackground: '#fafafa',
+		selectorContainerTitleBackground: '#fafafa',
+		selectorContainerTitleText: '#000',
+		sortableContainerBackground: '#fff',
+		sortableContainerBorderColor: '#ccc',
+		sortableFieldBackground: '#fafafa',
+		sortableFieldText: '#000',
 	},
+	onGridCellClick: () => {},
+	onGridHeaderCellClick: () => {},
+	onLeftGridCellClick: () => {},
+	onLeftHeaderCellClick: () => {},
 }
