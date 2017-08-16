@@ -10,7 +10,7 @@ import './styles.scss';
 
 export default class Menu extends PureComponent {
   constructor(props) {
-  super(props);
+    super(props);
 
     this.state = {
       isDrawerOpen: false,
@@ -21,12 +21,12 @@ export default class Menu extends PureComponent {
     this.toggleDrawer = this.toggleDrawer.bind(this);
   }
 
-  handleRightOpen () {
-    this.toggleDrawer(true)
+  handleRightOpen() {
+    this.toggleDrawer(true);
   };
 
   handleRightClose(e) {
-    this.toggleDrawer(false)
+    this.toggleDrawer(false);
   };
 
   toggleDrawer(open) {
@@ -34,7 +34,7 @@ export default class Menu extends PureComponent {
   };
 
   render() {
-    const{
+    const {
       colorPack,
       selectedAggregationType,
       aggregationTypes,
@@ -56,52 +56,56 @@ export default class Menu extends PureComponent {
       currentFilter,
     } = this.props;
 
-    const fieldsRenderer = fields.length ? fields.map((field, index) =>
-    { return (
-      <li
-        key={index}
-        data-id={field}
-        style={{
-          backgroundColor: colorPack.sortableFieldBackground,
-          color: colorPack.sortableFieldText
-        }}
-      >
-        {(currentValues.length > 0 && currentFilter === field) &&
-          <div
-            className="filter-menu"
+    const fieldsRenderer = fields.length ?
+      fields.map((field, index) => {
+        return (
+          <li
+            key={index}
+            data-id={field}
             style={{
-              display: currentValues.length > 0 ? 'inline-block' : 'none'
+              backgroundColor: colorPack.sortableFieldBackground,
+              color: colorPack.sortableFieldText,
             }}
           >
-            <div className="filters-container">
-              <List
-                ref='List'
-                className={'virtualized-list'}
-                height={80}
-                overscanRowCount={10}
-                rowCount={currentValues.length}
-                rowHeight={20}
-                rowRenderer={listRowRenderer}
-                width={100}
-              />
+            {(currentValues.length > 0 && currentFilter === field) &&
+              <div
+                className="filter-menu"
+                style={{
+                  display: currentValues.length > 0 ? 'inline-block' : 'none',
+                }}
+              >
+                <div className="filters-container">
+                  <List
+                    ref='List'
+                    className={'virtualized-list'}
+                    height={80}
+                    overscanRowCount={10}
+                    rowCount={currentValues.length}
+                    rowHeight={20}
+                    rowRenderer={listRowRenderer}
+                    width={100}
+                  />
+                </div>
+                <div onClick={submitFilters} className="filter-submit">
+                  Submit
+                </div>
+              </div>
+            }
+            <div className="inner-filter-container">
+              <div className="filter-text">
+                {field}
+              </div>
+              <div
+                className="filter-button"
+                onClick={showFilterMenu.bind(this, field)}
+              >
+              ✎
+              </div>
             </div>
-            <div onClick={submitFilters} className="filter-submit">Submit</div>
-          </div>
-        }
-        <div className="inner-filter-container">
-          <div className="filter-text">
-            {field}
-          </div>
-          <div
-            className="filter-button"
-            onClick={showFilterMenu.bind(this, field)}
-          >
-          ✎
-          </div>
-        </div>
-      </li>
-    )}
-    ) : ''
+          </li>
+        );
+      }) :
+      '';
     const rowFieldsRender = rowFields.map((field, index) =>
       (
         <li
@@ -109,7 +113,7 @@ export default class Menu extends PureComponent {
           data-id={field}
           style={{
             backgroundColor: colorPack.sortableFieldBackground,
-            color: colorPack.sortableFieldText
+            color: colorPack.sortableFieldText,
           }}
         >
           <div className="inner-filter-container">
@@ -152,7 +156,7 @@ export default class Menu extends PureComponent {
           data-id={field}
           style={{
             backgroundColor: colorPack.sortableFieldBackground,
-            color: colorPack.sortableFieldText
+            color: colorPack.sortableFieldText,
           }}
         >
           <div className="inner-filter-container">
@@ -321,7 +325,7 @@ export default class Menu extends PureComponent {
       </div>
     );
 
-    return(
+    return (
       <section className="menu">
         <Button
           raised
