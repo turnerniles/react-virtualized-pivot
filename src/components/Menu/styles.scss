@@ -187,18 +187,16 @@ section.menu{
 
 	.filter-menu{
     position: absolute;
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     background-color: #fff;
     z-index: 2;
     color: black;
 
 		.filters-container{
-			height: 80px;
-			padding: 1px;
-			border-left: 1px solid black;
-			border-right: 1px solid black;
-			border-top: 1px solid black;
+			height: 150px;
+			padding-bottom: 5px;
+			border: 1px solid black;
 			box-sizing: content-box;
 
 			.filter-container{

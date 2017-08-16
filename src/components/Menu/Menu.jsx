@@ -5,13 +5,13 @@ import Select from 'react-select';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 import Drawer from 'react-md/lib/Drawers';
 import Button from 'react-md/lib/Buttons/Button';
-import VirtualizedCheckbox from 'react-virtualized-checkbox'
+import VirtualizedCheckbox from 'react-virtualized-checkbox';
 
 import './styles.scss';
 
 export default class Menu extends PureComponent {
   constructor(props) {
-  super(props);
+    super(props);
 
     this.state = {
       isDrawerOpen: false,
@@ -22,12 +22,12 @@ export default class Menu extends PureComponent {
     this.toggleDrawer = this.toggleDrawer.bind(this);
   }
 
-  handleRightOpen () {
-    this.toggleDrawer(true)
+  handleRightOpen() {
+    this.toggleDrawer(true);
   };
 
-  handleRightClose() {
-    this.toggleDrawer(false)
+  handleRightClose(e) {
+    this.toggleDrawer(false);
   };
 
   toggleDrawer(open) {
@@ -35,7 +35,7 @@ export default class Menu extends PureComponent {
   };
 
   render() {
-    const{
+    const {
       colorPack,
       selectedAggregationType,
       aggregationTypes,
@@ -55,65 +55,58 @@ export default class Menu extends PureComponent {
       setRowFields,
       setColFields,
       currentFilter,
+      onFiltersOk,
+      onFiltersCancel,
     } = this.props;
 
-		const items = [
-      { label: "One", value: 1 },
-      { label: "Two", value: 2 },
-      { label: "Three", value: 3 }
-    ]
-
-    const fieldsRenderer = fields.length ? fields.map((field, index) =>
-    { return (
-      <li
-        key={index}
-        data-id={field}
-        style={{
-          backgroundColor: colorPack.sortableFieldBackground,
-          color: colorPack.sortableFieldText
-        }}
-      >
-        {(currentValues.length > 0 && currentFilter === field) &&
-          <div
-            className="filter-menu"
+    const fieldsRenderer = fields.length ?
+      fields.map((field, index) => {
+        return (
+          <li
+            key={index}
+            data-id={field}
             style={{
-              display: currentValues.length > 0 ? 'inline-block' : 'none'
+              backgroundColor: colorPack.sortableFieldBackground,
+              color: colorPack.sortableFieldText,
             }}
           >
-            <div className="filters-container">
-							<VirtualizedCheckbox
-				        items={items}
-				        onOK={(checkedItems) => this.setState({ checkedItems })}
-				        onCancel={ () => this.setState({ checkedItems: [] })}
-				      />
-              {/* <List
-                ref='List'
-                className={'virtualized-list'}
-                height={80}
-                overscanRowCount={10}
-                rowCount={currentValues.length}
-                rowHeight={20}
-                rowRenderer={listRowRenderer}
-                width={100}
-              /> */}
+            {(currentValues.length > 0 && currentFilter === field) &&
+              <div
+                className="filter-menu"
+                style={{
+                  display: currentValues.length > 0 ? 'inline-block' : 'none',
+                }}
+              >
+                <div className="filters-container">
+                  <VirtualizedCheckbox
+                    style={{width: '500px'}}
+                    items={currentValues}
+                    rowHeight={20}
+                    onOk={
+                      (all, checked, textFilter) => {
+                        onFiltersOk({all, checked, textFilter});
+                      }
+                    }
+                    onCancel={() => onFiltersCancel()}
+                  />
+                </div>
+              </div>
+            }
+            <div className="inner-filter-container">
+              <div className="filter-text">
+                {field}
+              </div>
+              <div
+                className="filter-button"
+                onClick={showFilterMenu.bind(this, field)}
+              >
+              ✎
+              </div>
             </div>
-            <div onClick={submitFilters} className="filter-submit">Submit</div>
-          </div>
-        }
-        <div className="inner-filter-container">
-          <div className="filter-text">
-            {field}
-          </div>
-          <div
-            className="filter-button"
-            onClick={showFilterMenu.bind(this, field)}
-          >
-          ✎
-          </div>
-        </div>
-      </li>
-    )}
-    ) : ''
+          </li>
+        );
+      }) :
+      '';
     const rowFieldsRender = rowFields.map((field, index) =>
       (
         <li
@@ -121,7 +114,7 @@ export default class Menu extends PureComponent {
           data-id={field}
           style={{
             backgroundColor: colorPack.sortableFieldBackground,
-            color: colorPack.sortableFieldText
+            color: colorPack.sortableFieldText,
           }}
         >
           <div className="inner-filter-container">
@@ -164,7 +157,7 @@ export default class Menu extends PureComponent {
           data-id={field}
           style={{
             backgroundColor: colorPack.sortableFieldBackground,
-            color: colorPack.sortableFieldText
+            color: colorPack.sortableFieldText,
           }}
         >
           <div className="inner-filter-container">
@@ -333,7 +326,7 @@ export default class Menu extends PureComponent {
       </div>
     );
 
-    return(
+    return (
       <section className="menu">
         <Button
           raised
@@ -378,4 +371,6 @@ Menu.propTypes = {
   setRowFields: PropTypes.func.isRequired,
   setColFields: PropTypes.func.isRequired,
   currentFilter: PropTypes.string.isRequired,
+  onFiltersOk: PropTypes.func.isRequired,
+  onFiltersCancel: PropTypes.func.isRequired,
 };
