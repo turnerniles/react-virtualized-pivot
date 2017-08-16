@@ -6,14 +6,14 @@ import Papa from 'papaparse/papaparse.js';
 import 'react-select/dist/react-select.css';
 import '../styles/index.scss';
 
-var data = require('./sampledata/data.js');
+const data = require('./sampledata/data.js');
 
 export default class App extends React.Component {
-  constructor (props, context) {
-    super(props, context)
+  constructor(props, context) {
+    super(props, context);
 
     this.state = {
-    	data: data.smallData,
+      data: data.smallData,
       dataSize: 'small',
       selectedAggregationDimension: 'age',
       isLoaded: true,
@@ -26,14 +26,14 @@ export default class App extends React.Component {
         sortableContainerBorderColor: '#ccc',
         selectorContainerTitleBackground: '#fafafa',
         selectorContainerTitleText: '#000',
-        leftHeaderCellBackground:'#fafafa',
-        leftHeaderCellText:'#000',
-        headerGridBackground:'#fafafa',
-        headerGridText:'#000',
+        leftHeaderCellBackground: '#fafafa',
+        leftHeaderCellText: '#000',
+        headerGridBackground: '#fafafa',
+        headerGridText: '#000',
         leftSideGridBackground: '#fff',
-        leftSideGridText:'#000',
+        leftSideGridText: '#000',
         bodyGridBackground: '#fff',
-        bodyGridText:'#000',
+        bodyGridText: '#000',
         evenRowBackground: '#fff',
         oddRowBackground: '#fafafa',
         gridBorders: '#e0e0e0',
@@ -50,19 +50,19 @@ export default class App extends React.Component {
 
     Papa.parse(file, {
       complete: (results) => {
-        this.setState({data: results.data})
-      }
+        this.setState({data: results.data});
+      },
     });
   }
 
-  onSelectData(dataSize){
+  onSelectData(dataSize) {
     if (dataSize.value === 'small') {
       this.setState({
         dataSize: dataSize.value,
         data: data.smallData,
         isLoaded: true,
         selectedAggregationDimension: 'age',
-      })
+      });
     }
     if (dataSize.value === 'medium') {
       this.setState({
@@ -70,27 +70,28 @@ export default class App extends React.Component {
         data: data.mediumData,
         isLoaded: true,
         selectedAggregationDimension: 'Quantity',
-      })
+      });
     }
     if (dataSize.value === 'large') {
       this.setState({
         dataSize: dataSize.value,
         isLoaded: false,
-      })
-      Papa.parse('https://raw.githubusercontent.com/turnerniles/react-virtualized-pivot/master/src/sampledata/RejectStatsA.csv', {
+      });
+      Papa.parse('https://raw.githubusercontent.com/turnerniles/' +
+        'react-virtualized-pivot/master/src/sampledata/RejectStatsA.csv', {
         download: true,
         complete: (results) => {
           this.setState({
             data: results.data,
             selectedAggregationDimension: 'Amount Requested',
             isLoaded: true,
-          })
-        }
-      })
+          });
+        },
+      });
     }
   }
 
-  onSelectColorPack(colorPack){
+  onSelectColorPack(colorPack) {
     if (colorPack.value === 'standard') {
       this.setState({
         selectedColorPack: colorPack.value,
@@ -102,14 +103,14 @@ export default class App extends React.Component {
           sortableContainerBorderColor: '#ccc',
           selectorContainerTitleBackground: '#fafafa',
           selectorContainerTitleText: '#000',
-          leftHeaderCellBackground:'#fafafa',
-          leftHeaderCellText:'#000',
-          headerGridBackground:'#fafafa',
-          headerGridText:'#000',
+          leftHeaderCellBackground: '#fafafa',
+          leftHeaderCellText: '#000',
+          headerGridBackground: '#fafafa',
+          headerGridText: '#000',
           leftSideGridBackground: '#fff',
-          leftSideGridText:'#000',
+          leftSideGridText: '#000',
           bodyGridBackground: '#fff',
-          bodyGridText:'#000',
+          bodyGridText: '#000',
           evenRowBackground: '#fff',
           oddRowBackground: '#fafafa',
           gridBorders: '#e0e0e0',
@@ -127,21 +128,21 @@ export default class App extends React.Component {
           sortableContainerBorderColor: '#ccc',
           selectorContainerTitleBackground: '#FF7373',
           selectorContainerTitleText: '#fff',
-          leftHeaderCellBackground:'rgb(51, 51, 51)',
-          leftHeaderCellText:'#fff',
-          headerGridBackground:'rgb(51, 51, 51)',
-          headerGridText:'#fff',
+          leftHeaderCellBackground: 'rgb(51, 51, 51)',
+          leftHeaderCellText: '#fff',
+          headerGridBackground: 'rgb(51, 51, 51)',
+          headerGridText: '#fff',
           leftSideGridBackground: 'rgb(188, 57, 89)',
-          leftSideGridText:'#fff',
+          leftSideGridText: '#fff',
           bodyGridBackground: 'rgb(120, 54, 70)',
-          bodyGridText:'#fff',
+          bodyGridText: '#fff',
           evenRowBackground: '',
           oddRowBackground: 'rgba(0, 0, 0, .1)',
           gridBorders: '#e0e0e0',
-      },
-    })
+        },
+      });
+    }
   }
-}
 
   render() {
     const {
@@ -155,7 +156,10 @@ export default class App extends React.Component {
 
     return (
       <div>
-        <div className="loader" style={{'display': isLoaded ? 'none' : 'inherit'}}>
+        <div
+          className="loader"
+          style={{'display': isLoaded ? 'none' : 'inherit'}}
+        >
           <div className="inner one"></div>
           <div className="inner two"></div>
           <div className="inner three"></div>
@@ -175,13 +179,13 @@ export default class App extends React.Component {
               name="Dataset"
               value={dataSize}
               options={[
-          	    { value: 'small', label: 'small' },
-          	    { value: 'medium', label: 'medium' },
-          			{ value: 'large', label: 'large' },
-          		]}
+                { value: 'small', label: 'small' },
+                { value: 'medium', label: 'medium' },
+                { value: 'large', label: 'large' },
+              ]}
               onChange={this.onSelectData}
               menuContainerStyle={{
-                  zIndex: 2,
+                zIndex: 2,
               }}
               clearable={false}
             />
@@ -200,12 +204,12 @@ export default class App extends React.Component {
               name="Dataset"
               value={selectedColorPack}
               options={[
-          	    { value: 'standard', label: 'standard' },
-          	    { value: 'funky', label: 'funky' },
-          		]}
+                { value: 'standard', label: 'standard' },
+                { value: 'funky', label: 'funky' },
+              ]}
               onChange={this.onSelectColorPack}
               menuContainerStyle={{
-                  zIndex: 2,
+                zIndex: 2,
               }}
               clearable={false}
             />
@@ -229,6 +233,6 @@ export default class App extends React.Component {
           selectedAggregationDimension={selectedAggregationDimension}
         />
       </div>
-    )
+    );
   }
 }
