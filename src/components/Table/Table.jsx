@@ -659,7 +659,7 @@ export default class Table extends PureComponent {
 
 Table.propTypes = {
   checkIfInCollapsed: PropTypes.func.isRequired,
-  colorPack: PropTypes.object.isReqired,
+  colorPack: PropTypes.object.isRequired,
   columnCount: PropTypes.number.isRequired,
   columnWidth: PropTypes.number.isRequired,
   data: PropTypes.array.isRequired,
