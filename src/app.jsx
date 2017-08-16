@@ -115,7 +115,7 @@ export default class App extends React.Component {
           oddRowBackground: '#fafafa',
           gridBorders: '#e0e0e0',
         },
-      })
+      });
     }
     if (colorPack.value === 'funky') {
       this.setState({
@@ -226,9 +226,42 @@ export default class App extends React.Component {
         <Pivot
           colorPack={colorPack}
           data={data}
-          onGridCellClick={({rowIndex, columnIndex, children, childrenData, rowHeaders, columnHeaders}) => console.log('grid', rowIndex, columnIndex, children, childrenData, rowHeaders, columnHeaders)}
-          onGridHeaderCellClick={({rowIndex, columnIndex}) => console.log('header', rowIndex, columnIndex)}
-          onLeftGridCellClick={({rowIndex, columnIndex, children, childrenData, rowHeaders}) => console.log('left grid', rowIndex, columnIndex, children, childrenData, rowHeaders)}
+          onGridCellClick={({
+            rowIndex,
+            columnIndex,
+            children,
+            childrenData,
+            rowHeaders,
+            columnHeaders,
+          }) => {
+            console.log('grid');
+            console.log('rowIndex', rowIndex);
+            console.log('columnIndex', columnIndex);
+            console.log('children', children);
+            console.log('childrenData', childrenData);
+            console.log('rowHeaders', rowHeaders);
+            console.log('columnHeaders', columnHeaders);
+          }}
+          onGridHeaderCellClick={({
+            rowIndex,
+            columnIndex,
+          }) => {
+            console.log('header', rowIndex, columnIndex);
+          }}
+          onLeftGridCellClick={({
+            rowIndex,
+            columnIndex,
+            children,
+            childrenData,
+            rowHeaders,
+          }) => {
+            console.log('leftGrid');
+            console.log('rowIndex', rowIndex);
+            console.log('columnIndex', columnIndex);
+            console.log('children', children);
+            console.log('childrenData', childrenData);
+            console.log('rowHeaders', rowHeaders);
+          }}
           onLeftHeaderCellClick={() => console.log('clicking leftHeader')}
           selectedAggregationDimension={selectedAggregationDimension}
         />

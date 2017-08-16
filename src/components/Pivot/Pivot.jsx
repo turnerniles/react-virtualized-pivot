@@ -33,7 +33,8 @@ export default class Pivot extends PureComponent {
       colFields: [],
       rowFields: [],
       selectedAggregationType: 'sum',
-      selectedAggregationDimension: this.props.selectedAggregationDimension || '',
+      selectedAggregationDimension: this.props.selectedAggregationDimension ||
+        '',
       currentFilter: '',
       currentValues: [],
       filters: {},
@@ -123,7 +124,7 @@ export default class Pivot extends PureComponent {
     Object.keys(filters).forEach((filter) => {
       pivotedData.filter((elem, index, array) => {
         return filters[filter].findIndex((field) => {
-          return field == elem[filter];
+          return field === elem[filter];
         }) === -1;
       });
     });
@@ -174,7 +175,7 @@ export default class Pivot extends PureComponent {
     Object.keys(filters).forEach((filter) => {
       pivotedData.filter((elem, index, array) => {
         return filters[filter].findIndex((field) => {
-          return field == elem[filter];
+          return field === elem[filter];
         }) === -1;
       });
     });
@@ -226,7 +227,7 @@ export default class Pivot extends PureComponent {
     Object.keys(filters).forEach((filter) => {
       pivotedData.filter((elem, index, array) => {
         return filters[filter].findIndex((field) => {
-          return field == elem[filter];
+          return field === elem[filter];
         }) === -1;
       });
     });
@@ -329,8 +330,7 @@ export default class Pivot extends PureComponent {
     if (!(currentFilter in filters)) filters[currentFilter] = [];
     filters[currentFilter].indexOf(filterValue) === -1 ?
       filters[currentFilter].push(filterValue) :
-      filters[currentFilter]
-        .splice(filters[currentFilter]
+      filters[currentFilter].splice(filters[currentFilter]
         .indexOf(filterValue), 1);
 
     this.setState({
@@ -357,7 +357,7 @@ export default class Pivot extends PureComponent {
     Object.keys(filters).forEach((filter) => {
       newPivot.filter((elem, index, array) => {
         return filters[filter].findIndex((field) => {
-          return field == elem[filter];
+          return field === elem[filter];
         }) === -1;
       });
     });
