@@ -111,6 +111,7 @@ export default class Table extends PureComponent {
 
   renderBodyCell({ columnIndex, key, rowIndex, style }) {
     const {
+      bodyCellValueTransformation,
       collapsedRows,
       data,
       headerCounter,
@@ -241,8 +242,18 @@ export default class Table extends PureComponent {
           <div className="body-cell-data">
             {
               data.length > 0 ?
-                data.slice(headerCounter)[rowIndex].value[columnIndex + 1] :
-                ''
+                bodyCellValueTransformation({
+                  rowIndex,
+                  columnIndex,
+                  value: data
+                    .slice(headerCounter)[rowIndex]
+                    .value[columnIndex + 1],
+                }) :
+                bodyCellValueTransformation({
+                  rowIndex,
+                  columnIndex,
+                  value: '',
+                })
             }
           </div>
         </div>

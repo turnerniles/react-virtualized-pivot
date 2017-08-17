@@ -46,6 +46,11 @@ import 'react-virtualized-pivot/docs/umd/styles.css';
 * `data` (**required**)
   * An array of arrays (first array will be your column headers)
   * An array of objects (keys of the object are your column headers)
+* `bodyCellValueTransformation`
+  * A function that transforms the display value of the body cell. The function provides an object as a parameter with the following properties:
+    * rowIndex: the row index of the cell
+    * columnIndex: the column index of the cell
+    * value: the original value of the cell
 * `colorPack`
   * An object with components to adjust colors of as keys and the corresponding color as a string. The following components are available for color selection (shown with their default selection):
     * columnResizer: '#e0e0e0'
@@ -126,6 +131,12 @@ const colorPack = {
   oddRowBackground: '#fafafa',
   gridBorders: '#e0e0e0',
 };
+
+function bodyCellValueTransformation({value}) {
+  if (value > 10) return 'i am greater than 10';
+
+  return value;
+}
 
 function onGridCellClick({rowIndex, columnIndex, children, childrenData, rowHeaders, columnHeaders}) {
   console.log('clicked on body cell');
