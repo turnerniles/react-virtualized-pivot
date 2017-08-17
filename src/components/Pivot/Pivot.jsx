@@ -427,24 +427,25 @@ export default class Pivot extends PureComponent {
       aggregationDimensions,
       colFields,
       columnCount,
+      columnWidth,
       currentFilter,
       currentValues,
       data,
       fields,
       headerCounter,
-      pivot,
-      rowFields,
-      selectedAggregationDimension,
-      selectedAggregationType,
-      columnWidth,
       headerHeight,
       overscanColumnCount,
       overscanRowCount,
+      pivot,
       rowCount,
+      rowFields,
       rowHeight,
+      selectedAggregationDimension,
+      selectedAggregationType,
     } = this.state;
 
     const {
+      bodyCellValueTransformation,
       colorPack,
       onGridCellClick,
       onGridHeaderCellClick,
@@ -486,26 +487,27 @@ export default class Pivot extends PureComponent {
         <div className="pivot-grid">
           <section className="pivot-grid">
             <Table
+              bodyCellValueTransformation={bodyCellValueTransformation}
+              checkIfInCollapsed={this.checkIfInCollapsed}
               collapsedRows={pivot.collapsedRows}
-              originalArgs={pivot.originalArgs}
-              rawData={pivot.data.rawData}
+              colorPack={colorPack}
+              columnCount={columnCount}
+              columnWidth={columnWidth}
+              data={data !== undefined ? data : [[]]}
+              headerCounter={headerCounter}
+              headerHeight={headerHeight}
               onGridCellClick={onGridCellClick}
               onGridHeaderCellClick={onGridHeaderCellClick}
               onLeftGridCellClick={onLeftGridCellClick}
               onLeftHeaderCellClick={onLeftHeaderCellClick}
-              colorPack={colorPack}
-              headerHeight={headerHeight}
-              rowHeight={rowHeight}
-              headerCounter={headerCounter}
-              columnWidth={columnWidth}
+              onToggleRow={this.onToggleRow}
+              originalArgs={pivot.originalArgs}
               overscanColumnCount={overscanColumnCount}
               overscanRowCount={overscanRowCount}
-              data={data !== undefined ? data : [[]]}
-              onToggleRow={this.onToggleRow}
-              checkIfInCollapsed={this.checkIfInCollapsed}
-              rowFields={rowFields}
+              rawData={pivot.data.rawData}
               rowCount={rowCount}
-              columnCount={columnCount}
+              rowFields={rowFields}
+              rowHeight={rowHeight}
             />
           </section>
         </div>
@@ -515,6 +517,7 @@ export default class Pivot extends PureComponent {
 }
 
 Pivot.propTypes = {
+  bodyCellValueTransformation: PropTypes.func,
   colorPack: PropTypes.object,
   data: PropTypes.array.isRequired,
   onGridCellClick: PropTypes.func,
@@ -525,6 +528,7 @@ Pivot.propTypes = {
 };
 
 Pivot.defaultProps = {
+  bodyCellValueTransformation: ({value}) => value,
   colorPack: {
     bodyGridBackground: '#fff',
     bodyGridText: '#000',
