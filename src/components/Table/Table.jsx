@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 
 import './styles.scss';
 
+const minColWidth = 20;
+
 export default class Table extends PureComponent {
   constructor(props) {
     super(props);
@@ -19,7 +21,7 @@ export default class Table extends PureComponent {
 
     this.forceTableUpdate = this.forceTableUpdate.bind(this);
     this.getColumnWidth = this.getColumnWidth.bind(this);
-    this.onStop = this.onStop.bind(this);
+    this.onDrag = this.onDrag.bind(this);
     this.setSelectedColumn = this.setSelectedColumn.bind(this);
 
     this.evenOddRowStyle = this.evenOddRowStyle.bind(this);
@@ -53,7 +55,7 @@ export default class Table extends PureComponent {
     return this.state.columnWidths[index];
   }
 
-  onStop(e, ui) {
+  onDrag(e, ui) {
     const {
       columnWidths,
       leftColumnWidth,
@@ -62,13 +64,13 @@ export default class Table extends PureComponent {
 
     if (selectedColumn === 'left') {
       this.setState({
-        leftColumnWidth: leftColumnWidth + (ui.deltaX),
+        leftColumnWidth: Math.max(leftColumnWidth + (ui.deltaX), minColWidth),
       });
     } else {
       const newColumnWidths = [...columnWidths];
 
-      newColumnWidths[selectedColumn] = columnWidths[selectedColumn] +
-        (ui.deltaX);
+      newColumnWidths[selectedColumn] = Math.max(
+        columnWidths[selectedColumn] + (ui.deltaX), minColWidth);
 
       this.setState({
         columnWidths: newColumnWidths,
@@ -111,6 +113,7 @@ export default class Table extends PureComponent {
 
   renderBodyCell({ columnIndex, key, rowIndex, style }) {
     const {
+      bodyCellValueTransformation,
       collapsedRows,
       data,
       headerCounter,
@@ -241,8 +244,18 @@ export default class Table extends PureComponent {
           <div className="body-cell-data">
             {
               data.length > 0 ?
-                data.slice(headerCounter)[rowIndex].value[columnIndex + 1] :
-                ''
+                bodyCellValueTransformation({
+                  rowIndex,
+                  columnIndex,
+                  value: data
+                    .slice(headerCounter)[rowIndex]
+                    .value[columnIndex + 1],
+                }) :
+                bodyCellValueTransformation({
+                  rowIndex,
+                  columnIndex,
+                  value: '',
+                })
             }
           </div>
         </div>
@@ -262,6 +275,7 @@ export default class Table extends PureComponent {
         className="header-container"
         key={key}
         onClick={onGridHeaderCellClick.bind(this, { rowIndex, columnIndex })}
+        onMouseDown={this.setSelectedColumn.bind(this, columnIndex)}
         style={{
           ...style,
         }}
@@ -280,7 +294,7 @@ export default class Table extends PureComponent {
         </div>
         <Draggable
           axis="x"
-          onDrag={this.onStop}
+          onDrag={this.onDrag}
           position={{ x: 0, y: 0 }}
         >
           <div
@@ -290,7 +304,6 @@ export default class Table extends PureComponent {
               borderRight: `1px solid ${this.props.colorPack.columnResizer}`,
               borderBottom: `1px solid ${this.props.colorPack.columnResizer}`,
             }}
-            onMouseEnter={this.setSelectedColumn.bind(this, columnIndex)}
           >
           </div>
         </Draggable>
@@ -310,6 +323,7 @@ export default class Table extends PureComponent {
         className="header-container"
         key={key}
         onClick={onLeftHeaderCellClick}
+        onMouseDown={this.setSelectedColumn.bind(this, 'left')}
         style={{
           ...style,
         }}
@@ -323,7 +337,7 @@ export default class Table extends PureComponent {
         </div>
         <Draggable
           axis="x"
-          onDrag={this.onStop}
+          onDrag={this.onDrag}
           position={{ x: 0, y: 0 }}
         >
           <div
@@ -333,7 +347,6 @@ export default class Table extends PureComponent {
               borderRight: `1px solid ${this.props.colorPack.columnResizer}`,
               borderBottom: `1px solid ${this.props.colorPack.columnResizer}`,
             }}
-            onMouseEnter={this.setSelectedColumn.bind(this, 'left')}
           >
           </div>
         </Draggable>
