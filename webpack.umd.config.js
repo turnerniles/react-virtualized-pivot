@@ -23,7 +23,7 @@ module.exports = {
     'react-virtualized-pivot': './src/components/Pivot/Pivot.jsx',
   },
   output: {
-    path: 'lib/umd',
+    path: 'dist/umd',
     filename: '[name].js',
     libraryTarget: 'umd',
     library: 'VirtualizedSelect',
