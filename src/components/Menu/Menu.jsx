@@ -331,13 +331,13 @@ export default class Menu extends PureComponent {
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet"/>
         <Button
-          raised
-          label="Toggle Drawer"
+          icon
+          primary
           onClick={this.handleRightOpen}
           style={{
             marginBottom: '5px',
           }}
-        />
+        >settings</Button>
         <Drawer
           visible={this.state.isDrawerOpen}
           position={'right'}
