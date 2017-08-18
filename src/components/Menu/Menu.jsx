@@ -328,6 +328,8 @@ export default class Menu extends PureComponent {
 
     return (
       <section className="menu">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet"/>
         <Button
           raised
           label="Toggle Drawer"

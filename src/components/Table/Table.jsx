@@ -345,7 +345,8 @@ export default class Table extends PureComponent {
             style={{
               backgroundColor: colorPack.leftHeaderCellBackground,
               borderRight: `1px solid ${this.props.colorPack.columnResizer}`,
-              borderBottom: `1px solid ${this.props.colorPack.columnResizer}`,
+              borderBottom: columnIndex === 0 ? 'inherit' :
+                `1px solid ${this.props.colorPack.columnResizer}`,
             }}
           >
           </div>
@@ -551,6 +552,7 @@ export default class Table extends PureComponent {
                         className="HeaderGrid"
                         style={{
                           backgroundColor: colorPack.headerGridBackground,
+                          borderBottom: `1px solid ${colorPack.gridBorders}`,
                         }}
                         width={leftColumnWidth}
                         height={headerHeight * headerCounter}
