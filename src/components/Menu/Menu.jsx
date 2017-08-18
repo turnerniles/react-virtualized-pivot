@@ -44,6 +44,7 @@ export default class Menu extends PureComponent {
       aggregationDimensions,
       onSelectAggregationDimension,
       fields,
+      filters,
       currentValues,
       listRowRenderer,
       submitFilters,
@@ -80,7 +81,17 @@ export default class Menu extends PureComponent {
                 <div className="filters-container">
                   <VirtualizedCheckbox
                     style={{width: '500px'}}
-                    items={currentValues}
+                    items={filters[currentFilter] !== undefined ?
+                      currentValues.map((item) => {
+                        if (filters[currentFilter].indexOf(item) > -1) {
+                          return {
+                            label: item, checked: true,
+                          };
+                        }
+                        return {
+                          label: item, checked: false,
+                        };
+                      }) : currentValues}
                     rowHeight={20}
                     onOk={
                       (all, checked, textFilter) => {

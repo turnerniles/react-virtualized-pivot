@@ -340,8 +340,11 @@ export default class Pivot extends PureComponent {
     });
   }
 
-  onFiltersOk(all, checked, textFilter) {
-    console.log('hello', all, checked, textFilter);
+  onFiltersOk({all, checked, textFilter}) {
+    checked = checked.map((item) => {
+      return item.value;
+    });
+
     const {
       currentFilter,
       filters,
@@ -356,7 +359,6 @@ export default class Pivot extends PureComponent {
   }
 
   onFiltersCancel() {
-    console.log('cancel');
     this.setState({
       currentFilter: '',
     });
@@ -456,6 +458,7 @@ export default class Pivot extends PureComponent {
       currentValues,
       data,
       fields,
+      filters,
       headerCounter,
       headerHeight,
       overscanColumnCount,
@@ -496,6 +499,7 @@ export default class Pivot extends PureComponent {
           aggregationDimensions={aggregationDimensions}
           onSelectAggregationDimension={this.onSelectAggregationDimension}
           fields={fields}
+          filters={filters}
           currentValues={currentValues}
           listRowRenderer={this.listRowRenderer}
           submitFilters={this.submitFilters}
