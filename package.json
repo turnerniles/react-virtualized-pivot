@@ -7,15 +7,16 @@
     "build": "webpack --config webpack.production.config.js --progress --profile --colors",
     "build-umd": "webpack --config webpack.umd.config.js --progress --profile --colors",
     "start": "webpack-dev-server --progress --profile --colors",
-    "lint": "eslint 'src/**/*.jsx'",
+    "lint:eslint": "eslint 'src/**/*.jsx'",
+    "lint:staged": "lint-staged",
     "dev": "webpack-dashboard -- webpack-dev-server --progress --profile --colors",
     "test:watch": "karma start",
     "test": "karma start --browsers Firefox --single-run",
-    "precommit": "lint-staged",
     "preversion": "npm run build-umd"
   },
+  "pre-commit": "lint:staged",
   "lint-staged": {
-    "*.js": "lint"
+    "*.js": "lint:eslint"
   },
   "repository": {
     "type": "git",

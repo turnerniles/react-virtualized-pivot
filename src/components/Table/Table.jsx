@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
 import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import Draggable from 'react-draggable';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
-import './styles.scss';
+import './styles.scss'
 
 const minColWidth = 20;
 
