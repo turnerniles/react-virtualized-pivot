@@ -21,6 +21,15 @@ loaders.push({
   exclude: ['node_modules'],
 });
 
+const babelLoader = {
+  test: /\.jsx?$/,
+  exclude: /(node_modules|bower_components|public\/)/,
+  loader: 'babel-loader',
+  query: {
+    presets: ['es2015', 'react', 'stage-2'],
+  },
+};
+
 module.exports = {
   entry: [
     'babel-polyfill',
@@ -36,7 +45,7 @@ module.exports = {
     extensions: ['.js', '.jsx'],
   },
   module: {
-    loaders,
+    loaders: [babelLoader].concat(loaders),
   },
   plugins: [
     new WebpackCleanupPlugin(),

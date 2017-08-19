@@ -30,4 +30,4 @@ node_modules
 .DS_Store
 
 # Build files
-lib
+dist
