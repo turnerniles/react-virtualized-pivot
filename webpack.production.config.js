@@ -8,7 +8,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 loaders.push({
   test: /\.css$/,
-  loaders: ['style-loader', 'css-loader?importLoaders=1'],
+  loaders: ['style-loader', 'css-loader?importLoaders=1', 'postcss-loader'],
   exclude: ['node_modules'],
 });
 
