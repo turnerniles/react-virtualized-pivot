@@ -7,11 +7,15 @@
     "build": "webpack --config webpack.production.config.js --progress --profile --colors",
     "build-umd": "webpack --config webpack.umd.config.js --progress --profile --colors",
     "start": "webpack-dev-server --progress --profile --colors",
-    "lint": "eslint --ext js --ext jsx src || exit 0",
+    "lint": "eslint 'src/**/*.jsx'",
     "dev": "webpack-dashboard -- webpack-dev-server --progress --profile --colors",
     "test:watch": "karma start",
     "test": "karma start --browsers Firefox --single-run",
+    "precommit": "npm run lint",
     "preversion": "npm run build-umd"
+  },
+  "lint-staged": {
+    "*.js": "lint"
   },
   "repository": {
     "type": "git",
@@ -59,6 +63,7 @@
     "extract-text-webpack-plugin": "^v2.0.0-rc.1",
     "file-loader": "^0.10.0",
     "html-webpack-plugin": "^2.26.0",
+    "husky": "^0.14.3",
     "karma": "^1.6.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.0.0",
@@ -67,8 +72,10 @@
     "karma-mocha": "^1.3.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.3",
+    "lint-staged": "^4.0.3",
     "mocha": "^3.2.0",
     "postcss-loader": "^1.2.2",
+    "pre-commit": "^1.2.2",
     "react-addons-test-utils": "^15.5.1",
     "react-hot-loader": "^3.0.0-beta.6",
     "sinon": "^2.1.0",
