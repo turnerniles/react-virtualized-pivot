@@ -4,8 +4,6 @@ import Table from '../Table/Table.jsx';
 import PropTypes from 'prop-types';
 import Menu from '../Menu/Menu.jsx';
 
-window.pivot = QuickPivot;
-
 import 'react-select/dist/react-select.css';
 import './styles.scss';
 
@@ -48,6 +46,7 @@ export default class Pivot extends PureComponent {
       data: [],
       header: {},
       headerCounter: 0,
+      isDrawerOpen: false,
     };
 
     this.onSelectAggregationDimension =
@@ -66,6 +65,9 @@ export default class Pivot extends PureComponent {
     this.setColFields = this.setColFields.bind(this);
     this.onFiltersOk = this.onFiltersOk.bind(this);
     this.onFiltersCancel = this.onFiltersCancel.bind(this);
+    this.handleRightOpen = this.handleRightOpen.bind(this);
+    this.handleRightClose = this.handleRightClose.bind(this);
+    this.toggleDrawer = this.toggleDrawer.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -448,6 +450,18 @@ export default class Pivot extends PureComponent {
     });
   }
 
+  handleRightOpen() {
+    this.toggleDrawer(true);
+  };
+
+  handleRightClose(e) {
+    this.toggleDrawer(false);
+  };
+
+  toggleDrawer(open) {
+    this.setState({ isDrawerOpen: open });
+  };
+
   render() {
     const {
       aggregationDimensions,
@@ -469,6 +483,7 @@ export default class Pivot extends PureComponent {
       rowHeight,
       selectedAggregationDimension,
       selectedAggregationType,
+      isDrawerOpen,
     } = this.state;
 
     const {
@@ -513,6 +528,8 @@ export default class Pivot extends PureComponent {
           currentFilter={currentFilter}
           onFiltersOk={this.onFiltersOk}
           onFiltersCancel={this.onFiltersCancel}
+          handleRightClose={this.handleRightClose}
+          isDrawerOpen={isDrawerOpen}
         />
         <div className="pivot-grid">
           <section className="pivot-grid">
@@ -538,6 +555,7 @@ export default class Pivot extends PureComponent {
               rowCount={rowCount}
               rowFields={rowFields}
               rowHeight={rowHeight}
+              handleRightOpen={this.handleRightOpen}
             />
           </section>
         </div>

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 import Drawer from 'react-md/lib/Drawers';
-import Button from 'react-md/lib/Buttons/Button';
 import VirtualizedCheckbox from 'react-virtualized-checkbox';
 
 import './styles.scss';
@@ -12,27 +11,7 @@ import './styles.scss';
 export default class Menu extends PureComponent {
   constructor(props) {
     super(props);
-
-    this.state = {
-      isDrawerOpen: false,
-    };
-
-    this.handleRightOpen = this.handleRightOpen.bind(this);
-    this.handleRightClose = this.handleRightClose.bind(this);
-    this.toggleDrawer = this.toggleDrawer.bind(this);
   }
-
-  handleRightOpen() {
-    this.toggleDrawer(true);
-  };
-
-  handleRightClose(e) {
-    this.toggleDrawer(false);
-  };
-
-  toggleDrawer(open) {
-    this.setState({ isDrawerOpen: open });
-  };
 
   render() {
     const {
@@ -58,6 +37,8 @@ export default class Menu extends PureComponent {
       currentFilter,
       onFiltersOk,
       onFiltersCancel,
+      isDrawerOpen,
+      handleRightClose,
     } = this.props;
 
     const fieldsRenderer = fields.length ?
@@ -339,21 +320,11 @@ export default class Menu extends PureComponent {
 
     return (
       <section className="menu">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-          rel="stylesheet"/>
-        <Button
-          icon
-          primary
-          onClick={this.handleRightOpen}
-          style={{
-            marginBottom: '5px',
-          }}
-        >settings</Button>
         <Drawer
-          visible={this.state.isDrawerOpen}
+          visible={isDrawerOpen}
           position={'right'}
           overlay={true}
-          onVisibilityToggle={this.handleRightClose}
+          onVisibilityToggle={handleRightClose}
           type={Drawer.DrawerTypes.TEMPORARY}
           style={{ zIndex: 100 }}
         >

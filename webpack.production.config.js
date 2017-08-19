@@ -8,7 +8,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 loaders.push({
   test: /\.css$/,
-  loaders: ['style-loader', 'css-loader?importLoaders=1'],
+  loaders: ['style-loader', 'css-loader?importLoaders=1', 'postcss-loader'],
   exclude: ['node_modules'],
 });
 
@@ -20,6 +20,15 @@ loaders.push({
   }),
   exclude: ['node_modules'],
 });
+
+const babelLoader = {
+  test: /\.jsx?$/,
+  exclude: /(node_modules|bower_components|public\/)/,
+  loader: 'babel-loader',
+  query: {
+    presets: ['es2015', 'react', 'stage-2'],
+  },
+};
 
 module.exports = {
   entry: [
@@ -36,7 +45,7 @@ module.exports = {
     extensions: ['.js', '.jsx'],
   },
   module: {
-    loaders,
+    loaders: [babelLoader].concat(loaders),
   },
   plugins: [
     new WebpackCleanupPlugin(),
