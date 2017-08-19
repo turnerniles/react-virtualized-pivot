@@ -16,7 +16,7 @@
   },
   "pre-commit": "lint:staged",
   "lint-staged": {
-    "*.js": "lint:eslint"
+    "*.jsx": "lint:eslint"
   },
   "repository": {
     "type": "git",
