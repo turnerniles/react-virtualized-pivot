@@ -1,13 +1,5 @@
 module.exports = [
   {
-    test: /\.jsx?$/,
-    exclude: /(node_modules|bower_components|public\/)/,
-    loader: 'babel-loader',
-    query: {
-      presets: ['es2015', 'stage-2', 'react'],
-    },
-  },
-  {
     test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
     exclude: /(node_modules|bower_components)/,
     loader: 'file-loader',

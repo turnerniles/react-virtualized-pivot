@@ -17,6 +17,16 @@ loaders.push({
   exclude: ['node_modules'],
 });
 
+const babelLoader = {
+  test: /\.jsx?$/,
+  exclude: /(node_modules|bower_components|public\/)/,
+  loader: 'babel-loader',
+  query: {
+    plugins: ['transform-runtime'],
+    presets: ['es2015', 'react', 'stage-2'],
+  },
+};
+
 module.exports = {
   devtool: 'source-map',
   entry: {
@@ -57,6 +67,6 @@ module.exports = {
     }),
   ],
   module: {
-    loaders,
+    loaders: [babelLoader].concat(loaders),
   },
 };
