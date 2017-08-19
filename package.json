@@ -11,7 +11,7 @@
     "dev": "webpack-dashboard -- webpack-dev-server --progress --profile --colors",
     "test:watch": "karma start",
     "test": "karma start --browsers Firefox --single-run",
-    "precommit": "npm run lint",
+    "precommit": "lint-staged",
     "preversion": "npm run build-umd"
   },
   "lint-staged": {
