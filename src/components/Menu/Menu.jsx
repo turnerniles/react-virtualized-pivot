@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 import Drawer from 'react-md/lib/Drawers';
-import VirtualizedCheckbox from 'react-virtualized-checkbox';
+import VirtualizedCheckbox from
+  '../CustomReactVirtualizedCheckbox/CustomReactVirtualizedCheckbox.js';
+import { Modal, Position } from 'react-overlays';
 
 import './styles.scss';
 
@@ -38,10 +40,25 @@ export default class Menu extends PureComponent {
       handleRightClose,
     } = this.props;
 
+    const divStyle = {
+      backgroundColor: 'white',
+      border: 'solid 1px',
+      boxShadow: '0 5px 15px #9d9d9d',
+      display: 'flex',
+      flexDirection: 'column',
+      fontSize: '90%',
+      height: '100%',
+      justifyContent: 'space-between',
+      padding: '3px',
+      zIndex: 100,
+      left: '-500px',
+    };
+
     const fieldsRenderer = fields.length ?
       fields.map((field, index) => {
         return (
           <li
+            ref={ref => { this.overlayButton = ref; }}
             key={index}
             data-id={field}
             style={{
@@ -49,43 +66,6 @@ export default class Menu extends PureComponent {
               color: colorPack.sortableFieldText,
             }}
           >
-            {(currentValues.length > 0 && currentFilter === field) &&
-              <div
-                className="filter-menu"
-                style={{
-                  display: currentValues.length > 0 ? 'inline-block' : 'none',
-                }}
-              >
-                <div className="filters-container">
-                  <VirtualizedCheckbox
-                    style={{width: '500px'}}
-                    items={filters[currentFilter] !== undefined ?
-                      currentValues.map((item) => {
-                        if (filters[currentFilter].indexOf(item) > -1) {
-                          return {
-                            label: item, checked: false,
-                          };
-                        }
-                        return {
-                          label: item, checked: true,
-                        };
-                      }) : currentValues.map((item) => {
-                        return {
-                          label: item, checked: true,
-                        };
-                      })
-                    }
-                    rowHeight={20}
-                    onOk={
-                      (all, checked, textFilter) => {
-                        onFiltersOk({all, checked, textFilter});
-                      }
-                    }
-                    onCancel={() => onFiltersCancel()}
-                  />
-                </div>
-              </div>
-            }
             <div className="inner-filter-container">
               <div className="filter-text">
                 {field}
@@ -289,6 +269,62 @@ export default class Menu extends PureComponent {
               }}
               tag="ul"
             >
+              {(currentValues.length > 0) &&
+                <div
+                  className="filter-menu"
+                  style={{
+                    display: currentValues.length > 0 ? 'inline-block' : 'none',
+                  }}
+                >
+                  <div className="filters-container">
+                    <Modal
+                      autoFocus={false}
+                      show={currentValues.length > 0}
+                      keyboard={false}
+                      target={this.overlayButton}
+                      container={document.body}
+                      backdropStyle={{ position: 'fixed', top: 0, bottom: 0,
+                        left: 0, right: 0, zIndex: 100}}
+                    >
+                      <Position
+                        placement='bottom'
+                        container={document.body}
+                        target={this.overlayButton}
+                      >
+                        <div style={{ position: 'absolute',
+                          ...divStyle, height: 100, width: 200 }}>
+                          <VirtualizedCheckbox
+                            style={{width: '500px'}}
+                            items={filters[currentFilter] !== undefined ?
+                              currentValues.map((item) => {
+                                if (filters[currentFilter].indexOf(item) > -1) {
+                                  return {
+                                    label: item, checked: false,
+                                  };
+                                }
+                                return {
+                                  label: item, checked: true,
+                                };
+                              }) : currentValues.map((item) => {
+                                return {
+                                  label: item, checked: true,
+                                };
+                              })
+                            }
+                            rowHeight={20}
+                            onOk={
+                              (all, checked, textFilter) => {
+                                onFiltersOk({all, checked, textFilter});
+                              }
+                            }
+                            onCancel={() => onFiltersCancel()}
+                          />
+                        </div>
+                      </Position>
+                    </Modal>
+                  </div>
+                </div>
+              }
               {fieldsRenderer}
             </ReactSortable>
           </div>

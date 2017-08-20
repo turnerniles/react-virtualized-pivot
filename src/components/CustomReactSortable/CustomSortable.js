@@ -394,7 +394,7 @@
 				this._lastX = (touch || evt).clientX;
 				this._lastY = (touch || evt).clientY;
 
-				dragEl.style['will-change'] = 'transform';
+				// dragEl.style['will-change'] = 'transform';
 
 				dragStartFn = function () {
 					// Delayed drag has been triggered
@@ -630,7 +630,7 @@
 				cloneEl = _clone(dragEl);
 
 				cloneEl.draggable = false;
-				cloneEl.style['will-change'] = '';
+				// cloneEl.style['will-change'] = '';
 
 				_css(cloneEl, 'display', 'none');
 				_toggleClass(cloneEl, this.options.chosenClass, false);
@@ -908,7 +908,7 @@
 					}
 
 					_disableDraggable(dragEl);
-					dragEl.style['will-change'] = '';
+					// dragEl.style['will-change'] = '';
 
 					// Remove class's
 					_toggleClass(dragEl, this.options.ghostClass, false);

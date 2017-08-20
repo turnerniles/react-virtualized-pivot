@@ -146,35 +146,35 @@ section.menu{
 			right: 1px;
 		}
 	}
-
-	.filter-menu{
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    background-color: #fff;
-    z-index: 2;
-    color: black;
-
-		.filters-container{
-			height: 150px;
-			padding-bottom: 5px;
-			border: 1px solid black;
-			box-sizing: content-box;
-
-			.filter-container{
-				font-size: 11px;
-				margin-top: 3px;
-				height: 20px;
-				float: left;
-				text-align: left;
-				width: 100%;
-				.filter-name{
-					display: inline-block;
-				}
-				.filter-checkbox{
-					display: inline-block;
-				}
-			}
-		}
-  }
+  // 
+	// .filter-menu{
+  //   position: absolute;
+  //   width: 150px;
+  //   height: 150px;
+  //   background-color: #fff;
+  //   z-index: 2;
+  //   color: black;
+  //
+	// 	.filters-container{
+	// 		height: 150px;
+	// 		padding-bottom: 5px;
+	// 		border: 1px solid black;
+	// 		box-sizing: content-box;
+  //
+	// 		.filter-container{
+	// 			font-size: 11px;
+	// 			margin-top: 3px;
+	// 			height: 20px;
+	// 			float: left;
+	// 			text-align: left;
+	// 			width: 100%;
+	// 			.filter-name{
+	// 				display: inline-block;
+	// 			}
+	// 			.filter-checkbox{
+	// 				display: inline-block;
+	// 			}
+	// 		}
+	// 	}
+  // }
 }
