@@ -57,9 +57,7 @@ export default class Pivot extends PureComponent {
     this.checkIfInCollapsed = this.checkIfInCollapsed.bind(this);
     this.displayFilter = this.displayFilter.bind(this);
     this.addToFilters = this.addToFilters.bind(this);
-    this.submitFilters = this.submitFilters.bind(this);
     this.showFilterMenu = this.showFilterMenu.bind(this);
-    this.listRowRenderer = this.listRowRenderer.bind(this);
     this.setFields = this.setFields.bind(this);
     this.setRowFields = this.setRowFields.bind(this);
     this.setColFields = this.setColFields.bind(this);
@@ -290,30 +288,6 @@ export default class Pivot extends PureComponent {
       pivot.collapsedRows;
   }
 
-  listRowRenderer({ index, isScrolling, key, style }) {
-    const { currentValues, currentFilter, filters } = this.state;
-
-    return (
-      <div
-        key={currentValues[index]}
-        className="filter-container"
-        style={style}
-      >
-        <input
-          onChange={this.addToFilters.bind(this, currentValues[index])}
-          className="filter-checkbox"
-          type="checkbox"
-          defaultChecked={(filters[currentFilter] === undefined) ? false :
-            filters[currentFilter].indexOf(currentValues[index]) !== -1}
-        >
-        </input>
-        <div className='filter-name'>
-          {currentValues[index]}
-        </div>
-      </div>
-    );
-  }
-
   displayFilter(fieldName) {
     const {
       pivot,
@@ -361,63 +335,65 @@ export default class Pivot extends PureComponent {
   }
 
   onFiltersCancel() {
+    console.log('in the cancel');
     this.setState({
       currentFilter: '',
+      currentValues: [],
     });
   }
 
-  submitFilters() {
-    const {
-      colFields,
-      filters,
-      rowFields,
-      selectedAggregationDimension,
-      selectedAggregationType,
-    } = this.state;
-
-    // create new pivot and apply all filters. Because quick-pivot does not
-    // account for removal of filters
-    const newPivot = this.props.data !== undefined ?
-      new QuickPivot(this.props.data, rowFields, colFields,
-        selectedAggregationDimension || '', selectedAggregationType, '') :
-      {};
-
-    Object.keys(filters).forEach((filter) => {
-      newPivot.filter((elem, index, array) => {
-        return filters[filter].findIndex((field) => {
-          return field === elem[filter];
-        }) === -1;
-      });
-    });
-
-    let headerCounter = 0;
-
-    if (newPivot.data) {
-      while (true) {
-        if (newPivot.data.table) {
-          if (newPivot.data.table[headerCounter].type === 'colHeader') {
-            headerCounter += 1;
-          } else {
-            break;
-          }
-        } else {
-          break;
-        }
-      }
-    }
-
-    this.setState({
-      headerCounter,
-      pivot: newPivot,
-      columnCount: (newPivot.data.table.length &&
-        newPivot.data.table[0].value.length) ?
-        newPivot.data.table[0].value.length : 0,
-      rowCount: newPivot.data.table.length || 0,
-      data: newPivot.data.table,
-      header: newPivot.data.table[0],
-      currentFilter: '',
-    });
-  }
+  // submitFilters() {
+  //   const {
+  //     colFields,
+  //     filters,
+  //     rowFields,
+  //     selectedAggregationDimension,
+  //     selectedAggregationType,
+  //   } = this.state;
+  //
+  //   // create new pivot and apply all filters. Because quick-pivot does not
+  //   // account for removal of filters
+  //   const newPivot = this.props.data !== undefined ?
+  //     new QuickPivot(this.props.data, rowFields, colFields,
+  //       selectedAggregationDimension || '', selectedAggregationType, '') :
+  //     {};
+  //
+  //   Object.keys(filters).forEach((filter) => {
+  //     newPivot.filter((elem, index, array) => {
+  //       return filters[filter].findIndex((field) => {
+  //         return field === elem[filter];
+  //       }) === -1;
+  //     });
+  //   });
+  //
+  //   let headerCounter = 0;
+  //
+  //   if (newPivot.data) {
+  //     while (true) {
+  //       if (newPivot.data.table) {
+  //         if (newPivot.data.table[headerCounter].type === 'colHeader') {
+  //           headerCounter += 1;
+  //         } else {
+  //           break;
+  //         }
+  //       } else {
+  //         break;
+  //       }
+  //     }
+  //   }
+  //
+  //   this.setState({
+  //     headerCounter,
+  //     pivot: newPivot,
+  //     columnCount: (newPivot.data.table.length &&
+  //       newPivot.data.table[0].value.length) ?
+  //       newPivot.data.table[0].value.length : 0,
+  //     rowCount: newPivot.data.table.length || 0,
+  //     data: newPivot.data.table,
+  //     header: newPivot.data.table[0],
+  //     currentFilter: '',
+  //   });
+  // }
 
   showFilterMenu(field) {
     const {
@@ -516,7 +492,6 @@ export default class Pivot extends PureComponent {
           fields={fields}
           filters={filters}
           currentValues={currentValues}
-          listRowRenderer={this.listRowRenderer}
           submitFilters={this.submitFilters}
           showFilterMenu={this.showFilterMenu}
           rowFields={rowFields}

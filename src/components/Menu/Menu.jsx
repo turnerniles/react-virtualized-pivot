@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { List } from 'react-virtualized';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
@@ -25,8 +24,6 @@ export default class Menu extends PureComponent {
       fields,
       filters,
       currentValues,
-      listRowRenderer,
-      submitFilters,
       showFilterMenu,
       colFields,
       rowFields,
@@ -66,13 +63,18 @@ export default class Menu extends PureComponent {
                       currentValues.map((item) => {
                         if (filters[currentFilter].indexOf(item) > -1) {
                           return {
-                            label: item, checked: true,
+                            label: item, checked: false,
                           };
                         }
                         return {
-                          label: item, checked: false,
+                          label: item, checked: true,
                         };
-                      }) : currentValues}
+                      }) : currentValues.map((item) => {
+                        return {
+                          label: item, checked: true,
+                        };
+                      })
+                    }
                     rowHeight={20}
                     onOk={
                       (all, checked, textFilter) => {
@@ -125,18 +127,33 @@ export default class Menu extends PureComponent {
           className="filter-menu"
           style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
           <div className="filters-container">
-            <List
-              ref='List'
-              className={'virtualized-list'}
-              height={80}
-              overscanRowCount={10}
-              rowCount={currentValues.length}
+            <VirtualizedCheckbox
+              style={{width: '500px'}}
+              items={filters[currentFilter] !== undefined ?
+                currentValues.map((item) => {
+                  if (filters[currentFilter].indexOf(item) > -1) {
+                    return {
+                      label: item, checked: false,
+                    };
+                  }
+                  return {
+                    label: item, checked: true,
+                  };
+                }) : currentValues.map((item) => {
+                  return {
+                    label: item, checked: true,
+                  };
+                })
+              }
               rowHeight={20}
-              rowRenderer={listRowRenderer}
-              width={100}
+              onOk={
+                (all, checked, textFilter) => {
+                  onFiltersOk({all, checked, textFilter});
+                }
+              }
+              onCancel={() => onFiltersCancel()}
             />
           </div>
-          <div onClick={submitFilters} className="filter-submit">Submit</div>
         </div>
           }
         </li>
@@ -168,18 +185,33 @@ export default class Menu extends PureComponent {
           className="filter-menu"
           style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
           <div className="filters-container">
-            <List
-              ref='List'
-              className={'virtualized-list'}
-              height={80}
-              overscanRowCount={10}
-              rowCount={currentValues.length}
+            <VirtualizedCheckbox
+              style={{width: '500px'}}
+              items={filters[currentFilter] !== undefined ?
+                currentValues.map((item) => {
+                  if (filters[currentFilter].indexOf(item) > -1) {
+                    return {
+                      label: item, checked: false,
+                    };
+                  }
+                  return {
+                    label: item, checked: true,
+                  };
+                }) : currentValues.map((item) => {
+                  return {
+                    label: item, checked: true,
+                  };
+                })
+              }
               rowHeight={20}
-              rowRenderer={listRowRenderer}
-              width={100}
+              onOk={
+                (all, checked, textFilter) => {
+                  onFiltersOk({all, checked, textFilter});
+                }
+              }
+              onCancel={() => onFiltersCancel()}
             />
           </div>
-          <div onClick={submitFilters} className="filter-submit">Submit</div>
         </div>
           }
         </li>
@@ -250,6 +282,10 @@ export default class Menu extends PureComponent {
               options={{
                 group: 'shared',
                 onAdd: onAddUpdateField,
+                onMove: () => {
+                  console.log('hello');
+                  onFiltersCancel();
+                },
               }}
               tag="ul"
             >
@@ -278,7 +314,10 @@ export default class Menu extends PureComponent {
                 group: 'shared',
                 onAdd: onAddUpdateField,
                 onUpdate: onAddUpdateField,
-                // onChoose: () => {this.setState({currentFilter: ''})},
+                onMove: () => {
+                  console.log('hello');
+                  onFiltersCancel();
+                },
               }}
               tag="ul"
             >
@@ -307,7 +346,9 @@ export default class Menu extends PureComponent {
                 group: 'shared',
                 onAdd: onAddUpdateField,
                 onUpdate: onAddUpdateField,
-                // onChoose: () => {this.setState({currentFilter: ''})},
+                onMove: () => {
+                  onFiltersCancel();
+                },
               }}
               tag="ul"
             >
@@ -345,8 +386,6 @@ Menu.propTypes = {
   onSelectAggregationDimension: PropTypes.func.isRequired,
   fields: PropTypes.array.isRequired,
   currentValues: PropTypes.array.isRequired,
-  listRowRenderer: PropTypes.func.isRequired,
-  submitFilters: PropTypes.func.isRequired,
   showFilterMenu: PropTypes.func.isRequired,
   rowFields: PropTypes.array.isRequired,
   colFields: PropTypes.array.isRequired,
@@ -357,4 +396,6 @@ Menu.propTypes = {
   currentFilter: PropTypes.string.isRequired,
   onFiltersOk: PropTypes.func.isRequired,
   onFiltersCancel: PropTypes.func.isRequired,
+  isDrawerOpen: PropTypes.bool.isRequired,
+  handleRightClose: PropTypes.func.isRequired,
 };

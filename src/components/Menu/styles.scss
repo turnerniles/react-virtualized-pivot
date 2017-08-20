@@ -36,7 +36,6 @@ section.menu{
   .fields-drag-container{
 
     .fields{
-      height: 46px;
       width: 100%;
       display: inline-block;
     }
@@ -59,6 +58,7 @@ section.menu{
 	  margin-left: 10px;
 	  background-color: #fff;
 		overflow-y: auto;
+    overflow-x: hidden;
 
 		@media (min-width: 768px){height: 76px;}
 		@media (min-width: 992px){height: 76px;}
@@ -75,7 +75,7 @@ section.menu{
     background-color: rgba(0,0,0,.5);
     box-shadow: 0 0 1px rgba(255,255,255,.5);
   }
-  
+
 	.block__list-title {
 	  margin: -20px 0 0;
 	  padding: 10px;
@@ -177,16 +177,4 @@ section.menu{
 			}
 		}
   }
-	.filter-submit{
-		font-size: 11px;
-		border-top: 1px solid black;
-		height: 20%;
-		line-height: 1.7;
-		background-color: #5F9EDF;
-		cursor: pointer;
-		border-right: 1px solid black;
-    border-bottom: 1px solid black;
-    border-left: 1px solid black;
-    color: white;
-	}
 }

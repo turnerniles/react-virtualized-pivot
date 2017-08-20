@@ -328,6 +328,7 @@ export default class Table extends PureComponent {
         onMouseDown={this.setSelectedColumn.bind(this, 'left')}
         style={{
           ...style,
+          borderLeft: `1px solid ${this.props.colorPack.columnResizer}`,
         }}
       >
         <div className="header-cell">
@@ -336,11 +337,7 @@ export default class Table extends PureComponent {
           { rowIndex === 0 &&
             <Button
               icon
-              primary
               onClick={handleRightOpen}
-              style={{
-                marginBottom: '5px',
-              }}
             >settings</Button>
           }
           {
