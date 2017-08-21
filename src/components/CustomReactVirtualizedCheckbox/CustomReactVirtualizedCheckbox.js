@@ -157,6 +157,18 @@ class VirtualizedCheckbox extends Component {
     }
   }
 
+  get unCheckedBoxes () {
+    const { boxes } = this.state
+    if (this.checkedAll) {
+      return boxes.slice(1)
+    } else {
+      return boxes
+        .slice(1)
+        .filter(box => box.filtered)
+        .filter(box => !box.checked)
+    }
+  }
+
   get checkedAll () {
     const { boxes, textFilter } = this.state
     return boxes[0].checked && !textFilter
@@ -210,6 +222,7 @@ class VirtualizedCheckbox extends Component {
                     this.props.onOk(
                       this.checkedAll,
                       this.checkedBoxes,
+                      this.unCheckedBoxes,
                       textFilter
                     )}
                 />

@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 import Drawer from 'react-md/lib/Drawers';
-import VirtualizedCheckbox from
-  '../CustomReactVirtualizedCheckbox/CustomReactVirtualizedCheckbox.js';
 import { Modal, Position } from 'react-overlays';
-
+import OverlayContent from './OverlayContent/OverlayContent.jsx';
 import './styles.scss';
 
 export default class Menu extends PureComponent {
@@ -51,14 +49,13 @@ export default class Menu extends PureComponent {
       justifyContent: 'space-between',
       padding: '3px',
       zIndex: 100,
-      left: '-500px',
     };
 
     const fieldsRenderer = fields.length ?
       fields.map((field, index) => {
         return (
           <li
-            ref={ref => { this.overlayButton = ref; }}
+            ref={ref => { this.fieldsOverlayButton = ref; }}
             key={index}
             data-id={field}
             style={{
@@ -66,7 +63,8 @@ export default class Menu extends PureComponent {
               color: colorPack.sortableFieldText,
             }}
           >
-            <div className="inner-filter-container">
+            <div className="inner-filter-container"
+            >
               <div className="filter-text">
                 {field}
               </div>
@@ -77,13 +75,47 @@ export default class Menu extends PureComponent {
               ✎
               </div>
             </div>
+            {(currentValues.length > 0 && currentFilter === field) &&
+              <div
+                className="filter-menu"
+              >
+                <div className="filters-container">
+                  <Modal
+                    autoFocus={true}
+                    show={currentValues.length > 0}
+                    keyboard={false}
+                    target={this.fieldsOverlayButton}
+                    container={document.body}
+                  >
+                    <Position
+                      placement={'bottom'}
+                      container={document.body}
+                      target={this.fieldsOverlayButton}
+                    >
+                      <div style={{ position: 'absolute',
+                        ...divStyle, height: 100, width: 200 }}>
+                        <OverlayContent
+                          filters={filters}
+                          currentFilter={currentFilter}
+                          currentValues={currentValues}
+                          onFiltersOk={onFiltersOk}
+                          onFiltersCancel={onFiltersCancel}
+                        />
+                      </div>
+                    </Position>
+                  </Modal>
+                </div>
+              </div>
+            }
           </li>
         );
       }) :
       '';
+
     const rowFieldsRender = rowFields.map((field, index) =>
       (
         <li
+          ref={ref => { this.rowFieldsOverlayButton = ref; }}
           key={index}
           data-id={field}
           style={{
@@ -103,38 +135,36 @@ export default class Menu extends PureComponent {
             </div>
           </div>
           {(currentValues.length > 0 && currentFilter === field) &&
-        <div
-          className="filter-menu"
-          style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
-          <div className="filters-container">
-            <VirtualizedCheckbox
-              style={{width: '500px'}}
-              items={filters[currentFilter] !== undefined ?
-                currentValues.map((item) => {
-                  if (filters[currentFilter].indexOf(item) > -1) {
-                    return {
-                      label: item, checked: false,
-                    };
-                  }
-                  return {
-                    label: item, checked: true,
-                  };
-                }) : currentValues.map((item) => {
-                  return {
-                    label: item, checked: true,
-                  };
-                })
-              }
-              rowHeight={20}
-              onOk={
-                (all, checked, textFilter) => {
-                  onFiltersOk({all, checked, textFilter});
-                }
-              }
-              onCancel={() => onFiltersCancel()}
-            />
-          </div>
-        </div>
+            <div
+              className="filter-menu"
+            >
+              <div className="filters-container">
+                <Modal
+                  autoFocus={true}
+                  show={currentValues.length > 0}
+                  keyboard={false}
+                  target={this.rowFieldsOverlayButton}
+                  container={document.body}
+                >
+                  <Position
+                    placement={'bottom'}
+                    container={document.body}
+                    target={this.rowFieldsOverlayButton}
+                  >
+                    <div style={{ position: 'absolute',
+                      ...divStyle, height: 100, width: 200 }}>
+                      <OverlayContent
+                        filters={filters}
+                        currentFilter={currentFilter}
+                        currentValues={currentValues}
+                        onFiltersOk={onFiltersOk}
+                        onFiltersCancel={onFiltersCancel}
+                      />
+                    </div>
+                  </Position>
+                </Modal>
+              </div>
+            </div>
           }
         </li>
       ));
@@ -142,6 +172,7 @@ export default class Menu extends PureComponent {
     const colFieldsRender = colFields.map((field, index) =>
       (
         <li
+          ref={ref => { this.colFieldsOverlayButton = ref; }}
           key={index}
           data-id={field}
           style={{
@@ -161,38 +192,36 @@ export default class Menu extends PureComponent {
             </div>
           </div>
           {(currentValues.length > 0 && currentFilter === field) &&
-        <div
-          className="filter-menu"
-          style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
-          <div className="filters-container">
-            <VirtualizedCheckbox
-              style={{width: '500px'}}
-              items={filters[currentFilter] !== undefined ?
-                currentValues.map((item) => {
-                  if (filters[currentFilter].indexOf(item) > -1) {
-                    return {
-                      label: item, checked: false,
-                    };
-                  }
-                  return {
-                    label: item, checked: true,
-                  };
-                }) : currentValues.map((item) => {
-                  return {
-                    label: item, checked: true,
-                  };
-                })
-              }
-              rowHeight={20}
-              onOk={
-                (all, checked, textFilter) => {
-                  onFiltersOk({all, checked, textFilter});
-                }
-              }
-              onCancel={() => onFiltersCancel()}
-            />
-          </div>
-        </div>
+            <div
+              className="filter-menu"
+            >
+              <div className="filters-container">
+                <Modal
+                  autoFocus={true}
+                  show={currentValues.length > 0}
+                  keyboard={false}
+                  target={this.colFieldsOverlayButton}
+                  container={document.body}
+                >
+                  <Position
+                    placement={'bottom'}
+                    container={document.body}
+                    target={this.colFieldsOverlayButton}
+                  >
+                    <div style={{ position: 'absolute',
+                      ...divStyle, height: 100, width: 200 }}>
+                      <OverlayContent
+                        filters={filters}
+                        currentFilter={currentFilter}
+                        currentValues={currentValues}
+                        onFiltersOk={onFiltersOk}
+                        onFiltersCancel={onFiltersCancel}
+                      />
+                    </div>
+                  </Position>
+                </Modal>
+              </div>
+            </div>
           }
         </li>
       ));
@@ -263,68 +292,11 @@ export default class Menu extends PureComponent {
                 group: 'shared',
                 onAdd: onAddUpdateField,
                 onMove: () => {
-                  console.log('hello');
                   onFiltersCancel();
                 },
               }}
               tag="ul"
             >
-              {(currentValues.length > 0) &&
-                <div
-                  className="filter-menu"
-                  style={{
-                    display: currentValues.length > 0 ? 'inline-block' : 'none',
-                  }}
-                >
-                  <div className="filters-container">
-                    <Modal
-                      autoFocus={false}
-                      show={currentValues.length > 0}
-                      keyboard={false}
-                      target={this.overlayButton}
-                      container={document.body}
-                      backdropStyle={{ position: 'fixed', top: 0, bottom: 0,
-                        left: 0, right: 0, zIndex: 100}}
-                    >
-                      <Position
-                        placement='bottom'
-                        container={document.body}
-                        target={this.overlayButton}
-                      >
-                        <div style={{ position: 'absolute',
-                          ...divStyle, height: 100, width: 200 }}>
-                          <VirtualizedCheckbox
-                            style={{width: '500px'}}
-                            items={filters[currentFilter] !== undefined ?
-                              currentValues.map((item) => {
-                                if (filters[currentFilter].indexOf(item) > -1) {
-                                  return {
-                                    label: item, checked: false,
-                                  };
-                                }
-                                return {
-                                  label: item, checked: true,
-                                };
-                              }) : currentValues.map((item) => {
-                                return {
-                                  label: item, checked: true,
-                                };
-                              })
-                            }
-                            rowHeight={20}
-                            onOk={
-                              (all, checked, textFilter) => {
-                                onFiltersOk({all, checked, textFilter});
-                              }
-                            }
-                            onCancel={() => onFiltersCancel()}
-                          />
-                        </div>
-                      </Position>
-                    </Modal>
-                  </div>
-                </div>
-              }
               {fieldsRenderer}
             </ReactSortable>
           </div>
@@ -351,7 +323,6 @@ export default class Menu extends PureComponent {
                 onAdd: onAddUpdateField,
                 onUpdate: onAddUpdateField,
                 onMove: () => {
-                  console.log('hello');
                   onFiltersCancel();
                 },
               }}
