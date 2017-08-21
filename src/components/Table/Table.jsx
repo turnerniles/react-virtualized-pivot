@@ -3,6 +3,7 @@ import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
 import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
+import Button from 'react-md/lib/Buttons/Button';
 
 import './styles.scss';
 
@@ -316,6 +317,7 @@ export default class Table extends PureComponent {
       colorPack,
       data,
       onLeftHeaderCellClick,
+      handleRightOpen,
     } = this.props;
 
     return (
@@ -326,13 +328,21 @@ export default class Table extends PureComponent {
         onMouseDown={this.setSelectedColumn.bind(this, 'left')}
         style={{
           ...style,
+          borderLeft: `1px solid ${this.props.colorPack.columnResizer}`,
         }}
       >
         <div className="header-cell">
+          <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"/>
+          { rowIndex === 0 &&
+            <Button
+              icon
+              onClick={handleRightOpen}
+            >settings</Button>
+          }
           {
             data.length ?
-              data[rowIndex].value[columnIndex] :
-              ''
+              data[rowIndex].value[columnIndex] : ''
           }
         </div>
         <Draggable
@@ -345,7 +355,8 @@ export default class Table extends PureComponent {
             style={{
               backgroundColor: colorPack.leftHeaderCellBackground,
               borderRight: `1px solid ${this.props.colorPack.columnResizer}`,
-              borderBottom: `1px solid ${this.props.colorPack.columnResizer}`,
+              borderBottom: columnIndex === 0 ? 'inherit' :
+                `1px solid ${this.props.colorPack.columnResizer}`,
             }}
           >
           </div>
@@ -543,6 +554,7 @@ export default class Table extends PureComponent {
                         color: colorPack.leftHeaderCellText,
                         height: headerHeight * headerCounter,
                         width: leftColumnWidth,
+                        zIndex: 2,
                       }}
                     >
                       <Grid
@@ -551,12 +563,14 @@ export default class Table extends PureComponent {
                         className="HeaderGrid"
                         style={{
                           backgroundColor: colorPack.headerGridBackground,
+                          borderBottom: `1px solid ${colorPack.gridBorders}`,
                         }}
                         width={leftColumnWidth}
-                        height={headerHeight * headerCounter}
+                        height={headerCounter ? headerHeight * headerCounter :
+                          headerHeight}
                         rowHeight={headerHeight}
                         columnWidth={leftColumnWidth}
-                        rowCount={headerCounter}
+                        rowCount={headerCounter ? headerCounter : 1}
                         columnCount={1}
                       />
                     </div>

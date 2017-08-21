@@ -1,37 +1,16 @@
 import React, { PureComponent } from 'react';
-import { List } from 'react-virtualized';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 import Drawer from 'react-md/lib/Drawers';
-import Button from 'react-md/lib/Buttons/Button';
-
+import { Modal, Position } from 'react-overlays';
+import OverlayContent from './OverlayContent/OverlayContent.jsx';
 import './styles.scss';
 
 export default class Menu extends PureComponent {
   constructor(props) {
     super(props);
-
-    this.state = {
-      isDrawerOpen: false,
-    };
-
-    this.handleRightOpen = this.handleRightOpen.bind(this);
-    this.handleRightClose = this.handleRightClose.bind(this);
-    this.toggleDrawer = this.toggleDrawer.bind(this);
   }
-
-  handleRightOpen() {
-    this.toggleDrawer(true);
-  };
-
-  handleRightClose(e) {
-    this.toggleDrawer(false);
-  };
-
-  toggleDrawer(open) {
-    this.setState({ isDrawerOpen: open });
-  };
 
   render() {
     const {
@@ -43,9 +22,8 @@ export default class Menu extends PureComponent {
       aggregationDimensions,
       onSelectAggregationDimension,
       fields,
+      filters,
       currentValues,
-      listRowRenderer,
-      submitFilters,
       showFilterMenu,
       colFields,
       rowFields,
@@ -54,12 +32,30 @@ export default class Menu extends PureComponent {
       setRowFields,
       setColFields,
       currentFilter,
+      onFiltersOk,
+      onFiltersCancel,
+      isDrawerOpen,
+      handleRightClose,
     } = this.props;
+
+    const divStyle = {
+      backgroundColor: 'white',
+      border: 'solid 1px',
+      boxShadow: '0 5px 15px #9d9d9d',
+      display: 'flex',
+      flexDirection: 'column',
+      fontSize: '90%',
+      height: '100%',
+      justifyContent: 'space-between',
+      padding: '3px',
+      zIndex: 100,
+    };
 
     const fieldsRenderer = fields.length ?
       fields.map((field, index) => {
         return (
           <li
+            ref={ref => { this.fieldsOverlayButton = ref; }}
             key={index}
             data-id={field}
             style={{
@@ -67,31 +63,8 @@ export default class Menu extends PureComponent {
               color: colorPack.sortableFieldText,
             }}
           >
-            {(currentValues.length > 0 && currentFilter === field) &&
-              <div
-                className="filter-menu"
-                style={{
-                  display: currentValues.length > 0 ? 'inline-block' : 'none',
-                }}
-              >
-                <div className="filters-container">
-                  <List
-                    ref='List'
-                    className={'virtualized-list'}
-                    height={80}
-                    overscanRowCount={10}
-                    rowCount={currentValues.length}
-                    rowHeight={20}
-                    rowRenderer={listRowRenderer}
-                    width={100}
-                  />
-                </div>
-                <div onClick={submitFilters} className="filter-submit">
-                  Submit
-                </div>
-              </div>
-            }
-            <div className="inner-filter-container">
+            <div className="inner-filter-container"
+            >
               <div className="filter-text">
                 {field}
               </div>
@@ -102,13 +75,47 @@ export default class Menu extends PureComponent {
               ✎
               </div>
             </div>
+            {(currentValues.length > 0 && currentFilter === field) &&
+              <div
+                className="filter-menu"
+              >
+                <div className="filters-container">
+                  <Modal
+                    autoFocus={true}
+                    show={currentValues.length > 0}
+                    keyboard={false}
+                    target={this.fieldsOverlayButton}
+                    container={document.body}
+                  >
+                    <Position
+                      placement={'bottom'}
+                      container={document.body}
+                      target={this.fieldsOverlayButton}
+                    >
+                      <div style={{ position: 'absolute',
+                        ...divStyle, height: 100, width: 200 }}>
+                        <OverlayContent
+                          filters={filters}
+                          currentFilter={currentFilter}
+                          currentValues={currentValues}
+                          onFiltersOk={onFiltersOk}
+                          onFiltersCancel={onFiltersCancel}
+                        />
+                      </div>
+                    </Position>
+                  </Modal>
+                </div>
+              </div>
+            }
           </li>
         );
       }) :
       '';
+
     const rowFieldsRender = rowFields.map((field, index) =>
       (
         <li
+          ref={ref => { this.rowFieldsOverlayButton = ref; }}
           key={index}
           data-id={field}
           style={{
@@ -128,23 +135,36 @@ export default class Menu extends PureComponent {
             </div>
           </div>
           {(currentValues.length > 0 && currentFilter === field) &&
-        <div
-          className="filter-menu"
-          style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
-          <div className="filters-container">
-            <List
-              ref='List'
-              className={'virtualized-list'}
-              height={80}
-              overscanRowCount={10}
-              rowCount={currentValues.length}
-              rowHeight={20}
-              rowRenderer={listRowRenderer}
-              width={100}
-            />
-          </div>
-          <div onClick={submitFilters} className="filter-submit">Submit</div>
-        </div>
+            <div
+              className="filter-menu"
+            >
+              <div className="filters-container">
+                <Modal
+                  autoFocus={true}
+                  show={currentValues.length > 0}
+                  keyboard={false}
+                  target={this.rowFieldsOverlayButton}
+                  container={document.body}
+                >
+                  <Position
+                    placement={'bottom'}
+                    container={document.body}
+                    target={this.rowFieldsOverlayButton}
+                  >
+                    <div style={{ position: 'absolute',
+                      ...divStyle, height: 100, width: 200 }}>
+                      <OverlayContent
+                        filters={filters}
+                        currentFilter={currentFilter}
+                        currentValues={currentValues}
+                        onFiltersOk={onFiltersOk}
+                        onFiltersCancel={onFiltersCancel}
+                      />
+                    </div>
+                  </Position>
+                </Modal>
+              </div>
+            </div>
           }
         </li>
       ));
@@ -152,6 +172,7 @@ export default class Menu extends PureComponent {
     const colFieldsRender = colFields.map((field, index) =>
       (
         <li
+          ref={ref => { this.colFieldsOverlayButton = ref; }}
           key={index}
           data-id={field}
           style={{
@@ -171,23 +192,36 @@ export default class Menu extends PureComponent {
             </div>
           </div>
           {(currentValues.length > 0 && currentFilter === field) &&
-        <div
-          className="filter-menu"
-          style={{display: currentValues.length > 0 ? 'inline-block' : 'none'}}>
-          <div className="filters-container">
-            <List
-              ref='List'
-              className={'virtualized-list'}
-              height={80}
-              overscanRowCount={10}
-              rowCount={currentValues.length}
-              rowHeight={20}
-              rowRenderer={listRowRenderer}
-              width={100}
-            />
-          </div>
-          <div onClick={submitFilters} className="filter-submit">Submit</div>
-        </div>
+            <div
+              className="filter-menu"
+            >
+              <div className="filters-container">
+                <Modal
+                  autoFocus={true}
+                  show={currentValues.length > 0}
+                  keyboard={false}
+                  target={this.colFieldsOverlayButton}
+                  container={document.body}
+                >
+                  <Position
+                    placement={'bottom'}
+                    container={document.body}
+                    target={this.colFieldsOverlayButton}
+                  >
+                    <div style={{ position: 'absolute',
+                      ...divStyle, height: 100, width: 200 }}>
+                      <OverlayContent
+                        filters={filters}
+                        currentFilter={currentFilter}
+                        currentValues={currentValues}
+                        onFiltersOk={onFiltersOk}
+                        onFiltersCancel={onFiltersCancel}
+                      />
+                    </div>
+                  </Position>
+                </Modal>
+              </div>
+            </div>
           }
         </li>
       ));
@@ -257,6 +291,9 @@ export default class Menu extends PureComponent {
               options={{
                 group: 'shared',
                 onAdd: onAddUpdateField,
+                onMove: () => {
+                  onFiltersCancel();
+                },
               }}
               tag="ul"
             >
@@ -285,7 +322,9 @@ export default class Menu extends PureComponent {
                 group: 'shared',
                 onAdd: onAddUpdateField,
                 onUpdate: onAddUpdateField,
-                // onChoose: () => {this.setState({currentFilter: ''})},
+                onMove: () => {
+                  onFiltersCancel();
+                },
               }}
               tag="ul"
             >
@@ -314,7 +353,9 @@ export default class Menu extends PureComponent {
                 group: 'shared',
                 onAdd: onAddUpdateField,
                 onUpdate: onAddUpdateField,
-                // onChoose: () => {this.setState({currentFilter: ''})},
+                onMove: () => {
+                  onFiltersCancel();
+                },
               }}
               tag="ul"
             >
@@ -327,19 +368,11 @@ export default class Menu extends PureComponent {
 
     return (
       <section className="menu">
-        <Button
-          raised
-          label="Toggle Drawer"
-          onClick={this.handleRightOpen}
-          style={{
-            marginBottom: '5px',
-          }}
-        />
         <Drawer
-          visible={this.state.isDrawerOpen}
+          visible={isDrawerOpen}
           position={'right'}
           overlay={true}
-          onVisibilityToggle={this.handleRightClose}
+          onVisibilityToggle={handleRightClose}
           type={Drawer.DrawerTypes.TEMPORARY}
           style={{ zIndex: 100 }}
         >
@@ -360,8 +393,6 @@ Menu.propTypes = {
   onSelectAggregationDimension: PropTypes.func.isRequired,
   fields: PropTypes.array.isRequired,
   currentValues: PropTypes.array.isRequired,
-  listRowRenderer: PropTypes.func.isRequired,
-  submitFilters: PropTypes.func.isRequired,
   showFilterMenu: PropTypes.func.isRequired,
   rowFields: PropTypes.array.isRequired,
   colFields: PropTypes.array.isRequired,
@@ -370,4 +401,8 @@ Menu.propTypes = {
   setRowFields: PropTypes.func.isRequired,
   setColFields: PropTypes.func.isRequired,
   currentFilter: PropTypes.string.isRequired,
+  onFiltersOk: PropTypes.func.isRequired,
+  onFiltersCancel: PropTypes.func.isRequired,
+  isDrawerOpen: PropTypes.bool.isRequired,
+  handleRightClose: PropTypes.func.isRequired,
 };

@@ -4,8 +4,6 @@ import Table from '../Table/Table.jsx';
 import PropTypes from 'prop-types';
 import Menu from '../Menu/Menu.jsx';
 
-window.pivot = QuickPivot;
-
 import 'react-select/dist/react-select.css';
 import './styles.scss';
 
@@ -48,6 +46,7 @@ export default class Pivot extends PureComponent {
       data: [],
       header: {},
       headerCounter: 0,
+      isDrawerOpen: false,
     };
 
     this.onSelectAggregationDimension =
@@ -56,14 +55,15 @@ export default class Pivot extends PureComponent {
     this.onAddUpdateField = this.onAddUpdateField.bind(this);
     this.onToggleRow = this.onToggleRow.bind(this);
     this.checkIfInCollapsed = this.checkIfInCollapsed.bind(this);
-    this.displayFilter = this.displayFilter.bind(this);
-    this.addToFilters = this.addToFilters.bind(this);
-    this.submitFilters = this.submitFilters.bind(this);
     this.showFilterMenu = this.showFilterMenu.bind(this);
-    this.listRowRenderer = this.listRowRenderer.bind(this);
     this.setFields = this.setFields.bind(this);
     this.setRowFields = this.setRowFields.bind(this);
     this.setColFields = this.setColFields.bind(this);
+    this.onFiltersOk = this.onFiltersOk.bind(this);
+    this.onFiltersCancel = this.onFiltersCancel.bind(this);
+    this.handleRightOpen = this.handleRightOpen.bind(this);
+    this.handleRightClose = this.handleRightClose.bind(this);
+    this.toggleDrawer = this.toggleDrawer.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -286,66 +286,20 @@ export default class Pivot extends PureComponent {
       pivot.collapsedRows;
   }
 
-  listRowRenderer({ index, isScrolling, key, style }) {
-    const { currentValues, currentFilter, filters } = this.state;
-
-    return (
-      <div
-        key={currentValues[index]}
-        className="filter-container"
-        style={style}
-      >
-        <input
-          onChange={this.addToFilters.bind(this, currentValues[index])}
-          className="filter-checkbox"
-          type="checkbox"
-          defaultChecked={(filters[currentFilter] === undefined) ? false :
-            filters[currentFilter].indexOf(currentValues[index]) !== -1}
-        >
-        </input>
-        <div className='filter-name'>
-          {currentValues[index]}
-        </div>
-      </div>
-    );
-  }
-
-  displayFilter(fieldName) {
-    const {
-      pivot,
-    } = this.state;
-
-    pivot.getUniqueValues(fieldName);
-  }
-
-  addToFilters(filterValue) {
-    const {
-      currentFilter,
-    } = this.state;
-
-    const {
-      filters,
-    } = this.state;
-
-    if (!(currentFilter in filters)) filters[currentFilter] = [];
-    filters[currentFilter].indexOf(filterValue) === -1 ?
-      filters[currentFilter].push(filterValue) :
-      filters[currentFilter].splice(filters[currentFilter]
-        .indexOf(filterValue), 1);
-
-    this.setState({
-      filters,
-    });
-  }
-
-  submitFilters() {
+  onFiltersOk({all, checked, unchecked, textFilter}) {
     const {
       colFields,
       filters,
       rowFields,
       selectedAggregationDimension,
       selectedAggregationType,
+      currentFilter,
     } = this.state;
+
+    unchecked = unchecked.map((item) => {
+      return item.label;
+    });
+    filters[currentFilter] = unchecked;
 
     // create new pivot and apply all filters. Because quick-pivot does not
     // account for removal of filters
@@ -379,6 +333,7 @@ export default class Pivot extends PureComponent {
     }
 
     this.setState({
+      filters,
       headerCounter,
       pivot: newPivot,
       columnCount: (newPivot.data.table.length &&
@@ -388,6 +343,13 @@ export default class Pivot extends PureComponent {
       data: newPivot.data.table,
       header: newPivot.data.table[0],
       currentFilter: '',
+    });
+  }
+
+  onFiltersCancel() {
+    this.setState({
+      currentFilter: '',
+      currentValues: [],
     });
   }
 
@@ -422,6 +384,19 @@ export default class Pivot extends PureComponent {
     });
   }
 
+  handleRightOpen() {
+    this.toggleDrawer(true);
+  };
+
+  handleRightClose(e) {
+    this.onFiltersCancel();
+    this.toggleDrawer(false);
+  };
+
+  toggleDrawer(open) {
+    this.setState({ isDrawerOpen: open });
+  };
+
   render() {
     const {
       aggregationDimensions,
@@ -432,6 +407,7 @@ export default class Pivot extends PureComponent {
       currentValues,
       data,
       fields,
+      filters,
       headerCounter,
       headerHeight,
       overscanColumnCount,
@@ -442,6 +418,7 @@ export default class Pivot extends PureComponent {
       rowHeight,
       selectedAggregationDimension,
       selectedAggregationType,
+      isDrawerOpen,
     } = this.state;
 
     const {
@@ -472,8 +449,8 @@ export default class Pivot extends PureComponent {
           aggregationDimensions={aggregationDimensions}
           onSelectAggregationDimension={this.onSelectAggregationDimension}
           fields={fields}
+          filters={filters}
           currentValues={currentValues}
-          listRowRenderer={this.listRowRenderer}
           submitFilters={this.submitFilters}
           showFilterMenu={this.showFilterMenu}
           rowFields={rowFields}
@@ -483,6 +460,10 @@ export default class Pivot extends PureComponent {
           setRowFields={this.setRowFields}
           setColFields={this.setColFields}
           currentFilter={currentFilter}
+          onFiltersOk={this.onFiltersOk}
+          onFiltersCancel={this.onFiltersCancel}
+          handleRightClose={this.handleRightClose}
+          isDrawerOpen={isDrawerOpen}
         />
         <div className="pivot-grid">
           <section className="pivot-grid">
@@ -508,6 +489,7 @@ export default class Pivot extends PureComponent {
               rowCount={rowCount}
               rowFields={rowFields}
               rowHeight={rowHeight}
+              handleRightOpen={this.handleRightOpen}
             />
           </section>
         </div>
