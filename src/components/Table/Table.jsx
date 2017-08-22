@@ -338,6 +338,11 @@ export default class Table extends PureComponent {
             <Button
               icon
               onClick={handleRightOpen}
+              style={{
+                height: '40px',
+                padding: '8px',
+                width: '40px',
+              }}
             >settings</Button>
           }
           {
