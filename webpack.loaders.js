@@ -38,5 +38,10 @@ module.exports = [
     test: /\.jsx$/,
     exclude: /node_modules/,
     loader: 'eslint-loader',
+    options: {
+      configFile: process.env.NODE_ENV === 'development' ?
+        '.eslintrcDev' :
+        '.eslintrc',
+    },
   },
 ];

@@ -25,9 +25,6 @@ const babelLoader = {
   test: /\.jsx?$/,
   exclude: /(node_modules|bower_components|public\/)/,
   loader: 'babel-loader',
-  query: {
-    presets: ['es2015', 'react', 'stage-2'],
-  },
 };
 
 module.exports = {
@@ -61,6 +58,7 @@ module.exports = {
     host: HOST,
   },
   plugins: [
+    new webpack.NoEmitOnErrorsPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin({
       filename: 'style.css',

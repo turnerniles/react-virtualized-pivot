@@ -4,15 +4,16 @@
   "description": "React Virtualized Pivot",
   "main": "lib/umd/react-virtualized-pivot.js",
   "scripts": {
-    "build": "webpack --config webpack.production.config.js --progress --profile --colors",
-    "build-umd": "webpack --config webpack.umd.config.js --progress --profile --colors",
-    "start": "webpack-dev-server --progress --profile --colors",
+    "build:demo": "cross-env BABEL_ENV=demo webpack --config webpack.production.config.js --progress --profile --colors && build:css",
+    "build:umd": "cross-env BABEL_ENV=umd webpack --config webpack.umd.config.js --progress --profile --colors && build:css",
+    "build:css": "postcss --config postcss.config.js --use autoprefixer --replace styles.css",
+    "start": "cross-env NODE_ENV=development webpack-dev-server --progress --profile --colors",
     "lint:eslint": "eslint 'src/**/*.jsx'",
     "lint:staged": "lint-staged",
     "dev": "webpack-dashboard -- webpack-dev-server --progress --profile --colors",
     "test:watch": "karma start",
     "test": "karma start --browsers Firefox --single-run",
-    "preversion": "npm run build-umd"
+    "preversion": "npm run build:umd"
   },
   "pre-commit": "lint:staged",
   "lint-staged": {
