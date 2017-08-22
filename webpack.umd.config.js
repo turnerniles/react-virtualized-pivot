@@ -1,6 +1,8 @@
+'use strict';
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const loaders = require('./webpack.loaders');
 const webpack = require('webpack');
+const path = require('path');
 
 loaders.push({
   test: /\.css$/,
@@ -29,7 +31,7 @@ module.exports = {
     'react-virtualized-pivot': './src/components/Pivot/Pivot.jsx',
   },
   output: {
-    path: 'build/umd',
+    path: path.join(__dirname, 'dist', 'umd'),
     filename: '[name].js',
     libraryTarget: 'umd',
     library: 'VirtualizedSelect',
