@@ -93,7 +93,7 @@ export default class Menu extends PureComponent {
                       target={this.fieldsOverlayButton}
                     >
                       <div style={{ position: 'absolute',
-                        ...divStyle, height: 100, width: 200 }}>
+                        ...divStyle, height: 200, width: 150 }}>
                         <OverlayContent
                           filters={filters}
                           currentFilter={currentFilter}
@@ -152,7 +152,7 @@ export default class Menu extends PureComponent {
                     target={this.rowFieldsOverlayButton}
                   >
                     <div style={{ position: 'absolute',
-                      ...divStyle, height: 100, width: 200 }}>
+                      ...divStyle, height: 200, width: 150 }}>
                       <OverlayContent
                         filters={filters}
                         currentFilter={currentFilter}
@@ -209,7 +209,7 @@ export default class Menu extends PureComponent {
                     target={this.colFieldsOverlayButton}
                   >
                     <div style={{ position: 'absolute',
-                      ...divStyle, height: 100, width: 200 }}>
+                      ...divStyle, height: 200, width: 150 }}>
                       <OverlayContent
                         filters={filters}
                         currentFilter={currentFilter}

@@ -160,7 +160,7 @@ class VirtualizedCheckbox extends Component {
   get unCheckedBoxes () {
     const { boxes } = this.state
     if (this.checkedAll) {
-      return boxes.slice(1)
+      return [];
     } else {
       return boxes
         .slice(1)

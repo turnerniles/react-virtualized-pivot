@@ -294,8 +294,10 @@ export default class Pivot extends PureComponent {
       selectedAggregationDimension,
       selectedAggregationType,
       currentFilter,
+      currentValues,
     } = this.state;
 
+    console.log('currentValues', currentValues);
     unchecked = unchecked.map((item) => {
       return item.label;
     });
@@ -309,18 +311,22 @@ export default class Pivot extends PureComponent {
       {};
 
     Object.keys(filters).forEach((filter) => {
+      console.log(filters[filter]);
       newPivot.filter((elem, index, array) => {
         return filters[filter].findIndex((field) => {
-          return field === elem[filter];
+          // eslint-disable-next-line
+          return field == elem[filter];
         }) === -1;
       });
     });
 
     let headerCounter = 0;
 
+    console.log('newPivot.data)', newPivot.data.table);
+
     if (newPivot.data) {
       while (true) {
-        if (newPivot.data.table) {
+        if (newPivot.data.table && newPivot.data.table.length > 0) {
           if (newPivot.data.table[headerCounter].type === 'colHeader') {
             headerCounter += 1;
           } else {
