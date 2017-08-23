@@ -34,9 +34,4 @@ module.exports = [
     exclude: /(node_modules|bower_components)/,
     loader: 'url-loader?limit=10000&mimetype=image/png',
   },
-  {
-    test: /\.jsx$/,
-    exclude: /node_modules/,
-    loader: 'eslint-loader',
-  },
 ];

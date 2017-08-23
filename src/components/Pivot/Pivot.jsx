@@ -286,7 +286,7 @@ export default class Pivot extends PureComponent {
       pivot.collapsedRows;
   }
 
-  onFiltersOk({all, checked, unchecked, textFilter}) {
+  onFiltersOk({checked, unchecked, allChecked, filter}) {
     const {
       colFields,
       filters,
@@ -294,10 +294,8 @@ export default class Pivot extends PureComponent {
       selectedAggregationDimension,
       selectedAggregationType,
       currentFilter,
-      currentValues,
     } = this.state;
 
-    console.log('currentValues', currentValues);
     unchecked = unchecked.map((item) => {
       return item.label;
     });
@@ -321,8 +319,6 @@ export default class Pivot extends PureComponent {
     });
 
     let headerCounter = 0;
-
-    console.log('newPivot.data)', newPivot.data.table);
 
     if (newPivot.data) {
       while (true) {
@@ -353,6 +349,7 @@ export default class Pivot extends PureComponent {
   }
 
   onFiltersCancel() {
+    console.log('canceling filters');
     this.setState({
       currentFilter: '',
       currentValues: [],
@@ -360,6 +357,7 @@ export default class Pivot extends PureComponent {
   }
 
   showFilterMenu(field) {
+    console.log('showFilterMenu');
     const {
       pivot,
     } = this.state;
