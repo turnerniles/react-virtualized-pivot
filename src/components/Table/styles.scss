@@ -1,21 +1,4 @@
 section.virtualized-table{
-	.Select{
-		margin-top: -8px;
-		margin-left: 10px;
-		margin-bottom: 8px;
-	}
-
-	.title {
-		color: #fff;
-		padding: 2px 4px;
-		font-size: 11px;
-		margin-left: 5px;
-		display: inline-block;
-		position: relative;
-		background-color: #FF7373;
-		z-index: 1;
-	}
-
 	.ReactVirtualized__Grid__innerScrollContainer {
 		overflow: visible !important;
 	}

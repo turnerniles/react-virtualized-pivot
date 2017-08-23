@@ -36,8 +36,8 @@ export default class OverlayContent extends PureComponent {
         }
         rowHeight={20}
         onOk={
-          (all, checked, unchecked, textFilter) => {
-            onFiltersOk({all, checked, unchecked, textFilter});
+          (checked, unchecked, allChecked, filter) => {
+            onFiltersOk({checked, unchecked, allChecked, filter});
           }
         }
         onCancel={() => onFiltersCancel()}

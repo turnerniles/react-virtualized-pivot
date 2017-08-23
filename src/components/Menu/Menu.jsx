@@ -5,13 +5,19 @@ import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 import Drawer from 'react-md/lib/Drawers';
 import Toolbar from 'react-md/lib/Toolbars';
 import Button from 'react-md/lib/Buttons';
-import { Modal, Position } from 'react-overlays';
 import OverlayContent from './OverlayContent/OverlayContent.jsx';
+import RightArrowIcon from '../../icons/RightArrowIcon.jsx';
+
 import './styles.scss';
 
 export default class Menu extends PureComponent {
   constructor(props) {
     super(props);
+    this.filterButtonClick = this.filterButtonClick.bind(this);
+  }
+
+  filterButtonClick(field, e) {
+    this.props.showFilterMenu(field);
   }
 
   render() {
@@ -26,7 +32,6 @@ export default class Menu extends PureComponent {
       fields,
       filters,
       currentValues,
-      showFilterMenu,
       colFields,
       rowFields,
       onAddUpdateField,
@@ -57,6 +62,7 @@ export default class Menu extends PureComponent {
       fields.map((field, index) => {
         return (
           <li
+            className="fields-draggable-li"
             ref={ref => { this.fieldsOverlayButton = ref; }}
             key={index}
             data-id={field}
@@ -66,48 +72,38 @@ export default class Menu extends PureComponent {
             }}
           >
             <div className="inner-filter-container"
+              onMouseDown={(e) => {
+                onFiltersCancel();
+              }}
             >
-              <div className="filter-text">
+              <div className="filter-text"
+              >
                 {field}
               </div>
               <div
                 className="filter-button"
-                onClick={showFilterMenu.bind(this, field)}
+                onClick={this.filterButtonClick.bind(this, field)}
               >
               ✎
               </div>
             </div>
             {(currentValues.length > 0 && currentFilter === field) &&
+            <div className="filter-menu"
+            >
               <div
-                className="filter-menu"
+                className="filters-container"
+                style={{ position: 'absolute',
+                  ...divStyle, height: 200, width: 150 }}
               >
-                <div className="filters-container">
-                  <Modal
-                    autoFocus={true}
-                    show={currentValues.length > 0}
-                    keyboard={false}
-                    target={this.fieldsOverlayButton}
-                    container={document.body}
-                  >
-                    <Position
-                      placement={'bottom'}
-                      container={document.body}
-                      target={this.fieldsOverlayButton}
-                    >
-                      <div style={{ position: 'absolute',
-                        ...divStyle, height: 100, width: 200 }}>
-                        <OverlayContent
-                          filters={filters}
-                          currentFilter={currentFilter}
-                          currentValues={currentValues}
-                          onFiltersOk={onFiltersOk}
-                          onFiltersCancel={onFiltersCancel}
-                        />
-                      </div>
-                    </Position>
-                  </Modal>
-                </div>
+                <OverlayContent
+                  filters={filters}
+                  currentFilter={currentFilter}
+                  currentValues={currentValues}
+                  onFiltersOk={onFiltersOk}
+                  onFiltersCancel={onFiltersCancel}
+                />
               </div>
+            </div>
             }
           </li>
         );
@@ -117,7 +113,7 @@ export default class Menu extends PureComponent {
     const rowFieldsRender = rowFields.map((field, index) =>
       (
         <li
-          ref={ref => { this.rowFieldsOverlayButton = ref; }}
+          className="fields-draggable-li"
           key={index}
           data-id={field}
           style={{
@@ -125,48 +121,39 @@ export default class Menu extends PureComponent {
             color: colorPack.sortableFieldText,
           }}
         >
-          <div className="inner-filter-container">
-            <div className="filter-text">
+          <div className="inner-filter-container"
+            onMouseDown={(e) => {
+              onFiltersCancel();
+            }}
+          >
+            <div className="filter-text"
+            >
               {field}
             </div>
             <div
               className="filter-button"
-              onClick={showFilterMenu.bind(this, field)}
+              onClick={this.filterButtonClick.bind(this, field)}
             >
             ✎
             </div>
           </div>
           {(currentValues.length > 0 && currentFilter === field) &&
+          <div className="filter-menu"
+          >
             <div
-              className="filter-menu"
+              className="filters-container"
+              style={{ position: 'absolute',
+                ...divStyle, height: 200, width: 150 }}
             >
-              <div className="filters-container">
-                <Modal
-                  autoFocus={true}
-                  show={currentValues.length > 0}
-                  keyboard={false}
-                  target={this.rowFieldsOverlayButton}
-                  container={document.body}
-                >
-                  <Position
-                    placement={'bottom'}
-                    container={document.body}
-                    target={this.rowFieldsOverlayButton}
-                  >
-                    <div style={{ position: 'absolute',
-                      ...divStyle, height: 100, width: 200 }}>
-                      <OverlayContent
-                        filters={filters}
-                        currentFilter={currentFilter}
-                        currentValues={currentValues}
-                        onFiltersOk={onFiltersOk}
-                        onFiltersCancel={onFiltersCancel}
-                      />
-                    </div>
-                  </Position>
-                </Modal>
-              </div>
+              <OverlayContent
+                filters={filters}
+                currentFilter={currentFilter}
+                currentValues={currentValues}
+                onFiltersOk={onFiltersOk}
+                onFiltersCancel={onFiltersCancel}
+              />
             </div>
+          </div>
           }
         </li>
       ));
@@ -174,7 +161,7 @@ export default class Menu extends PureComponent {
     const colFieldsRender = colFields.map((field, index) =>
       (
         <li
-          ref={ref => { this.colFieldsOverlayButton = ref; }}
+          className="fields-draggable-li"
           key={index}
           data-id={field}
           style={{
@@ -182,48 +169,39 @@ export default class Menu extends PureComponent {
             color: colorPack.sortableFieldText,
           }}
         >
-          <div className="inner-filter-container">
-            <div className="filter-text">
+          <div className="inner-filter-container"
+            onMouseDown={(e) => {
+              onFiltersCancel();
+            }}
+          >
+            <div className="filter-text"
+            >
               {field}
             </div>
             <div
               className="filter-button"
-              onClick={showFilterMenu.bind(this, field)}
+              onClick={this.filterButtonClick.bind(this, field)}
             >
-              ✎
+            ✎
             </div>
           </div>
           {(currentValues.length > 0 && currentFilter === field) &&
+          <div className="filter-menu"
+          >
             <div
-              className="filter-menu"
+              className="filters-container"
+              style={{ position: 'absolute',
+                ...divStyle, height: 200, width: 150 }}
             >
-              <div className="filters-container">
-                <Modal
-                  autoFocus={true}
-                  show={currentValues.length > 0}
-                  keyboard={false}
-                  target={this.colFieldsOverlayButton}
-                  container={document.body}
-                >
-                  <Position
-                    placement={'bottom'}
-                    container={document.body}
-                    target={this.colFieldsOverlayButton}
-                  >
-                    <div style={{ position: 'absolute',
-                      ...divStyle, height: 100, width: 200 }}>
-                      <OverlayContent
-                        filters={filters}
-                        currentFilter={currentFilter}
-                        currentValues={currentValues}
-                        onFiltersOk={onFiltersOk}
-                        onFiltersCancel={onFiltersCancel}
-                      />
-                    </div>
-                  </Position>
-                </Modal>
-              </div>
+              <OverlayContent
+                filters={filters}
+                currentFilter={currentFilter}
+                currentValues={currentValues}
+                onFiltersOk={onFiltersOk}
+                onFiltersCancel={onFiltersCancel}
+              />
             </div>
+          </div>
           }
         </li>
       ));
@@ -293,9 +271,6 @@ export default class Menu extends PureComponent {
               options={{
                 group: 'shared',
                 onAdd: onAddUpdateField,
-                onMove: () => {
-                  onFiltersCancel();
-                },
               }}
               tag="ul"
             >
@@ -324,9 +299,6 @@ export default class Menu extends PureComponent {
                 group: 'shared',
                 onAdd: onAddUpdateField,
                 onUpdate: onAddUpdateField,
-                onMove: () => {
-                  onFiltersCancel();
-                },
               }}
               tag="ul"
             >
@@ -355,9 +327,6 @@ export default class Menu extends PureComponent {
                 group: 'shared',
                 onAdd: onAddUpdateField,
                 onUpdate: onAddUpdateField,
-                onMove: () => {
-                  onFiltersCancel();
-                },
               }}
               tag="ul"
             >
@@ -370,7 +339,9 @@ export default class Menu extends PureComponent {
 
     const close = (
       <Button icon onClick={handleRightClose}>
-        {'arrow_forward'}
+        <RightArrowIcon
+          color={colorPack.icons}
+        />
       </Button>
     );
     const header = (

@@ -286,7 +286,7 @@ export default class Pivot extends PureComponent {
       pivot.collapsedRows;
   }
 
-  onFiltersOk({all, checked, unchecked, textFilter}) {
+  onFiltersOk({checked, unchecked, allChecked, filter}) {
     const {
       colFields,
       filters,
@@ -311,7 +311,8 @@ export default class Pivot extends PureComponent {
     Object.keys(filters).forEach((filter) => {
       newPivot.filter((elem, index, array) => {
         return filters[filter].findIndex((field) => {
-          return field === elem[filter];
+          // eslint-disable-next-line
+          return field == elem[filter];
         }) === -1;
       });
     });
@@ -320,7 +321,7 @@ export default class Pivot extends PureComponent {
 
     if (newPivot.data) {
       while (true) {
-        if (newPivot.data.table) {
+        if (newPivot.data.table && newPivot.data.table.length > 0) {
           if (newPivot.data.table[headerCounter].type === 'colHeader') {
             headerCounter += 1;
           } else {
@@ -488,6 +489,7 @@ export default class Pivot extends PureComponent {
               rawData={pivot.data.rawData}
               rowCount={rowCount}
               rowFields={rowFields}
+              colFields={colFields}
               rowHeight={rowHeight}
               handleRightOpen={this.handleRightOpen}
             />
@@ -530,6 +532,7 @@ Pivot.defaultProps = {
     sortableContainerBorderColor: '#ccc',
     sortableFieldBackground: '#fafafa',
     sortableFieldText: '#000',
+    icons: '#ccc',
   },
   onGridCellClick: () => {},
   onGridHeaderCellClick: () => {},

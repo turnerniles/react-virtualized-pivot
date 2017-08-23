@@ -1,37 +1,79 @@
-import React, { Component, PropTypes } from 'react'
-import List from 'react-virtualized/dist/commonjs/List'
-import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { AutoSizer } from 'react-virtualized';
 
-const Checkbox = ({ onChange, checked, label, style }) => (
-  <div style={{ ...style, textAlign: 'left' }}>
-    <label>
-      <input
-        type='checkbox'
-        value={label}
-        onChange={onChange}
-        checked={checked || false}
-      />
-      {label}
-    </label>
-  </div>
-)
+import Checkboxes from './Checkboxes';
+
+function getDistinctFast(items, key) {
+  let unique = {};
+  let distinct = [];
+  for (let opt of items) {
+    if (typeof unique[opt[key]] === 'undefined') {
+      distinct.push(opt);
+    }
+    unique[opt[key]] = 0;
+  }
+  return distinct;
+}
+
+// Fast function to update items
+// Use the fact that both arrays are sorted and have no duplicates
+// and that all elements of the second array are present in the first array
+function updateItems(base, items, labelKey) {
+  let index = 0;
+  for (let it of items) {
+    while (base[index][labelKey] !== it[labelKey]) {
+      index += 1;
+    }
+    base[index].checked = it.checked;
+  }
+  return base;
+}
+
+const FilterBar = ({ value, onChange, height, width }) =>
+  <div style={{ height }}>
+    <input
+      style={{ width }}
+      type="text"
+      id="filter"
+      placeholder="Filter boxes"
+      value={value}
+      onChange={event => onChange(event.target.value)}
+    />
+  </div>;
+
+const Footer = ({
+  width,
+  height,
+  hasOkButton,
+  hasCancelButton,
+  onOk,
+  onCancel
+}) =>
+  <div style={{ display: 'flex', width, height }}>
+    {hasOkButton && <input type="button" value="Ok" onClick={onOk} />}
+    {hasCancelButton &&
+      <input type="button" value="Cancel" onClick={onCancel} />}
+  </div>;
 
 class VirtualizedCheckbox extends Component {
   static propTypes = {
-    hasButtons: PropTypes.bool,
+    hasCancelButton: PropTypes.bool,
     hasFilterBox: PropTypes.bool,
+    hasOkButton: PropTypes.bool,
+    height: PropTypes.number,
+    items: PropTypes.array,
     labelKey: PropTypes.string,
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
     onOk: PropTypes.func,
-    items: PropTypes.array,
     rowHeight: PropTypes.number,
-    textFilter: PropTypes.string,
-    valueKey: PropTypes.string
+    textFilter: PropTypes.string
   };
 
   static defaultProps = {
-    hasButtons: true,
+    hasOkButton: true,
+    hasCancelButton: true,
     hasFilterBox: true,
     labelKey: 'label',
     onCancel: () => null,
@@ -39,223 +81,129 @@ class VirtualizedCheckbox extends Component {
     onOk: () => null,
     items: [],
     rowHeight: 30,
-    textFilter: '',
-    valueKey: 'value'
+    textFilter: ''
   };
 
-  constructor (props) {
-    super(props)
-    const { items, labelKey, valueKey, textFilter } = props
+  constructor(props) {
+    super(props);
+    const { items: propsItems, labelKey, textFilter } = props;
 
-    let allBox = {}
-    allBox[valueKey] = '#ALL#'
-    allBox[labelKey] = '(Select all)'
-
-    const objectItems = typeof items[0] === 'string'
-      ? items.map(item => ({ [labelKey]: item, [valueKey]: item }))
-      : items
-    const _boxes = [allBox, ...this.getDistinctFast(objectItems, labelKey)]
-    const boxes = this.applyTextFilter(textFilter, _boxes, labelKey)
-
+    const objectItems =
+      typeof propsItems[0] === 'string'
+        ? propsItems.map(item => ({ [labelKey]: item }))
+        : propsItems;
+    const items = getDistinctFast(objectItems, labelKey);
     this.state = {
-      boxes,
-      textFilter
-    }
-
-    boxes[0].checked = this.checkedCounter === boxes.length - 1
-
-    this._checkboxRenderer = this._checkboxRenderer.bind(this)
-    this.onTextFilterChange = this.onTextFilterChange.bind(this)
-    this.onChange = this.onChange.bind(this)
+      items,
+      filter: textFilter
+    };
   }
 
-  getDistinctFast (items, labelKey) {
-    let unique = {}
-    let distinct = []
-    for (let opt of items) {
-      if (typeof unique[opt[labelKey]] === 'undefined') {
-        distinct.push(opt)
+  handleSelectAllChange = checked => {
+    const items = this.getFilteredItems().map(it => ({ ...it, checked }));
+    this.setState(prevState => ({
+      items: updateItems(prevState.items, items, this.props.labelKey)
+    }));
+    if (this.props.onChange) {
+      this.props.onChange(items);
+    }
+  };
+
+  handleChange = eventTarget => {
+    const index = this.state.items.findIndex(
+      it => it[this.props.labelKey] === eventTarget[this.props.labelKey]
+    );
+    const items = [...this.state.items];
+    items[index].checked = eventTarget.checked;
+    this.setState(prevState => ({
+      items
+    }));
+    if (this.props.onChange) {
+      this.props.onChange(items[index]);
+    }
+  };
+
+  handleFilterChange = filter => {
+    this.setState(() => ({
+      filter
+    }));
+  };
+
+  getFilteredItems = () => {
+    const { items, filter } = this.state;
+    return items.filter(
+      it =>
+        it[this.props.labelKey] &&
+        it[this.props.labelKey].toLowerCase().startsWith(filter.toLowerCase())
+    );
+  };
+
+  handleOkClick = () => {
+    const { items, filter } = this.state;
+    const checkedItems = items.filter(i => i.checked);
+    const unCheckedItems = items.filter(i => !i.checked);
+    this.props.onOk(checkedItems, unCheckedItems, checkedItems.length === items.length, filter);
+  };
+
+  handleCancelClick = () => this.props.onCancel();
+
+  render() {
+    const {
+      rowHeight,
+      hasOkButton,
+      hasCancelButton,
+      hasFilterBox,
+      height,
+      width: propWidth
+    } = this.props;
+    const hasFooter = hasOkButton || hasCancelButton;
+    const virtualScrollHeight = h => {
+      let i = 0;
+      if (hasFooter) {
+        i += 1;
       }
-      unique[opt[labelKey]] = 0
-    }
-    return distinct
-  }
-
-  onChange (box) {
-    const { valueKey, labelKey, onChange } = this.props
-    const { boxes } = this.state
-    if (box[valueKey] === '#ALL#') {
-      if (this.checkedAll) {
-        const newBoxes = boxes.map(box => ({ ...box, checked: false }))
-        this.setState({
-          boxes: newBoxes
-        })
-      } else {
-        const newBoxes = boxes.map(box => ({ ...box, checked: true }))
-        this.setState({
-          boxes: newBoxes
-        })
+      if (hasFilterBox) {
+        i += 1;
       }
-    } else {
-      const newBoxes = boxes.map(bx => {
-        if (bx[labelKey] === box[labelKey]) {
-          return { ...box, checked: !box.checked }
-        }
-        return bx
-      })
-      const newCheckedCounter = box.checked
-        ? this.checkedCounter - 1
-        : this.checkedCounter + 1
-      if (this.checkedAll) {
-        newBoxes[0].checked = false
-      } else if (newCheckedCounter === boxes.length - 1) {
-        newBoxes[0].checked = true
-      }
-      this.setState({
-        boxes: newBoxes
-      })
-    }
-    // this.list.forceUpdate()
-    if (onChange) {
-      onChange(box)
-    }
-  }
-
-  onTextFilterChange (event) {
-    const { labelKey } = this.props
-    const { boxes } = this.state
-    const textFilter = event.target.value
-    const filteredBoxes = this.applyTextFilter(textFilter, boxes, labelKey)
-    this.setState({ textFilter, boxes: filteredBoxes })
-  }
-
-  applyTextFilter (value, boxes, labelKey) {
-    const textFilter = value.toLowerCase()
-    const filteredBoxes = boxes.map(
-      box =>
-        box[labelKey].toLowerCase().startsWith(textFilter)
-          ? { ...box, filtered: true }
-          : { ...box, filtered: false }
-    )
-    if (textFilter) {
-      filteredBoxes[0] = { ...filteredBoxes[0], filtered: false }
-    } else {
-      filteredBoxes[0] = { ...filteredBoxes[0], filtered: true }
-    }
-    return filteredBoxes
-  }
-
-  get checkedBoxes () {
-    const { boxes } = this.state
-    if (this.checkedAll) {
-      return boxes.slice(1)
-    } else {
-      return boxes
-        .slice(1)
-        .filter(box => box.filtered)
-        .filter(box => box.checked)
-    }
-  }
-
-  get unCheckedBoxes () {
-    const { boxes } = this.state
-    if (this.checkedAll) {
-      return boxes.slice(1)
-    } else {
-      return boxes
-        .slice(1)
-        .filter(box => box.filtered)
-        .filter(box => !box.checked)
-    }
-  }
-
-  get checkedAll () {
-    const { boxes, textFilter } = this.state
-    return boxes[0].checked && !textFilter
-  }
-
-  get checkedCounter () {
-    const { boxes } = this.state
-    return boxes.filter(box => box.filtered).filter(box => box.checked).length
-  }
-
-  render () {
-    const { rowHeight, hasButtons, hasFilterBox } = this.props
-    const { boxes, textFilter } = this.state
-    const filteredBoxes = boxes.filter(box => box.filtered)
-    const virtualScrollHeight = height => {
-      let i = 0
-      if (hasButtons) i++
-      if (hasFilterBox) i++
-      return height - (i * rowHeight)
-    }
+      const actualHeight = height || h;
+      return actualHeight - i * rowHeight;
+    };
     return (
       <AutoSizer>
-        {({ width, height }) => (
+        {({ width, height }) =>
           <div>
             {hasFilterBox
-              ? <div style={{ height: rowHeight }}>
-                <input
-                  type='text'
-                  id='filter'
-                  placeholder='Filter boxes'
-                  value={textFilter}
-                  onChange={this.onTextFilterChange}
+              ? <FilterBar
+                  value={this.state.filter}
+                  onChange={this.handleFilterChange}
+                  height={rowHeight}
+                  width={propWidth || width}
                 />
-              </div>
               : null}
-            <List
+            <Checkboxes
               height={virtualScrollHeight(height)}
-              width={width}
-              rowCount={filteredBoxes.length}
+              width={propWidth || width}
+              items={this.getFilteredItems()}
+              labelKey={this.props.labelKey}
+              filtered={!!this.state.filter}
               rowHeight={rowHeight}
-              rowRenderer={this._checkboxRenderer}
-              boxes={filteredBoxes}
-              {...this.props}
+              onChange={this.handleChange}
+              onSelectAllChange={this.handleSelectAllChange}
             />
-            {hasButtons
-              ? <div style={{ display: 'flex', width, height: rowHeight }}>
-                <input
-                  type='button'
-                  value='Ok'
-                  onClick={() =>
-                    this.props.onOk(
-                      this.checkedAll,
-                      this.checkedBoxes,
-                      this.unCheckedBoxes,
-                      textFilter
-                    )}
+            {hasFooter
+              ? <Footer
+                  onOk={this.handleOkClick}
+                  onCancel={this.handleCancelClick}
+                  width={propWidth || width}
+                  height={rowHeight}
+                  hasOkButton={hasOkButton}
+                  hasCancelButton={hasCancelButton}
                 />
-                <input
-                  type='button'
-                  value='Cancel'
-                  onClick={() => this.props.onCancel()}
-                />
-              </div>
               : null}
-          </div>
-        )}
+          </div>}
       </AutoSizer>
-    )
-  }
-
-  _checkboxRenderer ({ index, style }) {
-    const { valueKey, labelKey } = this.props
-    const { boxes } = this.state
-    let box = boxes.filter(box => box.filtered)[index]
-    if (box[valueKey] === '#ALL#') {
-      box = { ...box, style: { color: 'black' } }
-    }
-    return (
-      <Checkbox
-        style={style}
-        key={box[labelKey]}
-        onChange={() => this.onChange(box)}
-        label={box[labelKey]}
-        checked={box.checked}
-      />
-    )
+    );
   }
 }
 
-export default VirtualizedCheckbox
+export default VirtualizedCheckbox;
