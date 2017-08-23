@@ -61,7 +61,7 @@ module.exports = {
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new ExtractTextPlugin({
-      filename: '../styles.css',
+      filename: 'styles.css',
       allChunks: true,
     }),
     new HtmlWebpackPlugin({
