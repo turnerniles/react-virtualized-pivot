@@ -1,6 +1,6 @@
 {
   "name": "react-virtualized-pivot",
-  "version": "0.2.5-alpha",
+  "version": "0.2.6-alpha",
   "description": "React Virtualized Pivot",
   "main": "dist/umd/react-virtualized-pivot.js",
   "scripts": {
