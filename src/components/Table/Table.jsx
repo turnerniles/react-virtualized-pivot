@@ -279,6 +279,7 @@ export default class Table extends PureComponent {
         onMouseDown={this.setSelectedColumn.bind(this, columnIndex)}
         style={{
           ...style,
+          backgroundColor: colorPack.headerGridBackground,
         }}
       >
         <div
@@ -616,7 +617,6 @@ export default class Table extends PureComponent {
                             <div
                               style={{
                                 color: colorPack.headerGridText,
-                                backgroundColor: colorPack.headerGridBackground,
                                 height: headerHeight * headerCounter,
                                 width: width - scrollbarSize(),
                               }}
