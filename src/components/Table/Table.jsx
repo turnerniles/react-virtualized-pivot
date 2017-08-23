@@ -531,7 +531,7 @@ export default class Table extends PureComponent {
       leftColumnWidth,
     } = this.state;
 
-    const height = (window.innerHeight - 240 - (headerCounter * 40));
+    const height = (window.innerHeight - (headerCounter * rowHeight)) - 100;
 
     return (
       <section className="virtualized-table">
