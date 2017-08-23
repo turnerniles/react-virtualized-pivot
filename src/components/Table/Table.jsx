@@ -279,6 +279,7 @@ export default class Table extends PureComponent {
         onMouseDown={this.setSelectedColumn.bind(this, columnIndex)}
         style={{
           ...style,
+          backgroundColor: colorPack.headerGridBackground,
         }}
       >
         <div
@@ -530,7 +531,7 @@ export default class Table extends PureComponent {
       leftColumnWidth,
     } = this.state;
 
-    const height = (window.innerHeight - 240 - (headerCounter * 40));
+    const height = (window.innerHeight - (headerCounter * rowHeight)) - 100;
 
     return (
       <section className="virtualized-table">
@@ -616,7 +617,6 @@ export default class Table extends PureComponent {
                             <div
                               style={{
                                 color: colorPack.headerGridText,
-                                backgroundColor: colorPack.headerGridBackground,
                                 height: headerHeight * headerCounter,
                                 width: width - scrollbarSize(),
                               }}

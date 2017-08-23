@@ -66,11 +66,19 @@ a {
   border-top: 3px solid #EFEFFA;
 }
 .app-menu{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
 	.select-container{
 		width: 200px;
 		display: inline-block;
 		float: left;
-
+    @media (max-width: 400px) {
+      width: calc(50% - 10px);
+      margin-right: 5px;
+      margin-left: 5px;
+    }
 		@media (min-width: 768px){width: 200px}
 		@media (min-width: 992px){width: 200px}
 		@media (min-width: 1220px){width: 200px}

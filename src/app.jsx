@@ -164,7 +164,7 @@ export default class App extends React.Component {
           <div className="inner two"></div>
           <div className="inner three"></div>
         </div>
-        <div className="app-menu" style={{'width': '100%', height: '50px'}}>
+        <div className="app-menu" style={{ 'width': '100%' }}>
           <div className='select-container'>
             <div
               className="title"
