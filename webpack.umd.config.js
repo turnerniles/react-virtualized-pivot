@@ -1,6 +1,8 @@
+'use strict';
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const loaders = require('./webpack.loaders');
 const webpack = require('webpack');
+const path = require('path');
 
 loaders.push({
   test: /\.css$/,
@@ -21,10 +23,6 @@ const babelLoader = {
   test: /\.jsx?$/,
   exclude: /(node_modules|bower_components|public\/)/,
   loader: 'babel-loader',
-  query: {
-    plugins: ['transform-runtime'],
-    presets: ['es2015', 'react', 'stage-2'],
-  },
 };
 
 module.exports = {
@@ -33,7 +31,7 @@ module.exports = {
     'react-virtualized-pivot': './src/components/Pivot/Pivot.jsx',
   },
   output: {
-    path: 'dist/umd',
+    path: path.join(__dirname, 'dist', 'umd'),
     filename: '[name].js',
     libraryTarget: 'umd',
     library: 'VirtualizedSelect',
@@ -54,7 +52,7 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin({
-      filename: 'styles.css',
+      filename: '../../styles.css',
       allChunks: false,
     }),
     new webpack.optimize.UglifyJsPlugin({
