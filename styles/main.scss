@@ -66,6 +66,10 @@ a {
   border-top: 3px solid #EFEFFA;
 }
 .app-menu{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
 	.select-container{
 		width: 200px;
 		display: inline-block;
