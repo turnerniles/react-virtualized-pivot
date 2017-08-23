@@ -87,6 +87,7 @@ a {
 			margin-top: -8px;
 			margin-left: 10px;
 			margin-bottom: 8px;
+			z-index: 3;
 
 			.Select-control {
 		    height: 20px;
@@ -119,7 +120,7 @@ a {
 			display: inline-block;
 			position: relative;
 			background-color: #FF7373;
-			z-index: 1;
+			z-index: 4;
 		}
 	}
 
