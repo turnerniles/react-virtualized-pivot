@@ -17,39 +17,31 @@ export default class OverlayContent extends PureComponent {
     } = this.props;
 
     return (
-      <div>
-        <VirtualizedCheckbox
-          onClick={(e) => {
-            e.stopPropagation();
-            // console.log('clicked e', e);
-          }}
-          items={filters[currentFilter] !== undefined ?
-            currentValues.map((item) => {
-              if (filters[currentFilter].indexOf(item) > -1) {
-                return {
-                  label: item, checked: false,
-                };
-              }
+      <VirtualizedCheckbox
+        items={filters[currentFilter] !== undefined ?
+          currentValues.map((item) => {
+            if (filters[currentFilter].indexOf(item) > -1) {
               return {
-                label: item, checked: true,
+                label: item, checked: false,
               };
-            }) : currentValues.map((item) => {
-              return {
-                label: item, checked: true,
-              };
-            })
-          }
-          rowHeight={20}
-          onOk={
-            (checked, unchecked, allChecked, filter) => {
-              onFiltersOk({checked, unchecked, allChecked, filter});
             }
+            return {
+              label: item, checked: true,
+            };
+          }) : currentValues.map((item) => {
+            return {
+              label: item, checked: true,
+            };
+          })
+        }
+        rowHeight={20}
+        onOk={
+          (checked, unchecked, allChecked, filter) => {
+            onFiltersOk({checked, unchecked, allChecked, filter});
           }
-          onCancel={() => onFiltersCancel()}
-          height={200}
-          width={142}
-        />
-      </div>
+        }
+        onCancel={() => onFiltersCancel()}
+      />
     );
   }
 }

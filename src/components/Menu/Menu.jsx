@@ -11,7 +11,6 @@ import './styles.scss';
 export default class Menu extends PureComponent {
   constructor(props) {
     super(props);
-
     this.filterButtonClick = this.filterButtonClick.bind(this);
   }
 
@@ -70,23 +69,13 @@ export default class Menu extends PureComponent {
               backgroundColor: colorPack.sortableFieldBackground,
               color: colorPack.sortableFieldText,
             }}
-            onClick={(e) => {
-              // console.log('click on filters');
-              e.stopPropagation();
-              // onFiltersCancel();
-            }}
           >
             <div className="inner-filter-container"
-              onClick={(e) => {
-                e.stopPropagation();
-                // onFiltersCancel();
+              onMouseDown={(e) => {
+                onFiltersCancel();
               }}
             >
               <div className="filter-text"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // onFiltersCancel();
-                }}
               >
                 {field}
               </div>
@@ -99,9 +88,6 @@ export default class Menu extends PureComponent {
             </div>
             {(currentValues.length > 0 && currentFilter === field) &&
             <div className="filter-menu"
-              onClick={(event)=>{
-                event.stopPropagation();
-              }}
             >
               <div
                 className="filters-container"
@@ -109,16 +95,11 @@ export default class Menu extends PureComponent {
                   ...divStyle, height: 200, width: 150 }}
               >
                 <OverlayContent
-                  style={{'willChange': 'transform'}}
                   filters={filters}
                   currentFilter={currentFilter}
                   currentValues={currentValues}
                   onFiltersOk={onFiltersOk}
                   onFiltersCancel={onFiltersCancel}
-                  onClick={(e)=>{
-                    e.stopPropagation();
-                    // console.log('clicked event', event);
-                  }}
                 />
               </div>
             </div>
@@ -132,19 +113,20 @@ export default class Menu extends PureComponent {
       (
         <li
           className="fields-draggable-li"
-          ref={ref => { this.rowFieldsOverlayButton = ref; }}
           key={index}
           data-id={field}
           style={{
             backgroundColor: colorPack.sortableFieldBackground,
             color: colorPack.sortableFieldText,
           }}
-          // onClick={() => {
-          //   onFiltersCancel();
-          // }}
         >
-          <div className="inner-filter-container">
-            <div className="filter-text">
+          <div className="inner-filter-container"
+            onMouseDown={(e) => {
+              onFiltersCancel();
+            }}
+          >
+            <div className="filter-text"
+            >
               {field}
             </div>
             <div
@@ -155,31 +137,22 @@ export default class Menu extends PureComponent {
             </div>
           </div>
           {(currentValues.length > 0 && currentFilter === field) &&
+          <div className="filter-menu"
+          >
             <div
-              className="filter-menu"
-              onBlur={() => {
-                // console.log('blurrr');
-                onFiltersCancel();
-              }}
-              // onClick={(event)=>{
-              //   event.stopPropagation();
-              //   console.log('clicked event', event);
-              // }}
+              className="filters-container"
+              style={{ position: 'absolute',
+                ...divStyle, height: 200, width: 150 }}
             >
-              <div
-                className="filters-container"
-                style={{ position: 'absolute',
-                  ...divStyle, height: 200, width: 150 }}
-              >
-                <OverlayContent
-                  filters={filters}
-                  currentFilter={currentFilter}
-                  currentValues={currentValues}
-                  onFiltersOk={onFiltersOk}
-                  onFiltersCancel={onFiltersCancel}
-                />
-              </div>
+              <OverlayContent
+                filters={filters}
+                currentFilter={currentFilter}
+                currentValues={currentValues}
+                onFiltersOk={onFiltersOk}
+                onFiltersCancel={onFiltersCancel}
+              />
             </div>
+          </div>
           }
         </li>
       ));
@@ -188,19 +161,20 @@ export default class Menu extends PureComponent {
       (
         <li
           className="fields-draggable-li"
-          ref={ref => { this.rowFieldsOverlayButton = ref; }}
           key={index}
           data-id={field}
           style={{
             backgroundColor: colorPack.sortableFieldBackground,
             color: colorPack.sortableFieldText,
           }}
-          // onClick={() => {
-          //   onFiltersCancel();
-          // }}
         >
-          <div className="inner-filter-container">
-            <div className="filter-text">
+          <div className="inner-filter-container"
+            onMouseDown={(e) => {
+              onFiltersCancel();
+            }}
+          >
+            <div className="filter-text"
+            >
               {field}
             </div>
             <div
@@ -211,27 +185,22 @@ export default class Menu extends PureComponent {
             </div>
           </div>
           {(currentValues.length > 0 && currentFilter === field) &&
+          <div className="filter-menu"
+          >
             <div
-              className="filter-menu"
-              // onClick={(event)=>{
-              //   event.stopPropagation();
-              //   console.log('clicked event', event);
-              // }}
+              className="filters-container"
+              style={{ position: 'absolute',
+                ...divStyle, height: 200, width: 150 }}
             >
-              <div
-                className="filters-container"
-                style={{ position: 'absolute',
-                  ...divStyle, height: 200, width: 150 }}
-              >
-                <OverlayContent
-                  filters={filters}
-                  currentFilter={currentFilter}
-                  currentValues={currentValues}
-                  onFiltersOk={onFiltersOk}
-                  onFiltersCancel={onFiltersCancel}
-                />
-              </div>
+              <OverlayContent
+                filters={filters}
+                currentFilter={currentFilter}
+                currentValues={currentValues}
+                onFiltersOk={onFiltersOk}
+                onFiltersCancel={onFiltersCancel}
+              />
             </div>
+          </div>
           }
         </li>
       ));
@@ -305,10 +274,10 @@ export default class Menu extends PureComponent {
                 //   console.log('start')
                 //   onFiltersCancel();
                 // },
-                onChoose: (e) => {
-                  onFiltersCancel();
-                  e.stopPropagation();
-                },
+                // onChoose: (e) => {
+                //   onFiltersCancel();
+                //   e.stopPropagation();
+                // },
                 chosenClass: 'dog',
               }}
               tag="ul"
@@ -339,9 +308,9 @@ export default class Menu extends PureComponent {
                 onAdd: onAddUpdateField,
                 onUpdate: onAddUpdateField,
                 draggable: '.fields-draggable-li',
-                onChoose: () => {
-                  onFiltersCancel();
-                },
+                // onChoose: () => {
+                //   onFiltersCancel();
+                // },
               }}
               tag="ul"
             >
@@ -370,9 +339,9 @@ export default class Menu extends PureComponent {
                 group: 'shared',
                 onAdd: onAddUpdateField,
                 onUpdate: onAddUpdateField,
-                onChoose: () => {
-                  onFiltersCancel();
-                },
+                // onChoose: () => {
+                //   onFiltersCancel();
+                // },
               }}
               tag="ul"
             >
