@@ -1,2 +1,22 @@
+# Ignore source files
 src
+styles
+
+# Ignore demo directories
 docs
+
+# Ignore build configurations
+webpack.*.js
+webpack.*.*.js
+*.webpack.js
+.jshintrc
+.travis.yml
+.babelrc
+.eslintrc
+.eslintrcDev
+
+# Ignore node modules
+node_modules
+
+# Ignore mac files
+.DS_Store

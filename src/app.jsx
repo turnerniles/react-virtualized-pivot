@@ -164,7 +164,7 @@ export default class App extends React.Component {
           <div className="inner two"></div>
           <div className="inner three"></div>
         </div>
-        <div className="app-menu" style={{'width': '100%', height: '50px'}}>
+        <div className="app-menu" style={{ 'width': '100%' }}>
           <div className='select-container'>
             <div
               className="title"
@@ -234,19 +234,19 @@ export default class App extends React.Component {
             rowHeaders,
             columnHeaders,
           }) => {
-            console.log('grid');
-            console.log('rowIndex', rowIndex);
-            console.log('columnIndex', columnIndex);
-            console.log('children', children);
-            console.log('childrenData', childrenData);
-            console.log('rowHeaders', rowHeaders);
-            console.log('columnHeaders', columnHeaders);
+            console.log('grid'); // eslint-disable-line no-console
+            console.log('rowIndex', rowIndex); // eslint-disable-line no-console
+            console.log('columnIndex', columnIndex); // eslint-disable-line no-console
+            console.log('children', children); // eslint-disable-line no-console
+            console.log('childrenData', childrenData); // eslint-disable-line no-console
+            console.log('rowHeaders', rowHeaders); // eslint-disable-line no-console
+            console.log('columnHeaders', columnHeaders); // eslint-disable-line no-console
           }}
           onGridHeaderCellClick={({
             rowIndex,
             columnIndex,
           }) => {
-            console.log('header', rowIndex, columnIndex);
+            console.log('header', rowIndex, columnIndex); // eslint-disable-line no-console
           }}
           onLeftGridCellClick={({
             rowIndex,
@@ -255,14 +255,14 @@ export default class App extends React.Component {
             childrenData,
             rowHeaders,
           }) => {
-            console.log('leftGrid');
-            console.log('rowIndex', rowIndex);
-            console.log('columnIndex', columnIndex);
-            console.log('children', children);
-            console.log('childrenData', childrenData);
-            console.log('rowHeaders', rowHeaders);
+            console.log('leftGrid'); // eslint-disable-line no-console
+            console.log('rowIndex', rowIndex); // eslint-disable-line no-console
+            console.log('columnIndex', columnIndex); // eslint-disable-line no-console
+            console.log('children', children); // eslint-disable-line no-console
+            console.log('childrenData', childrenData); // eslint-disable-line no-console
+            console.log('rowHeaders', rowHeaders); // eslint-disable-line no-console
           }}
-          onLeftHeaderCellClick={() => console.log('clicking leftHeader')}
+          onLeftHeaderCellClick={() => console.log('clicking leftHeader')} // eslint-disable-line no-console
           selectedAggregationDimension={selectedAggregationDimension}
         />
       </div>

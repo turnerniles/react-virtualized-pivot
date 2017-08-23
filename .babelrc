@@ -1,4 +1,16 @@
 {
-  "presets": ["es2015", "react", "stage-2"],
-  "plugins": ['transform-decorators-legacy', 'transform-class-properties', 'react-hot-loader/babel']
+  "env": {
+    "umd": {
+      "presets": ["es2015", "react", "stage-2"],
+      "plugins": ['transform-runtime', 'transform-object-assign', 'transform-decorators-legacy', 'transform-class-properties', 'react-hot-loader/babel']
+    },
+    "demo": {
+      "presets": ["es2015", "react", "stage-2"],
+      "plugins": ['transform-decorators-legacy', 'transform-class-properties', 'react-hot-loader/babel']
+    },
+    "development": {
+      "presets": ["es2015", "react", "stage-2"],
+      "plugins": ['transform-decorators-legacy', 'transform-class-properties', 'react-hot-loader/babel']
+    }
+  }
 }

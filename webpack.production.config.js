@@ -25,9 +25,6 @@ const babelLoader = {
   test: /\.jsx?$/,
   exclude: /(node_modules|bower_components|public\/)/,
   loader: 'babel-loader',
-  query: {
-    presets: ['es2015', 'react', 'stage-2'],
-  },
 };
 
 module.exports = {
@@ -64,7 +61,7 @@ module.exports = {
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new ExtractTextPlugin({
-      filename: 'style.css',
+      filename: '../styles.css',
       allChunks: true,
     }),
     new HtmlWebpackPlugin({

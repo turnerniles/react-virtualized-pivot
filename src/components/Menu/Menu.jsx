@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 import Drawer from 'react-md/lib/Drawers';
+import Toolbar from 'react-md/lib/Toolbars';
+import Button from 'react-md/lib/Buttons';
 import OverlayContent from './OverlayContent/OverlayContent.jsx';
 import './styles.scss';
 
@@ -381,15 +383,29 @@ export default class Menu extends PureComponent {
       </div>
     );
 
+    const close = (
+      <Button icon onClick={handleRightClose}>
+        {'arrow_forward'}
+      </Button>
+    );
+    const header = (
+      <Toolbar
+        nav={null}
+        actions={close}
+        className="md-divider-border md-divider-border--bottom"
+      />
+    );
+
     return (
       <section className="menu">
         <Drawer
-          visible={isDrawerOpen}
-          position={'right'}
-          overlay={true}
+          header={header}
           onVisibilityToggle={handleRightClose}
-          type={Drawer.DrawerTypes.TEMPORARY}
+          overlay={true}
+          position={'right'}
           style={{ zIndex: 100 }}
+          type={Drawer.DrawerTypes.TEMPORARY}
+          visible={isDrawerOpen}
         >
           {menuItems}
         </Drawer>
