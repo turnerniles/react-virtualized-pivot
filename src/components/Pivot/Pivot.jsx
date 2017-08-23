@@ -309,7 +309,7 @@ export default class Pivot extends PureComponent {
       {};
 
     Object.keys(filters).forEach((filter) => {
-      console.log(filters[filter]);
+      // console.log(filters[filter]);
       newPivot.filter((elem, index, array) => {
         return filters[filter].findIndex((field) => {
           // eslint-disable-next-line
@@ -349,7 +349,6 @@ export default class Pivot extends PureComponent {
   }
 
   onFiltersCancel() {
-    console.log('canceling filters');
     this.setState({
       currentFilter: '',
       currentValues: [],
@@ -357,7 +356,6 @@ export default class Pivot extends PureComponent {
   }
 
   showFilterMenu(field) {
-    console.log('showFilterMenu');
     const {
       pivot,
     } = this.state;

@@ -71,7 +71,7 @@ export default class Menu extends PureComponent {
               color: colorPack.sortableFieldText,
             }}
             onClick={(e) => {
-              console.log('click on filters');
+              // console.log('click on filters');
               e.stopPropagation();
               // onFiltersCancel();
             }}
@@ -117,7 +117,7 @@ export default class Menu extends PureComponent {
                   onFiltersCancel={onFiltersCancel}
                   onClick={(e)=>{
                     e.stopPropagation();
-                    console.log('clicked event', event);
+                    // console.log('clicked event', event);
                   }}
                 />
               </div>
@@ -158,7 +158,7 @@ export default class Menu extends PureComponent {
             <div
               className="filter-menu"
               onBlur={() => {
-                console.log('blurrr');
+                // console.log('blurrr');
                 onFiltersCancel();
               }}
               // onClick={(event)=>{

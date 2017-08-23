@@ -21,7 +21,7 @@ export default class OverlayContent extends PureComponent {
         <VirtualizedCheckbox
           onClick={(e) => {
             e.stopPropagation();
-            console.log('clicked e', e);
+            // console.log('clicked e', e);
           }}
           items={filters[currentFilter] !== undefined ?
             currentValues.map((item) => {
