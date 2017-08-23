@@ -37,6 +37,7 @@ export default class App extends React.Component {
         evenRowBackground: '#fff',
         oddRowBackground: '#fafafa',
         gridBorders: '#e0e0e0',
+        icons: '#ccc',
       },
     };
 
@@ -114,6 +115,7 @@ export default class App extends React.Component {
           evenRowBackground: '#fff',
           oddRowBackground: '#fafafa',
           gridBorders: '#e0e0e0',
+          icons: '#ccc',
         },
       });
     }
@@ -139,6 +141,7 @@ export default class App extends React.Component {
           evenRowBackground: '',
           oddRowBackground: 'rgba(0, 0, 0, .1)',
           gridBorders: '#e0e0e0',
+          icons: '#ccc',
         },
       });
     }

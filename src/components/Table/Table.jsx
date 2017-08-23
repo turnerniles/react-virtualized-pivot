@@ -4,6 +4,7 @@ import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
 import Button from 'react-md/lib/Buttons/Button';
+import SettingsIcon from '../../icons/SettingsIcon.jsx';
 
 import './styles.scss';
 
@@ -333,8 +334,6 @@ export default class Table extends PureComponent {
         }}
       >
         <div className="header-cell">
-          <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-            rel="stylesheet"/>
           { rowIndex === 0 &&
             <Button
               icon
@@ -344,7 +343,11 @@ export default class Table extends PureComponent {
                 padding: '8px',
                 width: '40px',
               }}
-            >settings</Button>
+            >
+              <SettingsIcon
+                color={colorPack.icons}
+              />
+            </Button>
           }
           {
             data.length ?
@@ -382,6 +385,7 @@ export default class Table extends PureComponent {
       originalArgs,
       rawData,
       rowFields,
+      colFields,
     } = this.props;
 
     function getCollapsedRows(rowNum, dataStr) {
@@ -484,6 +488,10 @@ export default class Table extends PureComponent {
     const arrowStyle = (rowIndex) => {
       if (checkIfInCollapsed(rowIndex)) {
         return '▶';
+      }
+      if (rowFields.length === 0 &&
+        data.slice(headerCounter)[rowIndex].depth < colFields.length - 1) {
+        return '▼';
       }
       if (data.slice(headerCounter)[rowIndex].depth < rowFields.length - 1) {
         return '▼';
@@ -702,5 +710,6 @@ Table.propTypes = {
   overscanRowCount: PropTypes.number.isRequired,
   rowCount: PropTypes.number.isRequired,
   rowFields: PropTypes.array.isRequired,
+  colFields: PropTypes.array.isRequired,
   rowHeight: PropTypes.number.isRequired,
 };

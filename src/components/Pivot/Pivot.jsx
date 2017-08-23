@@ -309,7 +309,6 @@ export default class Pivot extends PureComponent {
       {};
 
     Object.keys(filters).forEach((filter) => {
-      // console.log(filters[filter]);
       newPivot.filter((elem, index, array) => {
         return filters[filter].findIndex((field) => {
           // eslint-disable-next-line
@@ -490,6 +489,7 @@ export default class Pivot extends PureComponent {
               rawData={pivot.data.rawData}
               rowCount={rowCount}
               rowFields={rowFields}
+              colFields={colFields}
               rowHeight={rowHeight}
               handleRightOpen={this.handleRightOpen}
             />
@@ -532,6 +532,7 @@ Pivot.defaultProps = {
     sortableContainerBorderColor: '#ccc',
     sortableFieldBackground: '#fafafa',
     sortableFieldText: '#000',
+    icons: '#ccc',
   },
   onGridCellClick: () => {},
   onGridHeaderCellClick: () => {},

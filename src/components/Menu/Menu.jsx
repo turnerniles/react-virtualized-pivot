@@ -6,6 +6,8 @@ import Drawer from 'react-md/lib/Drawers';
 import Toolbar from 'react-md/lib/Toolbars';
 import Button from 'react-md/lib/Buttons';
 import OverlayContent from './OverlayContent/OverlayContent.jsx';
+import RightArrowIcon from '../../icons/RightArrowIcon.jsx';
+
 import './styles.scss';
 
 export default class Menu extends PureComponent {
@@ -15,7 +17,6 @@ export default class Menu extends PureComponent {
   }
 
   filterButtonClick(field, e) {
-    e.stopPropagation();
     this.props.showFilterMenu(field);
   }
 
@@ -270,15 +271,6 @@ export default class Menu extends PureComponent {
               options={{
                 group: 'shared',
                 onAdd: onAddUpdateField,
-                // onStart: () => {
-                //   console.log('start')
-                //   onFiltersCancel();
-                // },
-                // onChoose: (e) => {
-                //   onFiltersCancel();
-                //   e.stopPropagation();
-                // },
-                chosenClass: 'dog',
               }}
               tag="ul"
             >
@@ -307,10 +299,6 @@ export default class Menu extends PureComponent {
                 group: 'shared',
                 onAdd: onAddUpdateField,
                 onUpdate: onAddUpdateField,
-                draggable: '.fields-draggable-li',
-                // onChoose: () => {
-                //   onFiltersCancel();
-                // },
               }}
               tag="ul"
             >
@@ -339,9 +327,6 @@ export default class Menu extends PureComponent {
                 group: 'shared',
                 onAdd: onAddUpdateField,
                 onUpdate: onAddUpdateField,
-                // onChoose: () => {
-                //   onFiltersCancel();
-                // },
               }}
               tag="ul"
             >
@@ -354,7 +339,9 @@ export default class Menu extends PureComponent {
 
     const close = (
       <Button icon onClick={handleRightClose}>
-        {'arrow_forward'}
+        <RightArrowIcon
+          color={colorPack.icons}
+        />
       </Button>
     );
     const header = (
