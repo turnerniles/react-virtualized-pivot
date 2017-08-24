@@ -19,7 +19,7 @@ npm install react-virtualized-pivot --save
 
 ES6 and UMD builds are available. For example:
 
-```jsx
+```js
 import Pivot from 'react-virtualized-pivot';
 
 // Be sure to include styles at some point, probably during your bootstrapping
@@ -100,7 +100,7 @@ You can also use a global-friendly UMD build:
   * A function that is fired when clicking on the top left most cell (above the row headers and to the left of the column headers)
 
 ## Example usage with optional props
-```jsx
+```js
 import React from 'react';
 import Pivot from 'react-virtualized-pivot';
 import 'react-virtualized-pivot/docs/umd/styles.css';

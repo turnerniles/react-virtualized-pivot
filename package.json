@@ -2,7 +2,7 @@
   "name": "react-virtualized-pivot",
   "version": "0.2.7-alpha",
   "description": "React Virtualized Pivot",
-  "main": "dist/umd/react-virtualized-pivot.js",
+  "main": "dist/es/index.js",
   "module": "dist/es/index.js",
   "scripts": {
     "clean:demo": "rimraf docs",
@@ -14,10 +14,10 @@
     "build:es:css": "postcss --config postcss.config.js --use autoprefixer --replace ./dist/es/styles.css",
     "build:demo:css": "postcss --config postcss.config.js --use autoprefixer --replace ./docs/styles.css",
     "build:umd:css": "postcss --config postcss.config.js --use autoprefixer --replace ./dist/umd/styles.css",
-    "start": "cross-env NODE_ENV=development webpack-dev-server --progress --profile --colors",
+    "start": "cross-env NODE_ENV=development webpack-dev-server --progress --profile --colors --config webpack.dev.config.js",
     "lint:eslint": "eslint 'src/**/*.jsx'",
     "lint:staged": "lint-staged",
-    "dev": "webpack-dashboard -- webpack-dev-server --progress --profile --colors",
+    "dev": "webpack-dashboard -- webpack-dev-server --progress --profile --colors  --config webpack.dev.config.js",
     "test:watch": "karma start",
     "test": "karma start --browsers Firefox --single-run",
     "preversion": "npm run build:umd && npm run build:es"

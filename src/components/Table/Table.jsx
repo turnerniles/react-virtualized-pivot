@@ -239,28 +239,29 @@ export default class Table extends PureComponent {
           ...style,
           borderRight: `1px solid ${this.props.colorPack.gridBorders}`,
           borderBottom: `1px solid ${this.props.colorPack.gridBorders}`,
+          overflow: 'hidden',
+          lineHeight: 2.5,
+          textAlign: 'right',
+          display: 'inline-block',
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+          direction: 'ltr',
         }}
         onClick={onClick}
       >
-        <div className="cell-text-container">
-          <div className="body-cell-data">
-            {
-              data.length > 0 ?
-                bodyCellValueTransformation({
-                  rowIndex,
-                  columnIndex,
-                  value: data
-                    .slice(headerCounter)[rowIndex]
-                    .value[columnIndex + 1],
-                }) :
-                bodyCellValueTransformation({
-                  rowIndex,
-                  columnIndex,
-                  value: '',
-                })
-            }
-          </div>
-        </div>
+        {
+          data.length > 0 ?
+            bodyCellValueTransformation({
+              rowIndex,
+              columnIndex,
+              value: data[headerCounter + rowIndex].value[columnIndex + 1],
+            }) :
+            bodyCellValueTransformation({
+              rowIndex,
+              columnIndex,
+              value: '',
+            })
+        }
       </div>
     );
   }
