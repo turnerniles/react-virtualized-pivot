@@ -507,6 +507,7 @@ export default class Table extends PureComponent {
           ...firstColumnStyle,
           ...this.evenOddRowStyle({ rowIndex, columnIndex }),
           ...style,
+          borderLeft: `1px solid ${this.props.colorPack.gridBorders}`,
           borderRight: `1px solid ${this.props.colorPack.gridBorders}`,
           borderBottom: `1px solid ${this.props.colorPack.gridBorders}`,
         }}
@@ -594,7 +595,6 @@ export default class Table extends PureComponent {
                         position: 'absolute',
                         left: 0,
                         top: headerHeight * headerCounter,
-                        backgroundColor: colorPack.leftSideGridBackground,
                         color: colorPack.leftSideGridText,
                       }}
                     >
@@ -607,9 +607,7 @@ export default class Table extends PureComponent {
                         columnCount={1}
                         className="LeftSideGrid"
                         style={{
-                          backgroundColor: colorPack.leftHeaderCellBackground,
-                          borderLeft: `1px solid ${colorPack.gridBorders}`,
-                          borderRight: `1px solid ${colorPack.gridBorders}`,
+                          backgroundColor: colorPack.leftSideGridBackground,
                         }}
                         height={height - scrollbarSize()}
                         rowHeight={rowHeight}
@@ -632,6 +630,7 @@ export default class Table extends PureComponent {
                                 color: colorPack.headerGridText,
                                 height: headerHeight * headerCounter,
                                 width: width - scrollbarSize(),
+                                backgroundColor: colorPack.headerGridBackground,
                               }}
                             >
                               <Grid

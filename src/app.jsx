@@ -171,10 +171,11 @@ export default class App extends React.Component {
               border: 0,
               zIndex: 1,
             }}
+            // eslint-disable-next-line
             src={'https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png'}
             alt={'Fork me on GitHub'}
           />
-          </a>
+        </a>
         <div
           className="loader"
           style={{'display': isLoaded ? 'none' : 'inherit'}}

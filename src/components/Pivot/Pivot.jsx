@@ -519,7 +519,7 @@ Pivot.defaultProps = {
     columnResizer: '#e0e0e0',
     evenRowBackground: '#fff',
     gridBorders: '#e0e0e0',
-    headerGridBackground: '#fafafa',
+    headerGridBackground: '#000',
     headerGridText: '#000',
     leftHeaderCellBackground: '#fafafa',
     leftHeaderCellText: '#000',
