@@ -3,19 +3,24 @@
   "version": "0.2.6-alpha",
   "description": "React Virtualized Pivot",
   "main": "dist/umd/react-virtualized-pivot.js",
+  "module": "dist/es/index.js",
   "scripts": {
     "clean:demo": "rimraf docs",
+    "clean:es": "rimraf dist/es",
     "clean:umd": "rimraf dist/umd",
-    "build:demo": "npm run clean:demo && cross-env BABEL_ENV=demo webpack --config webpack.production.config.js --progress --profile --colors && npm run build:css",
-    "build:umd": "npm run clean:umd && cross-env BABEL_ENV=umd webpack --config webpack.umd.config.js --progress --profile --colors && npm run build:css",
-    "build:css": "postcss --config postcss.config.js --use autoprefixer --replace styles.css",
+    "build:demo": "npm run clean:demo && cross-env BABEL_ENV=demo webpack --config webpack.demo.config.js --progress --profile --colors && npm run build:demo:css",
+    "build:es": "npm run clean:es && cross-env BABEL_ENV=es webpack --config webpack.es.config.js --progress --profile --colors && npm run build:es:css",
+    "build:umd": "npm run clean:umd && cross-env BABEL_ENV=umd webpack --config webpack.umd.config.js --progress --profile --colors && npm run build:umd:css",
+    "build:es:css": "postcss --config postcss.config.js --use autoprefixer --replace ./dist/es/styles.css",
+    "build:demo:css": "postcss --config postcss.config.js --use autoprefixer --replace ./docs/styles.css",
+    "build:umd:css": "postcss --config postcss.config.js --use autoprefixer --replace ./dist/umd/styles.css",
     "start": "cross-env NODE_ENV=development webpack-dev-server --progress --profile --colors",
     "lint:eslint": "eslint 'src/**/*.jsx'",
     "lint:staged": "lint-staged",
     "dev": "webpack-dashboard -- webpack-dev-server --progress --profile --colors",
     "test:watch": "karma start",
     "test": "karma start --browsers Firefox --single-run",
-    "preversion": "npm run build:umd"
+    "preversion": "npm run build:umd && npm run build:es"
   },
   "pre-commit": "lint:staged",
   "lint-staged": {
@@ -30,9 +35,8 @@
   "homepage": "https://github.com/turnerniles/react-virtualized-pivot#readme",
   "dependencies": {
     "babel-runtime": "^6.26.0",
+    "prop-types": "^15.5.10",
     "quick-pivot": "^2.2.6",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
     "react-draggable": "^2.2.6",
     "react-md": "^1.0.19",
     "react-select": "^1.0.0-rc.5",
@@ -43,6 +47,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.23.1",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^6.3.2",
@@ -84,8 +89,9 @@
     "postcss-cli": "^4.1.0",
     "postcss-loader": "^1.2.2",
     "pre-commit": "^1.2.2",
-    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
     "react-addons-test-utils": "^15.5.1",
+    "react-dom": "^15.6.1",
     "react-hot-loader": "^3.0.0-beta.7",
     "rimraf": "^2.6.1",
     "sass-loader": "^6.0.6",
@@ -95,6 +101,11 @@
     "webpack": "^2.2.1",
     "webpack-cleanup-plugin": "^0.4.2",
     "webpack-dashboard": "^0.3.0",
-    "webpack-dev-server": "^2.4.1"
+    "webpack-dev-server": "^2.4.1",
+    "webpack-node-externals": "^1.6.0"
+  },
+  "peerDependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
   }
 }

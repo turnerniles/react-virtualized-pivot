@@ -17,13 +17,13 @@ Install `react-virtualized-pivot` using npm.
 npm install react-virtualized-pivot --save
 ```
 
-## Usage
+ES6 and UMD builds are available. For example:
+
 ```jsx
-import React from 'react';
 import Pivot from 'react-virtualized-pivot';
 
 // Be sure to include styles at some point, probably during your bootstrapping
-import 'react-virtualized-pivot/styles.css';
+import 'react-virtualized-pivot/dist/es/styles.css';
 
 <Pivot
   data={[
@@ -39,6 +39,12 @@ import 'react-virtualized-pivot/styles.css';
     ['Sansa', 'f', 'Stark', 12],
   ]}
 />
+```
+
+You can also use a global-friendly UMD build:
+```html
+<link rel="stylesheet" href="path-to-react-virtualized-pivot/dist/umd/styles.css">
+<script src="path-to-react-virtualized-pivot/dist/umd/react-virtualized.js"></script>
 ```
 
 ## Props
