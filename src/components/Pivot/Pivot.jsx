@@ -38,7 +38,7 @@ export default class Pivot extends PureComponent {
       filters: {},
       columnWidth: 75,
       columnCount: 0,
-      overscanColumnCount: 0,
+      overscanColumnCount: 5,
       overscanRowCount: 5,
       headerHeight: 40,
       rowHeight: 20,
@@ -67,6 +67,9 @@ export default class Pivot extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.colorPack !== nextProps.colorPack) {
+      return;
+    }
     const aggregationDimensions = nextProps.data !== undefined ?
       nextProps.data[0].map((item, index) => {
         return {value: item, label: item};
@@ -519,7 +522,7 @@ Pivot.defaultProps = {
     columnResizer: '#e0e0e0',
     evenRowBackground: '#fff',
     gridBorders: '#e0e0e0',
-    headerGridBackground: '#fafafa',
+    headerGridBackground: '#000',
     headerGridText: '#000',
     leftHeaderCellBackground: '#fafafa',
     leftHeaderCellText: '#000',
