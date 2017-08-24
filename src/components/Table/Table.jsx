@@ -487,7 +487,7 @@ export default class Table extends PureComponent {
 
     const arrowStyle = (rowIndex) => {
       if (checkIfInCollapsed(rowIndex)) {
-        return '▶';
+        return '►';
       }
       if (rowFields.length === 0 &&
         data.slice(headerCounter)[rowIndex].depth < colFields.length - 1) {

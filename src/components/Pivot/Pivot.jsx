@@ -38,7 +38,7 @@ export default class Pivot extends PureComponent {
       filters: {},
       columnWidth: 75,
       columnCount: 0,
-      overscanColumnCount: 0,
+      overscanColumnCount: 5,
       overscanRowCount: 5,
       headerHeight: 40,
       rowHeight: 20,
