@@ -1,3 +1,10 @@
+img.github-fork {
+  @media (max-width: 480px) {
+    width: 100px;
+    height: 100px;
+  }
+}
+
 body {
 	background: #ece7e7;
 }
