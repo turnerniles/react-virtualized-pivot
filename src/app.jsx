@@ -119,29 +119,55 @@ export default class App extends React.Component {
         },
       });
     }
-    if (colorPack.value === 'funky') {
+    if (colorPack.value === 'fuschia') {
       this.setState({
         selectedColorPack: colorPack.value,
         colorPack: {
           columnResizer: '#e0e0e0',
-          sortableFieldBackground: '#5F9EDF',
-          sortableFieldText: '#fff',
+          sortableFieldBackground: '#fafafa',
+          sortableFieldText: '#000',
           sortableContainerBackground: '#fff',
           sortableContainerBorderColor: '#ccc',
-          selectorContainerTitleBackground: '#FF7373',
+          selectorContainerTitleBackground: 'rgb(188, 57, 89)',
           selectorContainerTitleText: '#fff',
-          leftHeaderCellBackground: 'rgb(51, 51, 51)',
+          leftHeaderCellBackground: '#333',
           leftHeaderCellText: '#fff',
-          headerGridBackground: 'rgb(51, 51, 51)',
+          headerGridBackground: '#333',
           headerGridText: '#fff',
           leftSideGridBackground: 'rgb(188, 57, 89)',
           leftSideGridText: '#fff',
-          bodyGridBackground: 'rgb(120, 54, 70)',
+          bodyGridBackground: '#783646',
           bodyGridText: '#fff',
           evenRowBackground: '',
           oddRowBackground: 'rgba(0, 0, 0, .1)',
           gridBorders: '#e0e0e0',
-          icons: '#ccc',
+          icons: '#fff',
+        },
+      });
+    }
+    if (colorPack.value === 'forest-green') {
+      this.setState({
+        selectedColorPack: colorPack.value,
+        colorPack: {
+          columnResizer: '#e0e0e0',
+          sortableFieldBackground: '#fafafa',
+          sortableFieldText: '#000',
+          sortableContainerBackground: '#fff',
+          sortableContainerBorderColor: '#ccc',
+          selectorContainerTitleBackground: '#3e7360',
+          selectorContainerTitleText: '#fff',
+          leftHeaderCellBackground: '#285847',
+          leftHeaderCellText: '#fff',
+          headerGridBackground: '#285847',
+          headerGridText: '#fff',
+          leftSideGridBackground: '#164A38',
+          leftSideGridText: '#fff',
+          bodyGridBackground: '#073323',
+          bodyGridText: '#fff',
+          evenRowBackground: '',
+          oddRowBackground: 'rgba(0, 0, 0, .2)',
+          gridBorders: '#e0e0e0',
+          icons: '#5e8D7c',
         },
       });
     }
@@ -159,6 +185,23 @@ export default class App extends React.Component {
 
     return (
       <div>
+        <a
+          href={'https://github.com/turnerniles/react-virtualized-pivot'}
+          target={'_blank'}
+        >
+          <img
+            style={{
+              'position': 'absolute',
+              top: 0,
+              right: 0,
+              border: 0,
+              zIndex: 1,
+            }}
+            // eslint-disable-next-line
+            src={'https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png'}
+            alt={'Fork me on GitHub'}
+          />
+        </a>
         <div
           className="loader"
           style={{'display': isLoaded ? 'none' : 'inherit'}}
@@ -208,7 +251,8 @@ export default class App extends React.Component {
               value={selectedColorPack}
               options={[
                 { value: 'standard', label: 'standard' },
-                { value: 'funky', label: 'funky' },
+                { value: 'forest-green', label: 'forest green' },
+                { value: 'fuschia', label: 'fuschia' },
               ]}
               onChange={this.onSelectColorPack}
               menuContainerStyle={{
