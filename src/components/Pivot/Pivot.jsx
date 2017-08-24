@@ -67,6 +67,9 @@ export default class Pivot extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.colorPack !== nextProps.colorPack) {
+      return;
+    }
     const aggregationDimensions = nextProps.data !== undefined ?
       nextProps.data[0].map((item, index) => {
         return {value: item, label: item};
