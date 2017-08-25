@@ -17,13 +17,13 @@ Install `react-virtualized-pivot` using npm.
 npm install react-virtualized-pivot --save
 ```
 
-ES6 and UMD builds are available. For example:
+ES6, CommonJS, and UMD builds are available. For example:
 
 ```js
 import Pivot from 'react-virtualized-pivot';
 
 // Be sure to include styles at some point, probably during your bootstrapping
-import 'react-virtualized-pivot/dist/es/styles.css';
+import 'react-virtualized-pivot/dist/commonjs/styles.css';
 
 <Pivot
   data={[
@@ -66,7 +66,7 @@ You can also use a global-friendly UMD build:
     * gridBorders: '#e0e0e0'
     * headerGridBackground:'#fafafa'
     * headerGridText:'#000'
-    * icons: '#ccc'    
+    * icons: '#ccc'
     * leftSideGridBackground: '#fff'
     * leftSideGridText:'#000'
     * leftHeaderCellBackground:'#fafafa'
@@ -75,7 +75,7 @@ You can also use a global-friendly UMD build:
     * selectorContainerTitleBackground: '#fafafa'
     * selectorContainerTitleText: '#000'
     * sortableContainerBackground: '#fff'
-    * sortableContainerBorderColor: '#ccc'    
+    * sortableContainerBorderColor: '#ccc'
     * sortableFieldBackground: '#fafafa'
     * sortableFieldText: '#000'
 * `onGridCellClick`
