@@ -214,7 +214,7 @@ export default class Table extends PureComponent {
     function onClick() {
       const { children, childrenData } = data.length > 0 ?
         getChildren(rowIndex, {children: [], childrenData: []},
-          data.slice(headerCounter)[rowIndex].depth) :
+          data[headerCounter + rowIndex].depth) :
         [];
 
       const rowHeaders = getRowHeaders(rowIndex);
@@ -461,7 +461,7 @@ export default class Table extends PureComponent {
 
       const { children, childrenData } = data.length > 0 ?
         getChildren(rowIndex, {children: [], childrenData: []},
-          data.slice(headerCounter)[rowIndex].depth) :
+          data[headerCounter + rowIndex].depth) :
         [];
 
       const rowHeaders = getRowHeaders(rowIndex);
@@ -479,9 +479,9 @@ export default class Table extends PureComponent {
 
     if (columnIndex === 0) {
       firstColumnStyle.paddingLeft =
-        `${20 * data.slice(headerCounter)[rowIndex].depth}px`;
+        `${20 * data[headerCounter + rowIndex].depth}px`;
       if (rowFields.length === 1 ||
-        data.slice(headerCounter)[rowIndex].depth < rowFields.length - 1) {
+        data[headerCounter + rowIndex].depth < rowFields.length - 1) {
         firstColumnStyle.cursor = 'pointer';
       }
     }
@@ -491,10 +491,10 @@ export default class Table extends PureComponent {
         return '►';
       }
       if (rowFields.length === 0 &&
-        data.slice(headerCounter)[rowIndex].depth < colFields.length - 1) {
+        data[headerCounter + rowIndex].depth < colFields.length - 1) {
         return '▼';
       }
-      if (data.slice(headerCounter)[rowIndex].depth < rowFields.length - 1) {
+      if (data[headerCounter + rowIndex].depth < rowFields.length - 1) {
         return '▼';
       }
       return '';
@@ -521,7 +521,7 @@ export default class Table extends PureComponent {
           <div className="cell-data">
             {
               data.length ?
-                data.slice(headerCounter)[rowIndex].value[columnIndex] :
+                data[headerCounter + rowIndex].value[columnIndex] :
                 ''
             }
           </div>
