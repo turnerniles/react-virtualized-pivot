@@ -46,7 +46,7 @@ import 'react-virtualized-pivot/dist/commonjs/styles.css';
 You can also use a global-friendly UMD build:
 ```html
 <link rel="stylesheet" href="path-to-react-virtualized-pivot/dist/umd/styles.css">
-<script src="path-to-react-virtualized-pivot/dist/umd/react-virtualized.js"></script>
+<script src="path-to-react-virtualized-pivot/dist/umd/react-virtualized-pivot.js"></script>
 ```
 
 ## Props
