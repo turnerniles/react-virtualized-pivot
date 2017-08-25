@@ -516,7 +516,7 @@ Pivot.propTypes = {
 
 Pivot.defaultProps = {
   bodyCellValueTransformation: ({value}) => value,
-  colorPack: {
+  colorPark: {
     bodyGridBackground: '#fff',
     bodyGridText: '#000',
     columnResizer: '#e0e0e0',
@@ -524,6 +524,7 @@ Pivot.defaultProps = {
     gridBorders: '#e0e0e0',
     headerGridBackground: '#000',
     headerGridText: '#000',
+    icons: '#ccc',
     leftHeaderCellBackground: '#fafafa',
     leftHeaderCellText: '#000',
     leftSideGridBackground: '#fff',
@@ -535,7 +536,6 @@ Pivot.defaultProps = {
     sortableContainerBorderColor: '#ccc',
     sortableFieldBackground: '#fafafa',
     sortableFieldText: '#000',
-    icons: '#ccc',
   },
   onGridCellClick: () => {},
   onGridHeaderCellClick: () => {},
