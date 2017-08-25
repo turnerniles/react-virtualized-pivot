@@ -1,8 +1,14 @@
 img.github-fork {
+  z-index: 5;
+  position: absolute;
+  top: 0;
+  right: 0;
+
   @media (max-width: 480px) {
     width: 100px;
     height: 100px;
   }
+
 }
 
 body {
