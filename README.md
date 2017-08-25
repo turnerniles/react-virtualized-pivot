@@ -19,7 +19,7 @@ Install `react-virtualized-pivot` using npm.
 npm install react-virtualized-pivot --save
 ```
 
-ES6, CommonJS, and UMD builds are available. For example:
+### Usage
 
 ```js
 import Pivot from 'react-virtualized-pivot';
