@@ -59,24 +59,25 @@ You can also use a global-friendly UMD build:
     * value: the original value of the cell
 * `colorPack`
   * An object with components to adjust colors of as keys and the corresponding color as a string. The following components are available for color selection (shown with their default selection):
-    * columnResizer: '#e0e0e0'
-    * sortableFieldBackground: '#fafafa'
-    * sortableFieldText: '#000'
-    * sortableContainerBackground: '#fff'
-    * sortableContainerBorderColor: '#ccc'
-    * selectorContainerTitleBackground: '#fafafa'
-    * selectorContainerTitleText: '#000'
-    * leftHeaderCellBackground:'#fafafa'
-    * leftHeaderCellText:'#000'
-    * headerGridBackground:'#fafafa'
-    * headerGridText:'#000'
-    * leftSideGridBackground: '#fff'
-    * leftSideGridText:'#000'
     * bodyGridBackground: '#fff'
     * bodyGridText:'#000'
+    * columnResizer: '#e0e0e0'
     * evenRowBackground: '#fff'
-    * oddRowBackground: '#fafafa'
     * gridBorders: '#e0e0e0'
+    * headerGridBackground:'#fafafa'
+    * headerGridText:'#000'
+    * icons: '#ccc'    
+    * leftSideGridBackground: '#fff'
+    * leftSideGridText:'#000'
+    * leftHeaderCellBackground:'#fafafa'
+    * leftHeaderCellText: '#000'
+    * oddRowBackground: '#fafafa'
+    * selectorContainerTitleBackground: '#fafafa'
+    * selectorContainerTitleText: '#000'
+    * sortableContainerBackground: '#fff'
+    * sortableContainerBorderColor: '#ccc'    
+    * sortableFieldBackground: '#fafafa'
+    * sortableFieldText: '#000'
 * `onGridCellClick`
   * A function that is fired when clicking on a grid cell. The function provides an object as a parameter with the following properties:
     * rowIndex: the row index of the cell clicked
@@ -103,7 +104,7 @@ You can also use a global-friendly UMD build:
 ```jsx
 import React from 'react';
 import Pivot from 'react-virtualized-pivot';
-import 'react-virtualized-pivot/docs/umd/styles.css';
+import 'react-virtualized-pivot/dist/es/styles.css';
 
 const data = [
   ['name', 'gender', 'house', 'age'],
