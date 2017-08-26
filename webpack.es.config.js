@@ -20,12 +20,6 @@ loaders.push({
   exclude: ['node_modules'],
 });
 
-const babelLoader = {
-  test: /\.jsx?$/,
-  exclude: /(node_modules|bower_components|public\/)/,
-  loader: 'babel-loader',
-};
-
 module.exports = {
   entry: {
     index: './src/components/Pivot/Pivot.jsx',
@@ -37,7 +31,7 @@ module.exports = {
     libraryTarget: 'umd',
   },
   module: {
-    loaders: [babelLoader].concat(loaders),
+    loaders,
   },
   plugins: [
     new ExtractTextPlugin({

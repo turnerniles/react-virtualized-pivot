@@ -40,10 +40,7 @@
     "react-draggable": "^2.2.6",
     "react-md": "^1.0.19",
     "react-select": "^1.0.0-rc.5",
-    "react-sortablejs": "^1.3.4",
-    "react-virtualized": "^9.9.0",
-    "react-virtualized-checkbox": "^3.0.1",
-    "sortablejs": "^1.6.0"
+    "react-virtualized": "^9.9.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -59,7 +56,6 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.4.0",
     "babel-preset-es2015": "^6.22.0",
-    "babel-preset-es2015-rollup": "^3.0.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "chai": "^3.5.0",
