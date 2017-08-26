@@ -1,5 +1,10 @@
 module.exports = [
   {
+    test: /\.jsx?$/,
+    exclude: /(node_modules|bower_components|public\/)/,
+    loader: 'babel-loader',
+  },
+  {
     test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
     exclude: /(node_modules|bower_components)/,
     loader: 'file-loader',

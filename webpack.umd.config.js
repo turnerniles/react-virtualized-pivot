@@ -19,12 +19,6 @@ loaders.push({
   exclude: ['node_modules'],
 });
 
-const babelLoader = {
-  test: /\.jsx?$/,
-  exclude: /(node_modules|bower_components|public\/)/,
-  loader: 'babel-loader',
-};
-
 module.exports = {
   devtool: 'source-map',
   entry: {
@@ -65,6 +59,6 @@ module.exports = {
     }),
   ],
   module: {
-    loaders: [babelLoader].concat(loaders),
+    loaders,
   },
 };

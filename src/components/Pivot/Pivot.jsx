@@ -516,13 +516,13 @@ Pivot.propTypes = {
 
 Pivot.defaultProps = {
   bodyCellValueTransformation: ({value}) => value,
-  colorPark: {
+  colorPack: {
     bodyGridBackground: '#fff',
     bodyGridText: '#000',
     columnResizer: '#e0e0e0',
     evenRowBackground: '#fff',
     gridBorders: '#e0e0e0',
-    headerGridBackground: '#000',
+    headerGridBackground: '#fafafa',
     headerGridText: '#000',
     icons: '#ccc',
     leftHeaderCellBackground: '#fafafa',
