@@ -40,8 +40,8 @@ export default class Table extends PureComponent {
           nextProps.columnCount - 1 :
           1).fill(nextProps.columnWidth),
       });
+      this.forceTableUpdate();
     }
-    this.forceTableUpdate();
   }
 
   forceTableUpdate() {
