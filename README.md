@@ -120,6 +120,7 @@ const data = [
   ['Jaime', 'm', 'Lannister', 32],
   ['Sansa', 'f', 'Stark', 12],
 ];
+
 const colorPack = {
   columnResizer: '#e0e0e0',
   sortableFieldBackground: '#fafafa',
@@ -128,17 +129,18 @@ const colorPack = {
   sortableContainerBorderColor: '#ccc',
   selectorContainerTitleBackground: '#fafafa',
   selectorContainerTitleText: '#000',
-  leftHeaderCellBackground:'#fafafa',
-  leftHeaderCellText:'#000',
-  headerGridBackground:'#fafafa',
-  headerGridText:'#000',
+  leftHeaderCellBackground: '#fafafa',
+  leftHeaderCellText: '#000',
+  headerGridBackground: '#fafafa',
+  headerGridText: '#000',
   leftSideGridBackground: '#fff',
-  leftSideGridText:'#000',
+  leftSideGridText: '#000',
   bodyGridBackground: '#fff',
-  bodyGridText:'#000',
+  bodyGridText: '#000',
   evenRowBackground: '#fff',
   oddRowBackground: '#fafafa',
   gridBorders: '#e0e0e0',
+  icons: '#ccc',
 };
 
 function bodyCellValueTransformation({value}) {

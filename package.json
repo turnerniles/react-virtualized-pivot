@@ -1,6 +1,6 @@
 {
   "name": "react-virtualized-pivot",
-  "version": "0.2.7-alpha",
+  "version": "0.2.10-alpha",
   "description": "React Virtualized Pivot",
   "main": "dist/es/index.js",
   "module": "dist/es/index.js",
