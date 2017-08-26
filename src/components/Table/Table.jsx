@@ -34,12 +34,13 @@ export default class Table extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      columnWidths: Array(nextProps.columnCount > 1 ?
-        nextProps.columnCount - 1 :
-        1).fill(nextProps.columnWidth),
-    });
-
+    if (nextProps.columnCount !== this.props.columnCount) {
+      this.setState({
+        columnWidths: Array(nextProps.columnCount > 1 ?
+          nextProps.columnCount - 1 :
+          1).fill(nextProps.columnWidth),
+      });
+    }
     this.forceTableUpdate();
   }
 
