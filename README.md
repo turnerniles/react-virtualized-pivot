@@ -9,7 +9,7 @@ https://turnerniles.github.io/react-virtualized-pivot/
 
 The demo uses ~24.7mb uncompressed .csv, 269,372 rows by 9 columns (2,424,348 cells) of 2007-2012 Declined Loan data provided by [Lending Club](https://www.lendingclub.com/info/download-data.action).
 
-![pivot_demo](https://raw.githubusercontent.com/turnerniles/react-virtualized-pivot/master/pivot_demo.gif)
+![pivot_demo](https://user-images.githubusercontent.com/8146241/29742823-06c2adf8-8a54-11e7-96ed-18466e853482.gif)
 
 ## Getting started
 
@@ -19,7 +19,7 @@ Install `react-virtualized-pivot` using npm.
 npm install react-virtualized-pivot --save
 ```
 
-ES6, CommonJS, and UMD builds are available. For example:
+### Usage
 
 ```js
 import Pivot from 'react-virtualized-pivot';
@@ -46,7 +46,7 @@ import 'react-virtualized-pivot/dist/commonjs/styles.css';
 You can also use a global-friendly UMD build:
 ```html
 <link rel="stylesheet" href="path-to-react-virtualized-pivot/dist/umd/styles.css">
-<script src="path-to-react-virtualized-pivot/dist/umd/react-virtualized.js"></script>
+<script src="path-to-react-virtualized-pivot/dist/umd/react-virtualized-pivot.js"></script>
 ```
 
 ## Props

@@ -1,11 +1,8 @@
 'use strict';
-
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const extractSass = new ExtractTextPlugin({
-  filename: 'styles.css',
-});
 const nodeExternals = require('webpack-node-externals');
+const webpack = require('webpack');
 const loaders = require('./webpack.loaders');
 
 loaders.push({
@@ -30,20 +27,30 @@ const babelLoader = {
 };
 
 module.exports = {
-  entry: [
-    './src/index.js',
-    './styles/index.scss',
-  ],
+  entry: {
+    index: './src/components/Pivot/Pivot.jsx',
+  },
   externals: [nodeExternals()],
   output: {
-    publicPath: './',
     path: path.join(__dirname, 'dist', 'es'),
     filename: 'index.js',
+    libraryTarget: 'umd',
   },
   module: {
     loaders: [babelLoader].concat(loaders),
   },
   plugins: [
-    extractSass,
+    new ExtractTextPlugin({
+      filename: 'styles.css',
+      allChunks: false,
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+        screw_ie8: true,
+        drop_console: true,
+        drop_debugger: true,
+      },
+    }),
   ],
 };
