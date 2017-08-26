@@ -310,6 +310,7 @@ export default class Table extends PureComponent {
             className="column-sizer"
             style={{
               backgroundColor: colorPack.leftHeaderCellBackground,
+              borderTop: `1px solid ${this.props.colorPack.columnResizer}`,
               borderRight: `1px solid ${this.props.colorPack.columnResizer}`,
               borderBottom: `1px solid ${this.props.colorPack.columnResizer}`,
             }}
