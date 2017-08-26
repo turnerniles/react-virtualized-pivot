@@ -9,7 +9,7 @@ https://turnerniles.github.io/react-virtualized-pivot/
 
 The demo uses ~24.7mb uncompressed .csv, 269,372 rows by 9 columns (2,424,348 cells) of 2007-2012 Declined Loan data provided by [Lending Club](https://www.lendingclub.com/info/download-data.action).
 
-![pivot_demo](https://user-images.githubusercontent.com/12212504/29735594-03aa740c-89c8-11e7-83c3-3d59c14d910e.gif)
+![pivot_demo](https://user-images.githubusercontent.com/8146241/29742823-06c2adf8-8a54-11e7-96ed-18466e853482.gif)
 
 ## Getting started
 
