@@ -1,170 +1,184 @@
 @import '~react-md/src/scss/react-md';
 
-$md-primary-color: $md-teal-500;
-$md-secondary-color: $md-lime-a-400;
 $md-font-icon-size: 20px;
-.md-icon.fa { height: $md-font-icon-size; width: $md-font-icon-size; }
 
-@include react-md-everything;
-
-header.md-paper {
-  height: 30px;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 10px 0px;
-
-  @media (min-width: 1035px) {
-    display: none;
+@media screen and (max-width: 1024px) and (min-width: 320px){
+  .md-drawer--right {
+      width: 310px;
+      left: inherit !important;
   }
 }
 
-aside.md-paper {
-  @media (max-width: 1034px) {
+@media screen and (max-width: 768px) and (min-width: 320px){
+  .md-drawer--right {
+      width: 100%;
+  }
+}
+
+.md-icon.fa {
+  height: 20px;
+  width: $md-font-icon-size;
+}
+
+  @include react-md-everything;
+
+.react-virtualized-pivot-module-menu {
+
+  header.md-paper {
+    height: 30px;
     display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
     align-items: center;
-  }
-}
-
-.pivot-options{
-  margin-right: 10px;
-  @media (min-width: 1035px) {
-    height: 150px;
-    width: 300px;
-    display: inline-block;
-  }
-  @media (max-width: 1034px) {
-  }
-
-  .Select{
-		margin-top: -8px;
-		margin-left: 10px;
-		margin-bottom: 8px;
-	}
-
-  .selectors-container{
     width: 100%;
-    display: inline-block;
+    padding: 10px 0px;
 
-    .select-container{
-      width: 100%;
-      display: inline-block;
+    @media (min-width: 769px) {
+      display: none;
     }
   }
 
-  .fields-drag-container{
-
-    .fields{
-      width: 100%;
-      display: inline-block;
-    }
-
-    .rows{
-      width: 100%;
-      display: inline-block;
-    }
-
-    .columns{
-      width: 100%;
-      display: inline-block;
+  aside.md-paper {
+    @media (max-width: 768px) {
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: column;
+      align-items: center;
     }
   }
-  .block__list {
-		height: 119px;
-	  margin-top: -8px;
-	  margin-left: 10px;
-	  background-color: #fff;
-		overflow-y: auto;
-    overflow-x: hidden;
 
-		@media (min-width: 768px){height: 76px;}
-		@media (min-width: 992px){height: 76px;}
-		@media (min-width: 1220px){height: 76px;}
-	}
+  .pivot-options{
+    margin-right: 10px;
+    @media (min-width: 769px) {
+      height: 150px;
+      width: 300px;
+      display: inline-block;
+    }
+    @media (max-width: 768px) {
+    }
 
-  .block__list::-webkit-scrollbar{
-    -webkit-appearance: none;
-    width: 7px;
-  }
+    .Select{
+  		margin-top: -8px;
+  		margin-left: 10px;
+  		margin-bottom: 8px;
+  	}
 
-  .block__list::-webkit-scrollbar-thumb{
-    border-radius: 4px;
-    background-color: rgba(0,0,0,.5);
-    box-shadow: 0 0 1px rgba(255,255,255,.5);
-  }
+    .selectors-container{
+      width: 100%;
+      display: inline-block;
 
-	.block__list-title {
-	  margin: -20px 0 0;
-	  padding: 10px;
-	  text-align: center;
-	  background: #5F9EDF;
-	}
-	.block__list li {
-		cursor: move;
-		list-style: none;
-	}
+      .select-container{
+        width: 100%;
+        display: inline-block;
+      }
+    }
 
-	.block__list_words li {
-	  background-color: #fff;
-	  padding: 10px 40px;
-	}
-	.block__list_words .sortable-ghost {
-	  opacity: 0.4;
-	  background-color: #F4E2C9;
-	}
+    .fields-drag-container{
 
-	.block__list_tags {
-	  padding-left: 15px;
-    border-radius: 4px;
-    border: solid 1px #ccc;
-	}
+      .fields{
+        width: 100%;
+        display: inline-block;
+      }
 
-	.block__list_tags:after {
-	  clear: both;
-	  content: '';
-	  display: block;
-	}
-	.block__list_tags li {
-	  float: left;
-	  margin: 5px;
-		min-width: 10px;
-  	text-align: center;
-	  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-	  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-	}
+      .rows{
+        width: 100%;
+        display: inline-block;
+      }
 
-  .title {
-		color: #fff;
-		padding: 2px 4px;
-		font-size: 11px;
-		margin-left: 5px;
-		display: inline-block;
-		position: relative;
-		background-color: #FF7373;
-		z-index: 1;
-	}
+      .columns{
+        width: 100%;
+        display: inline-block;
+      }
+    }
+    .block__list {
+  		height: 119px;
+  	  margin-top: -8px;
+  	  margin-left: 10px;
+  	  background-color: #fff;
+  		overflow-y: auto;
+      overflow-x: hidden;
 
-	.inner-filter-container{
-		position: relative;
-		padding: 5px 10px 5px 5px;
+  		@media (min-width: 768px){height: 76px;}
+  		@media (min-width: 992px){height: 76px;}
+  		@media (min-width: 1220px){height: 76px;}
+  	}
 
-		.filter-text{
-			font-size: 11px;
-		}
+    .block__list::-webkit-scrollbar{
+      -webkit-appearance: none;
+      width: 7px;
+    }
 
-		.filter-button{
-			position: absolute;
-			font-size: 10px;
-			display: inline-block;
-			cursor: pointer;
-			top: 0px;
-			right: 1px;
-		}
-	}
-  .dog{
-    background: red;
-    color: red;
+    .block__list::-webkit-scrollbar-thumb{
+      border-radius: 4px;
+      background-color: rgba(0,0,0,.5);
+      box-shadow: 0 0 1px rgba(255,255,255,.5);
+    }
+
+  	.block__list-title {
+  	  margin: -20px 0 0;
+  	  padding: 10px;
+  	  text-align: center;
+  	  background: #5F9EDF;
+  	}
+  	.block__list li {
+  		cursor: move;
+  		list-style: none;
+  	}
+
+  	.block__list_words li {
+  	  background-color: #fff;
+  	  padding: 10px 40px;
+  	}
+  	.block__list_words .sortable-ghost {
+  	  opacity: 0.4;
+  	  background-color: #F4E2C9;
+  	}
+
+  	.block__list_tags {
+  	  padding-left: 15px;
+      border-radius: 4px;
+      border: solid 1px #ccc;
+  	}
+
+  	.block__list_tags:after {
+  	  clear: both;
+  	  content: '';
+  	  display: block;
+  	}
+  	.block__list_tags li {
+  	  float: left;
+  	  margin: 5px;
+  		min-width: 10px;
+    	text-align: center;
+  	  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  	  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  	}
+
+    .title {
+  		color: #fff;
+  		padding: 2px 4px;
+  		font-size: 11px;
+  		margin-left: 5px;
+  		display: inline-block;
+  		position: relative;
+  		background-color: #FF7373;
+  		z-index: 1;
+  	}
+
+  	.inner-filter-container{
+  		position: relative;
+  		padding: 5px 10px 5px 5px;
+
+  		.filter-text{
+  			font-size: 11px;
+  		}
+
+  		.filter-button{
+  			position: absolute;
+  			font-size: 10px;
+  			display: inline-block;
+  			cursor: pointer;
+  			top: 0px;
+  			right: 1px;
+  		}
+  	}
   }
 }

@@ -184,7 +184,7 @@ export default class App extends React.Component {
     } = this.state;
 
     return (
-      <div>
+      <section className='react-virtualized-pivot-demo'>
         <a
           href="https://github.com/turnerniles/react-virtualized-pivot"
           target="_blank"
@@ -307,7 +307,7 @@ export default class App extends React.Component {
           onLeftHeaderCellClick={() => console.log('clicking leftHeader')} // eslint-disable-line no-console
           selectedAggregationDimension={selectedAggregationDimension}
         />
-      </div>
+      </section>
     );
   }
 }
