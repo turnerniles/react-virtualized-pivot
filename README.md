@@ -120,7 +120,6 @@ const data = [
   ['Jaime', 'm', 'Lannister', 32],
   ['Sansa', 'f', 'Stark', 12],
 ];
-
 const colorPack = {
   columnResizer: '#e0e0e0',
   sortableFieldBackground: '#fafafa',
