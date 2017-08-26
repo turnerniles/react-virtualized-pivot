@@ -443,7 +443,7 @@ export default class Pivot extends PureComponent {
     ];
 
     return (
-      <section className="virtualized-pivot">
+      <section className="react-virtualized-pivot-module">
         <Menu
           colorPack={colorPack}
           selectedAggregationType={selectedAggregationType}

@@ -287,7 +287,11 @@ export default class Table extends PureComponent {
         <div
           className="header-cell"
           style={{
-            borderBottom: `1px solid ${colorPack.gridBorders}`,
+            borderTop: rowIndex === 0 ?
+              `1px solid ${colorPack.gridBorders}` : 0,
+            borderBottom: `1px solid
+              ${this.props.colorPack.gridBorders}`,
+            lineHeight: 2.8,
           }}
         >
           {
@@ -549,7 +553,7 @@ export default class Table extends PureComponent {
     const height = (window.innerHeight - (headerCounter * rowHeight)) - 100;
 
     return (
-      <section className="virtualized-table">
+      <section className="react-virtualized-pivot-module-table">
         <div className="pivot-grid">
           <section className='pivot-grid'>
             <ScrollSync>
@@ -580,6 +584,9 @@ export default class Table extends PureComponent {
                         style={{
                           backgroundColor: colorPack.headerGridBackground,
                           borderBottom: `1px solid ${colorPack.gridBorders}`,
+                          borderTop: `1px solid
+                            ${this.props.colorPack.gridBorders}`,
+                          outline: 'none',
                         }}
                         width={leftColumnWidth}
                         height={headerCounter ? headerHeight * headerCounter :
@@ -609,6 +616,7 @@ export default class Table extends PureComponent {
                         className="LeftSideGrid"
                         style={{
                           backgroundColor: colorPack.leftSideGridBackground,
+                          outline: 'none',
                         }}
                         height={height - scrollbarSize()}
                         rowHeight={rowHeight}
@@ -649,6 +657,9 @@ export default class Table extends PureComponent {
                                 rowCount={headerCounter}
                                 scrollLeft={scrollLeft}
                                 width={width - scrollbarSize()}
+                                style={{
+                                  outline: 'none',
+                                }}
                               />
                             </div>
                             <div
@@ -663,6 +674,7 @@ export default class Table extends PureComponent {
                                 className="BodyGrid"
                                 style={{
                                   backgroundColor: colorPack.bodyGridBackground,
+                                  outline: 'none',
                                 }}
                                 columnWidth={this.getColumnWidth}
                                 columnCount={columnCount > 0 ?
