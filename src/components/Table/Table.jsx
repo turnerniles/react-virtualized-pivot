@@ -289,7 +289,7 @@ export default class Table extends PureComponent {
           className="header-cell"
           style={{
             borderTop: rowIndex === 0 ?
-              `1px solid ${colorPack.gridBorders}` : 0,
+              `1px solid ${colorPack.gridBorders}` : '',
             borderBottom: `1px solid
               ${this.props.colorPack.gridBorders}`,
             lineHeight: 2.8,
@@ -310,7 +310,8 @@ export default class Table extends PureComponent {
             className="column-sizer"
             style={{
               backgroundColor: colorPack.leftHeaderCellBackground,
-              borderTop: `1px solid ${this.props.colorPack.columnResizer}`,
+              borderTop: rowIndex === 0 ?
+                `1px solid ${colorPack.gridBorders}` : '',
               borderRight: `1px solid ${this.props.colorPack.columnResizer}`,
               borderBottom: `1px solid ${this.props.colorPack.columnResizer}`,
             }}

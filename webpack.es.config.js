@@ -15,7 +15,7 @@ loaders.push({
   test: /\.scss$/,
   loader: ExtractTextPlugin.extract({
     fallback: 'style-loader',
-    use: 'css-loader?sourceMap&localIdentName=[local]___[hash:base64:5]!sass-loader?outputStyle=expanded',
+    use: 'css-loader?sourceMap&modules=true&localIdentName=[local]___[hash:base64:5]!sass-loader?outputStyle=expanded',
   }),
   exclude: ['node_modules'],
 });
