@@ -21,6 +21,8 @@
     "test:watch": "karma start",
     "test": "npm run test:jest",
     "test:jest": "jest --no-watchman --runInBand",
+    "watch": "watch 'clear && npm run test -s' src",
+    "watch:jest": "jest --no-watchman --watch",
     "preversion": "npm run build:umd && npm run build:es"
   },
   "pre-commit": "lint:staged",
