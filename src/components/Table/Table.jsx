@@ -5,7 +5,7 @@ import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
 import Button from 'react-md/lib/Buttons/Button';
 import SettingsIcon from '../../icons/SettingsIcon.jsx';
-
+import arrowStyle from './arrowStyle';
 import './styles.scss';
 
 const minColWidth = 20;
@@ -493,20 +493,6 @@ export default class Table extends PureComponent {
       }
     }
 
-    const arrowStyle = (rowIndex) => {
-      if (checkIfInCollapsed(rowIndex)) {
-        return '►';
-      }
-      if (rowFields.length === 0 &&
-        data[headerCounter + rowIndex].depth < colFields.length - 1) {
-        return '▼';
-      }
-      if (data[headerCounter + rowIndex].depth < rowFields.length - 1) {
-        return '▼';
-      }
-      return '';
-    };
-
     return (
       <div
         className="cell"
@@ -523,7 +509,18 @@ export default class Table extends PureComponent {
       >
         <div className="cell-text-container">
           <div className="arrow">
-            {columnIndex === 0 ? arrowStyle(rowIndex) : ''}
+            {
+              columnIndex === 0 ?
+                arrowStyle({
+                  checkIfInCollapsed,
+                  colFields,
+                  rowFields,
+                  data,
+                  headerCounter,
+                  rowIndex,
+                }) :
+                ''
+            }
           </div>
           <div className="cell-data">
             {

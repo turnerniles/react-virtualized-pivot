@@ -5,9 +5,10 @@ import { AutoSizer } from 'react-virtualized';
 import Checkboxes from './Checkboxes';
 
 function getDistinctFast(items, key) {
-  let unique = {};
-  let distinct = [];
-  for (let opt of items) {
+  const unique = {};
+  const distinct = [];
+
+  for (const opt of items) {
     if (typeof unique[opt[key]] === 'undefined') {
       distinct.push(opt);
     }
@@ -21,7 +22,8 @@ function getDistinctFast(items, key) {
 // and that all elements of the second array are present in the first array
 function updateItems(base, items, labelKey) {
   let index = 0;
-  for (let it of items) {
+
+  for (const it of items) {
     while (base[index][labelKey] !== it[labelKey]) {
       index += 1;
     }
@@ -48,7 +50,7 @@ const Footer = ({
   hasOkButton,
   hasCancelButton,
   onOk,
-  onCancel
+  onCancel,
 }) =>
   <div style={{ display: 'flex', width, height }}>
     {hasOkButton && <input type="button" value="Ok" onClick={onOk} />}
@@ -68,7 +70,7 @@ class VirtualizedCheckbox extends Component {
     onChange: PropTypes.func,
     onOk: PropTypes.func,
     rowHeight: PropTypes.number,
-    textFilter: PropTypes.string
+    textFilter: PropTypes.string,
   };
 
   static defaultProps = {
@@ -81,7 +83,7 @@ class VirtualizedCheckbox extends Component {
     onOk: () => null,
     items: [],
     rowHeight: 30,
-    textFilter: ''
+    textFilter: '',
   };
 
   constructor(props) {
@@ -89,20 +91,22 @@ class VirtualizedCheckbox extends Component {
     const { items: propsItems, labelKey, textFilter } = props;
 
     const objectItems =
-      typeof propsItems[0] === 'string'
-        ? propsItems.map(item => ({ [labelKey]: item }))
-        : propsItems;
+      typeof propsItems[0] === 'string' ?
+        propsItems.map(item => ({ [labelKey]: item })) :
+        propsItems;
     const items = getDistinctFast(objectItems, labelKey);
+
     this.state = {
       items,
-      filter: textFilter
+      filter: textFilter,
     };
   }
 
   handleSelectAllChange = checked => {
     const items = this.getFilteredItems().map(it => ({ ...it, checked }));
+
     this.setState(prevState => ({
-      items: updateItems(prevState.items, items, this.props.labelKey)
+      items: updateItems(prevState.items, items, this.props.labelKey),
     }));
     if (this.props.onChange) {
       this.props.onChange(items);
@@ -114,9 +118,10 @@ class VirtualizedCheckbox extends Component {
       it => it[this.props.labelKey] === eventTarget[this.props.labelKey]
     );
     const items = [...this.state.items];
+
     items[index].checked = eventTarget.checked;
     this.setState(prevState => ({
-      items
+      items,
     }));
     if (this.props.onChange) {
       this.props.onChange(items[index]);
@@ -125,12 +130,13 @@ class VirtualizedCheckbox extends Component {
 
   handleFilterChange = filter => {
     this.setState(() => ({
-      filter
+      filter,
     }));
   };
 
   getFilteredItems = () => {
     const { items, filter } = this.state;
+
     return items.filter(
       it =>
         it[this.props.labelKey] &&
@@ -142,7 +148,9 @@ class VirtualizedCheckbox extends Component {
     const { items, filter } = this.state;
     const checkedItems = items.filter(i => i.checked);
     const unCheckedItems = items.filter(i => !i.checked);
-    this.props.onOk(checkedItems, unCheckedItems, checkedItems.length === items.length, filter);
+
+    this.props.onOk(checkedItems, unCheckedItems,
+      checkedItems.length === items.length, filter);
   };
 
   handleCancelClick = () => this.props.onCancel();
@@ -154,11 +162,13 @@ class VirtualizedCheckbox extends Component {
       hasCancelButton,
       hasFilterBox,
       height,
-      width: propWidth
+      width: propWidth,
     } = this.props;
+
     const hasFooter = hasOkButton || hasCancelButton;
     const virtualScrollHeight = h => {
       let i = 0;
+
       if (hasFooter) {
         i += 1;
       }
@@ -166,20 +176,24 @@ class VirtualizedCheckbox extends Component {
         i += 1;
       }
       const actualHeight = height || h;
+
       return actualHeight - i * rowHeight;
     };
+
     return (
       <AutoSizer>
         {({ width, height }) =>
           <div>
-            {hasFilterBox
-              ? <FilterBar
+            {
+              hasFilterBox ?
+                <FilterBar
                   value={this.state.filter}
                   onChange={this.handleFilterChange}
                   height={rowHeight}
                   width={propWidth || width}
-                />
-              : null}
+                /> :
+                null
+            }
             <Checkboxes
               height={virtualScrollHeight(height)}
               width={propWidth || width}
@@ -190,16 +204,18 @@ class VirtualizedCheckbox extends Component {
               onChange={this.handleChange}
               onSelectAllChange={this.handleSelectAllChange}
             />
-            {hasFooter
-              ? <Footer
+            {
+              hasFooter ?
+                <Footer
                   onOk={this.handleOkClick}
                   onCancel={this.handleCancelClick}
                   width={propWidth || width}
                   height={rowHeight}
                   hasOkButton={hasOkButton}
                   hasCancelButton={hasCancelButton}
-                />
-              : null}
+                /> :
+                null
+            }
           </div>}
       </AutoSizer>
     );
