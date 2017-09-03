@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import Button from 'react-md/lib/Buttons/Button';
 import SettingsIcon from '../../icons/SettingsIcon.jsx';
 import arrowStyle from './arrowStyle';
+import evenOddRowStyle from './evenOddRowStyle';
 import './styles.scss';
 
 const minColWidth = 20;
@@ -26,7 +27,6 @@ export default class Table extends PureComponent {
     this.onDrag = this.onDrag.bind(this);
     this.setSelectedColumn = this.setSelectedColumn.bind(this);
 
-    this.evenOddRowStyle = this.evenOddRowStyle.bind(this);
     this.renderBodyCell = this.renderBodyCell.bind(this);
     this.renderHeaderCell = this.renderHeaderCell.bind(this);
     this.renderLeftHeaderCell = this.renderLeftHeaderCell.bind(this);
@@ -87,37 +87,14 @@ export default class Table extends PureComponent {
     this.setState({ selectedColumn });
   }
 
-  evenOddRowStyle({ rowIndex = 0, columnIndex = 0 }) {
-    const {
-      colorPack: {
-        evenRowBackground,
-        oddRowBackground,
-      },
-    } = this.props;
-
-    if (rowIndex % 2 === 0) {
-      return columnIndex % 2 === 0 ?
-        {
-          backgroundColor: evenRowBackground,
-        } :
-        {
-          backgroundColor: oddRowBackground,
-        };
-    }
-
-    return columnIndex % 2 !== 0 ?
-      {
-        backgroundColor: evenRowBackground,
-      } :
-      {
-        backgroundColor: oddRowBackground,
-      };
-  }
-
   renderBodyCell({ columnIndex, key, rowIndex, style }) {
     const {
       bodyCellValueTransformation,
       collapsedRows,
+      colorPack: {
+        evenRowBackground,
+        oddRowBackground,
+      },
       data,
       headerCounter,
       onGridCellClick,
@@ -236,7 +213,12 @@ export default class Table extends PureComponent {
         className="cell"
         key={key}
         style={{
-          ...this.evenOddRowStyle({ rowIndex, columnIndex }),
+          ...evenOddRowStyle({
+            rowIndex,
+            columnIndex,
+            evenRowBackground,
+            oddRowBackground,
+          }),
           ...style,
           borderRight: `1px solid ${this.props.colorPack.gridBorders}`,
           borderBottom: `1px solid ${this.props.colorPack.gridBorders}`,
@@ -385,7 +367,12 @@ export default class Table extends PureComponent {
   renderLeftSideCell({ columnIndex, key, rowIndex, style }) {
     const {
       checkIfInCollapsed,
+      colFields,
       collapsedRows,
+      colorPack: {
+        evenRowBackground,
+        oddRowBackground,
+      },
       data,
       headerCounter,
       onLeftGridCellClick,
@@ -393,7 +380,6 @@ export default class Table extends PureComponent {
       originalArgs,
       rawData,
       rowFields,
-      colFields,
     } = this.props;
 
     function getCollapsedRows(rowNum, dataStr) {
@@ -499,7 +485,12 @@ export default class Table extends PureComponent {
         key={key}
         style={{
           ...firstColumnStyle,
-          ...this.evenOddRowStyle({ rowIndex, columnIndex }),
+          ...evenOddRowStyle({
+            columnIndex,
+            evenRowBackground,
+            oddRowBackground,
+            rowIndex,
+          }),
           ...style,
           borderLeft: `1px solid ${this.props.colorPack.gridBorders}`,
           borderRight: `1px solid ${this.props.colorPack.gridBorders}`,

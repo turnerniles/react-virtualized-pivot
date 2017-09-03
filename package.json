@@ -21,8 +21,7 @@
     "start": "cross-env NODE_ENV=development webpack-dev-server --progress --profile --colors --config webpack.dev.config.js",
     "test": "npm run test:jest",
     "test:jest": "BABEL_ENV=development jest --no-watchman --runInBand",
-    "test:watch": "karma start",
-    "watch": "watch 'clear && npm run test -s' src",
+    "test:watch": "npm run watch:jest",
     "watch:jest": "BABEL_ENV=development jest --no-watchman --watch"
   },
   "pre-commit": "lint:staged",
