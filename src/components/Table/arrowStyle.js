@@ -1,9 +1,21 @@
+/**
+ * Returns a collapsed arrow, dropdown arrow, or empty string
+ * @param {{
+    checkIfInCollapsed: function,
+    colFields: Array,
+    data: Array,
+    headerCounter: number,
+    rowFields: Array,
+    rowIndex: number,
+  }}
+  * @returns {string}
+*/
 export default function arrowStyle({
   checkIfInCollapsed,
   colFields,
-  rowFields,
   data,
   headerCounter,
+  rowFields,
   rowIndex,
 }) {
   if (checkIfInCollapsed(rowIndex)) {
