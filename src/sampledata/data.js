@@ -1,3 +1,4 @@
+/* eslint-disable */
 const smallData = [
  ['name', 'gender', 'house', 'age'],
  ['Jon', 'm', 'Stark', 14],
