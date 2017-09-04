@@ -7,7 +7,7 @@ import Button from 'react-md/lib/Buttons/Button';
 import SettingsIcon from '../../icons/SettingsIcon.jsx';
 import arrowStyle from './arrowStyle';
 import evenOddRowStyle from './evenOddRowStyle';
-import './styles.scss';
+import styles from './styles.scss';
 
 const minColWidth = 20;
 
@@ -210,7 +210,7 @@ export default class Table extends PureComponent {
 
     return (
       <div
-        className="cell"
+        className={styles['cell']}
         key={key}
         style={{
           ...evenOddRowStyle({
@@ -258,7 +258,7 @@ export default class Table extends PureComponent {
 
     return (
       <div
-        className="header-container"
+        className={styles['header-container']}
         key={key}
         onClick={onGridHeaderCellClick.bind(this, { rowIndex, columnIndex })}
         onMouseDown={this.setSelectedColumn.bind(this, columnIndex)}
@@ -268,7 +268,7 @@ export default class Table extends PureComponent {
         }}
       >
         <div
-          className="header-cell"
+          className={styles['header-cell']}
           style={{
             borderTop: rowIndex === 0 ?
               `1px solid ${colorPack.gridBorders}` : '',
@@ -289,7 +289,7 @@ export default class Table extends PureComponent {
           position={{ x: 0, y: 0 }}
         >
           <div
-            className="column-sizer"
+            className={styles['column-sizer']}
             style={{
               backgroundColor: colorPack.leftHeaderCellBackground,
               borderTop: rowIndex === 0 ?
@@ -314,7 +314,7 @@ export default class Table extends PureComponent {
 
     return (
       <div
-        className="header-container"
+        className={styles['header-container']}
         key={key}
         onClick={onLeftHeaderCellClick}
         onMouseDown={this.setSelectedColumn.bind(this, 'left')}
@@ -323,7 +323,7 @@ export default class Table extends PureComponent {
           borderLeft: `1px solid ${this.props.colorPack.columnResizer}`,
         }}
       >
-        <div className="header-cell">
+        <div className={styles['header-cell']}>
           { rowIndex === 0 &&
             <Button
               icon
@@ -350,7 +350,7 @@ export default class Table extends PureComponent {
           position={{ x: 0, y: 0 }}
         >
           <div
-            className="column-sizer"
+            className={styles['column-sizer']}
             style={{
               backgroundColor: colorPack.leftHeaderCellBackground,
               borderRight: `1px solid ${this.props.colorPack.columnResizer}`,
@@ -481,7 +481,7 @@ export default class Table extends PureComponent {
 
     return (
       <div
-        className="cell"
+        className={styles['cell']}
         key={key}
         style={{
           ...firstColumnStyle,
@@ -498,8 +498,8 @@ export default class Table extends PureComponent {
         }}
         onClick={onClick}
       >
-        <div className="cell-text-container">
-          <div className="arrow">
+        <div className={styles['cell-text-container']}>
+          <div className={styles['arrow']}>
             {
               columnIndex === 0 ?
                 arrowStyle({
@@ -513,7 +513,7 @@ export default class Table extends PureComponent {
                 ''
             }
           </div>
-          <div className="cell-data">
+          <div className={styles['cell-data']}>
             {
               data.length ?
                 data[headerCounter + rowIndex].value[columnIndex] :
@@ -544,9 +544,9 @@ export default class Table extends PureComponent {
     const height = (window.innerHeight - (headerCounter * rowHeight)) - 100;
 
     return (
-      <section className="react-virtualized-pivot-module-table">
-        <div className="pivot-grid">
-          <section className='pivot-grid'>
+      <section className={styles['react-virtualized-pivot-module-table']}>
+        <div className={styles['pivot-grid']}>
+          <section className={styles['pivot-grid']}>
             <ScrollSync>
               {({
                 clientHeight,
@@ -558,9 +558,9 @@ export default class Table extends PureComponent {
                 scrollWidth,
               }) => {
                 return (
-                  <div className="GridRow">
+                  <div className={styles['GridRow']}>
                     <div
-                      className="LeftSideGridContainer"
+                      className={styles['LeftSideGridContainer']}
                       style={{
                         color: colorPack.leftHeaderCellText,
                         height: headerHeight * headerCounter,
@@ -571,7 +571,7 @@ export default class Table extends PureComponent {
                       <Grid
                         ref={(input) => { this.header = input; }}
                         cellRenderer={this.renderLeftHeaderCell}
-                        className="HeaderGrid"
+                        className={styles['HeaderGrid']}
                         style={{
                           backgroundColor: colorPack.headerGridBackground,
                           borderBottom: `1px solid ${colorPack.gridBorders}`,
@@ -589,7 +589,7 @@ export default class Table extends PureComponent {
                       />
                     </div>
                     <div
-                      className="LeftSideGridContainer"
+                      className={styles['LeftSideGridContainer']}
                       style={{
                         position: 'absolute',
                         left: 0,
@@ -604,7 +604,7 @@ export default class Table extends PureComponent {
                         cellRenderer={this.renderLeftSideCell}
                         columnWidth={leftColumnWidth}
                         columnCount={1}
-                        className="LeftSideGrid"
+                        className={styles['LeftSideGrid']}
                         style={{
                           backgroundColor: colorPack.leftSideGridBackground,
                           outline: 'none',
@@ -619,7 +619,7 @@ export default class Table extends PureComponent {
                         width={leftColumnWidth}
                       />
                     </div>
-                    <div className="GridColumn">
+                    <div className={styles['GridColumn']}>
                       <AutoSizer
                         disableHeight
                       >
@@ -635,7 +635,7 @@ export default class Table extends PureComponent {
                             >
                               <Grid
                                 ref={(input) => { this.grid = input; }}
-                                className="HeaderGrid"
+                                className={styles['HeaderGrid']}
                                 columnWidth={this.getColumnWidth}
                                 columnCount={columnCount > 0 ?
                                   columnCount - 1 :
@@ -662,7 +662,7 @@ export default class Table extends PureComponent {
                             >
                               <Grid
                                 ref={(input) => { this.bodyGrid = input; }}
-                                className="BodyGrid"
+                                className={styles['BodyGrid']}
                                 style={{
                                   backgroundColor: colorPack.bodyGridBackground,
                                   outline: 'none',
