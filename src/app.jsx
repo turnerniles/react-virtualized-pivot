@@ -4,7 +4,7 @@ import Select from 'react-select';
 import Papa from 'papaparse/papaparse.js';
 
 import 'react-select/dist/react-select.css';
-import '../styles/index.scss';
+import styles from '../styles/index.scss';
 
 const data = require('./sampledata/data.js');
 
@@ -184,31 +184,31 @@ export default class App extends React.Component {
     } = this.state;
 
     return (
-      <section className='react-virtualized-pivot-demo'>
+      <section className={styles['react-virtualized-pivot-demo']}>
         <a
           href="https://github.com/turnerniles/react-virtualized-pivot"
           target="_blank"
           rel="noopener noreferrer"
         >
           <img
-            className="github-fork"
+            className={styles['github-fork']}
             // eslint-disable-next-line
             src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
             alt="Fork me on GitHub"
           />
         </a>
         <div
-          className="loader"
+          className={styles['loader']}
           style={{'display': isLoaded ? 'none' : 'inherit'}}
         >
-          <div className="inner one"></div>
-          <div className="inner two"></div>
-          <div className="inner three"></div>
+          <div className={styles['inner one']}></div>
+          <div className={styles['inner two']}></div>
+          <div className={styles['inner three']}></div>
         </div>
-        <div className="app-menu" style={{ 'width': '100%' }}>
-          <div className='select-container'>
+        <div className={styles['app-menu']} style={{ 'width': '100%' }}>
+          <div className={styles['select-container']}>
             <div
-              className="title"
+              className={styles['title']}
               style={{
                 'backgroundColor': colorPack.selectorContainerTitleBackground,
                 'color': colorPack.selectorContainerTitleText,
@@ -231,9 +231,9 @@ export default class App extends React.Component {
               clearable={false}
             />
           </div>
-          <div className='select-container'>
+          <div className={styles['select-container']}>
             <div
-              className="title"
+              className={styles['title']}
               style={{
                 'backgroundColor': colorPack.selectorContainerTitleBackground,
                 'color': colorPack.selectorContainerTitleText,
@@ -256,7 +256,7 @@ export default class App extends React.Component {
               clearable={false}
             />
           </div>
-          <div className="input">
+          <div className={styles['input']}>
             <input
               type="file"
               onChange={this.handleFileSelect}

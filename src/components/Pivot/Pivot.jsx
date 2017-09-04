@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Menu from '../Menu/Menu.jsx';
 
 import 'react-select/dist/react-select.css';
-import './styles.scss';
+import styles from './styles.scss';
 
 export default class Pivot extends PureComponent {
   constructor(props) {
@@ -443,7 +443,7 @@ export default class Pivot extends PureComponent {
     ];
 
     return (
-      <section className="react-virtualized-pivot-module">
+      <section className={styles['react-virtualized-pivot-module']}>
         <Menu
           colorPack={colorPack}
           selectedAggregationType={selectedAggregationType}
@@ -469,35 +469,33 @@ export default class Pivot extends PureComponent {
           handleRightClose={this.handleRightClose}
           isDrawerOpen={isDrawerOpen}
         />
-        <div className="pivot-grid">
-          <section className="pivot-grid">
-            <Table
-              bodyCellValueTransformation={bodyCellValueTransformation}
-              checkIfInCollapsed={this.checkIfInCollapsed}
-              collapsedRows={pivot.collapsedRows}
-              colorPack={colorPack}
-              columnCount={columnCount}
-              columnWidth={columnWidth}
-              data={data !== undefined ? data : [[]]}
-              headerCounter={headerCounter}
-              headerHeight={headerHeight}
-              onGridCellClick={onGridCellClick}
-              onGridHeaderCellClick={onGridHeaderCellClick}
-              onLeftGridCellClick={onLeftGridCellClick}
-              onLeftHeaderCellClick={onLeftHeaderCellClick}
-              onToggleRow={this.onToggleRow}
-              originalArgs={pivot.originalArgs}
-              overscanColumnCount={overscanColumnCount}
-              overscanRowCount={overscanRowCount}
-              rawData={pivot.data.rawData}
-              rowCount={rowCount}
-              rowFields={rowFields}
-              colFields={colFields}
-              rowHeight={rowHeight}
-              handleRightOpen={this.handleRightOpen}
-            />
-          </section>
-        </div>
+        <section className={styles['pivot-grid']}>
+          <Table
+            bodyCellValueTransformation={bodyCellValueTransformation}
+            checkIfInCollapsed={this.checkIfInCollapsed}
+            collapsedRows={pivot.collapsedRows}
+            colorPack={colorPack}
+            columnCount={columnCount}
+            columnWidth={columnWidth}
+            data={data !== undefined ? data : [[]]}
+            headerCounter={headerCounter}
+            headerHeight={headerHeight}
+            onGridCellClick={onGridCellClick}
+            onGridHeaderCellClick={onGridHeaderCellClick}
+            onLeftGridCellClick={onLeftGridCellClick}
+            onLeftHeaderCellClick={onLeftHeaderCellClick}
+            onToggleRow={this.onToggleRow}
+            originalArgs={pivot.originalArgs}
+            overscanColumnCount={overscanColumnCount}
+            overscanRowCount={overscanRowCount}
+            rawData={pivot.data.rawData}
+            rowCount={rowCount}
+            rowFields={rowFields}
+            colFields={colFields}
+            rowHeight={rowHeight}
+            handleRightOpen={this.handleRightOpen}
+          />
+        </section>
       </section>
     );
   }

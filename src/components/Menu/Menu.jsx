@@ -8,7 +8,7 @@ import Button from 'react-md/lib/Buttons';
 import OverlayContent from './OverlayContent/OverlayContent.jsx';
 import RightArrowIcon from '../../icons/RightArrowIcon.jsx';
 
-import './styles.scss';
+import styles from './styles.scss';
 
 export default class Menu extends PureComponent {
   constructor(props) {
@@ -62,7 +62,7 @@ export default class Menu extends PureComponent {
       fields.map((field, index) => {
         return (
           <li
-            className="fields-draggable-li"
+            className={styles['fields-draggable-li']}
             ref={ref => { this.fieldsOverlayButton = ref; }}
             key={index}
             data-id={field}
@@ -71,27 +71,27 @@ export default class Menu extends PureComponent {
               color: colorPack.sortableFieldText,
             }}
           >
-            <div className="inner-filter-container"
+            <div className={styles['inner-filter-container']}
               onMouseDown={(e) => {
                 onFiltersCancel();
               }}
             >
-              <div className="filter-text"
+              <div className={styles['filter-text']}
               >
                 {field}
               </div>
               <div
-                className="filter-button"
+                className={styles['filter-button']}
                 onClick={this.filterButtonClick.bind(this, field)}
               >
               ✎
               </div>
             </div>
             {(currentValues.length > 0 && currentFilter === field) &&
-            <div className="filter-menu"
+            <div className={styles['filter-menu']}
             >
               <div
-                className="filters-container"
+                className={styles['filters-container']}
                 style={{ position: 'absolute',
                   ...divStyle, height: 200, width: 150 }}
               >
@@ -113,7 +113,7 @@ export default class Menu extends PureComponent {
     const rowFieldsRender = rowFields.map((field, index) =>
       (
         <li
-          className="fields-draggable-li"
+          className={styles['fields-draggable-li']}
           key={index}
           data-id={field}
           style={{
@@ -121,27 +121,27 @@ export default class Menu extends PureComponent {
             color: colorPack.sortableFieldText,
           }}
         >
-          <div className="inner-filter-container"
+          <div className={styles['inner-filter-container']}
             onMouseDown={(e) => {
               onFiltersCancel();
             }}
           >
-            <div className="filter-text"
+            <div className={styles['filter-text']}
             >
               {field}
             </div>
             <div
-              className="filter-button"
+              className={styles['filter-button']}
               onClick={this.filterButtonClick.bind(this, field)}
             >
             ✎
             </div>
           </div>
           {(currentValues.length > 0 && currentFilter === field) &&
-          <div className="filter-menu"
+          <div className={styles['filter-menu']}
           >
             <div
-              className="filters-container"
+              className={styles['filters-container']}
               style={{ position: 'absolute',
                 ...divStyle, height: 200, width: 150 }}
             >
@@ -161,7 +161,7 @@ export default class Menu extends PureComponent {
     const colFieldsRender = colFields.map((field, index) =>
       (
         <li
-          className="fields-draggable-li"
+          className={styles['fields-draggable-li']}
           key={index}
           data-id={field}
           style={{
@@ -169,27 +169,27 @@ export default class Menu extends PureComponent {
             color: colorPack.sortableFieldText,
           }}
         >
-          <div className="inner-filter-container"
+          <div className={styles['inner-filter-container']}
             onMouseDown={(e) => {
               onFiltersCancel();
             }}
           >
-            <div className="filter-text"
+            <div className={styles['filter-text']}
             >
               {field}
             </div>
             <div
-              className="filter-button"
+              className={styles['filter-button']}
               onClick={this.filterButtonClick.bind(this, field)}
             >
             ✎
             </div>
           </div>
           {(currentValues.length > 0 && currentFilter === field) &&
-          <div className="filter-menu"
+          <div className={styles['filter-menu']}
           >
             <div
-              className="filters-container"
+              className={styles['filters-container']}
               style={{ position: 'absolute',
                 ...divStyle, height: 200, width: 150 }}
             >
@@ -207,11 +207,11 @@ export default class Menu extends PureComponent {
       ));
 
     const menuItems = (
-      <div className="pivot-options">
-        <div className="selectors-container">
-          <div className="select-container">
+      <div className={styles['pivot-options']}>
+        <div className={styles['selectors-container']}>
+          <div className={styles['select-container']}>
             <div
-              className="title"
+              className={styles['title']}
               style={{
                 'backgroundColor': colorPack.selectorContainerTitleBackground,
                 'color': colorPack.selectorContainerTitleText,
@@ -229,9 +229,9 @@ export default class Menu extends PureComponent {
             />
           </div>
 
-          <div className="select-container">
+          <div className={styles['select-container']}>
             <div
-              className="title"
+              className={styles['title']}
               style={{
                 'backgroundColor': colorPack.selectorContainerTitleBackground,
                 'color': colorPack.selectorContainerTitleText,
@@ -250,10 +250,10 @@ export default class Menu extends PureComponent {
           </div>
         </div>
 
-        <div className="fields-drag-container">
-          <div className="fields">
+        <div className={styles['fields-drag-container']}>
+          <div className={styles['fields']}>
             <div
-              className="title"
+              className={styles['title']}
               style={{
                 'backgroundColor': colorPack.selectorContainerTitleBackground,
                 'color': colorPack.selectorContainerTitleText,
@@ -262,7 +262,9 @@ export default class Menu extends PureComponent {
                 Fields
             </div>
             <ReactSortable
-              className="sortable-container block__list block__list_tags"
+              className={
+                styles['sortable-container block__list block__list_tags']
+              }
               style={{
                 backgroundColor: colorPack.sortableContainerBackground,
                 borderColor: colorPack.sortableContainerBorderColor,
@@ -278,9 +280,9 @@ export default class Menu extends PureComponent {
             </ReactSortable>
           </div>
 
-          <div className="rows">
+          <div className={styles['rows']}>
             <div
-              className="title"
+              className={styles['title']}
               style={{
                 'backgroundColor': colorPack.selectorContainerTitleBackground,
                 'color': colorPack.selectorContainerTitleText,
@@ -289,7 +291,9 @@ export default class Menu extends PureComponent {
               Rows
             </div>
             <ReactSortable
-              className="sortable-container block__list block__list_tags"
+              className={
+                styles['sortable-container block__list block__list_tags']
+              }
               style={{
                 backgroundColor: colorPack.sortableContainerBackground,
                 borderColor: colorPack.sortableContainerBorderColor,
@@ -317,7 +321,9 @@ export default class Menu extends PureComponent {
               Columns
             </div>
             <ReactSortable
-              className="sortable-container block__list block__list_tags"
+              className={
+                styles['sortable-container block__list block__list_tags']
+              }
               style={{
                 backgroundColor: colorPack.sortableContainerBackground,
                 borderColor: colorPack.sortableContainerBorderColor,
@@ -348,13 +354,13 @@ export default class Menu extends PureComponent {
       <Toolbar
         nav={null}
         actions={close}
-        className="md-divider-border md-divider-border--bottom"
+        className={styles['md-divider-border md-divider-border--bottom']}
       />
     );
 
     return (
       <Drawer
-        className="react-virtualized-pivot-module-menu"
+        className={styles['react-virtualized-pivot-module-menu']}
         header={header}
         onVisibilityToggle={handleRightClose}
         overlay={true}
