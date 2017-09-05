@@ -262,9 +262,11 @@ export default class Menu extends PureComponent {
                 Fields
             </div>
             <ReactSortable
-              className={
-                styles['sortable-container block__list block__list_tags']
-              }
+              className={[
+                styles['sortable-container'],
+                styles['block__list'],
+                styles['block__list_tags'],
+              ].join(' ')}
               style={{
                 backgroundColor: colorPack.sortableContainerBackground,
                 borderColor: colorPack.sortableContainerBorderColor,
@@ -291,9 +293,11 @@ export default class Menu extends PureComponent {
               Rows
             </div>
             <ReactSortable
-              className={
-                styles['sortable-container block__list block__list_tags']
-              }
+              className={[
+                styles['sortable-container'],
+                styles['block__list'],
+                styles['block__list_tags'],
+              ].join(' ')}
               style={{
                 backgroundColor: colorPack.sortableContainerBackground,
                 borderColor: colorPack.sortableContainerBorderColor,
@@ -310,9 +314,9 @@ export default class Menu extends PureComponent {
             </ReactSortable>
           </div>
 
-          <div className="columns">
+          <div className={styles['columns']}>
             <div
-              className="title"
+              className={styles['title']}
               style={{
                 'backgroundColor': colorPack.selectorContainerTitleBackground,
                 'color': colorPack.selectorContainerTitleText,
@@ -321,9 +325,11 @@ export default class Menu extends PureComponent {
               Columns
             </div>
             <ReactSortable
-              className={
-                styles['sortable-container block__list block__list_tags']
-              }
+              className={[
+                styles['sortable-container'],
+                styles['block__list'],
+                styles['block__list_tags'],
+              ].join(' ')}
               style={{
                 backgroundColor: colorPack.sortableContainerBackground,
                 borderColor: colorPack.sortableContainerBorderColor,
@@ -354,7 +360,10 @@ export default class Menu extends PureComponent {
       <Toolbar
         nav={null}
         actions={close}
-        className={styles['md-divider-border md-divider-border--bottom']}
+        className={[
+          styles['md-divider-border'],
+          styles['md-divider-border--bottom'],
+        ].join(' ')}
       />
     );
 
