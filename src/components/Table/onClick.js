@@ -22,7 +22,13 @@ export default function onClick({
   rawData,
   rowIndex,
 }) {
+  /**
+   * @params {number} rowNum
+   * @params {string} dataStr The data type to retrieve (rawData or table)
+   * @returns {Array}
+  */
   function getCollapsedRows(rowNum, dataStr) {
+    /** if rowNum is in collapsedRows, then the row is in fact collapsed */
     const rows = rowNum in collapsedRows ? collapsedRows[rowNum].table : [];
     const collapsedData = rowNum in collapsedRows ?
       collapsedRows[rowNum][dataStr] :
@@ -31,40 +37,61 @@ export default function onClick({
     return collapsedData.reduce((acc, { type, value }, index) => {
       const row = rows[index].row;
 
+      /** if row is not a header row, no need to recurse */
       if (type === 'data') {
-        return acc.concat([value.slice(0, 1)
-          .concat([value[columnIndex + 1]])]);
+        return acc.concat([[value[0]].concat([value[columnIndex + 1]])]);
       }
 
+      /**
+       * if the row is a header row, need to check if it is collapsed
+       * and if so, add it to the accumulated results
+      */
       return acc.concat(getCollapsedRows(row, dataStr));
     }, []);
   }
 
+  /**
+   * @params {number} rowIndex
+   * @params {Object} acc
+   * @params {number} startingDepth
+   * @returns {Object}
+  */
   function getChildren(rowIndex, acc, startingDepth) {
-    const dataRow = data.slice(headerCounter)[rowIndex];
-    const rawDataRow = rawData.slice(headerCounter)[rowIndex];
+    /** get current row of table data and raw data */
+    const dataRow = data[headerCounter + rowIndex];
+    const rawDataRow = rawData[headerCounter + rowIndex];
 
+    /**
+     * base case
+     * if there is no dataRow or
+     * if there are already children and the current row is a sibling or parent
+    */
     if (!dataRow ||
       (acc.children.length > 0 && startingDepth >= dataRow.depth)) {
       return acc;
     }
 
+    let obj;
+
+    /**
+     * if the row is a data row rather than a rowHeader
+     * add it to accumulation
+    */
     if (dataRow.type === 'data') {
-      const obj = {
-        children: acc.children.concat([dataRow.value.slice(0, 1)
+      obj = {
+        children: acc.children.concat([[dataRow.value[0]]
           .concat([dataRow.value[columnIndex + 1]])]),
-        childrenData: acc.childrenData.concat([rawDataRow.value.slice(0, 1)
+        childrenData: acc.childrenData.concat([[rawDataRow.value[0]]
           .concat([rawDataRow.value[columnIndex + 1]])]),
       };
-
-      return getChildren(rowIndex + 1, obj, startingDepth);
+    } else {
+      /** add any collapsed rows to accumulation */
+      obj = {
+        children: acc.children.concat(getCollapsedRows(dataRow.row, 'table')),
+        childrenData: acc.childrenData
+          .concat(getCollapsedRows(dataRow.row, 'rawData')),
+      };
     }
-
-    const obj = {
-      children: acc.children.concat(getCollapsedRows(dataRow.row, 'table')),
-      childrenData: acc.childrenData
-        .concat(getCollapsedRows(dataRow.row, 'rawData')),
-    };
 
     return getChildren(rowIndex + 1, obj, startingDepth);
   }
@@ -109,6 +136,11 @@ export default function onClick({
     return acc;
   }
 
+  /**
+   * if there is no data
+   * return empty array
+   * else recurse
+ */
   const { children, childrenData } = data.length > 0 ?
     getChildren(rowIndex, {children: [], childrenData: []},
       data[headerCounter + rowIndex].depth) :
