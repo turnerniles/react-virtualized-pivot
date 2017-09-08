@@ -96,25 +96,39 @@ export default function onClick({
     return getChildren(rowIndex + 1, obj, startingDepth);
   }
 
+  /**
+   * groups all parent row headers for a particular row index
+   * @params {number} rowIndex
+   * @returns {Object}
+  */
   function getRowHeaders(rowIndex) {
+    /** if there is no data, return empty object */
     if (originalArgs.rows.length === 0) return {};
 
+    /**
+     * slice off header rows
+     * get starting value and depth
+     * initialize acc object
+    */
     const slicedData = data.slice(headerCounter);
     const { value, depth } = slicedData[rowIndex];
     const acc = { [originalArgs.rows[depth]]: value[0] };
     let nextDepth = depth - 1;
     let counter = rowIndex - 1;
 
+    /** check that next row header exists (i.e. not at top level parent) */
     while (nextDepth >= 0) {
       let nextValue = null;
 
       while (nextValue === null) {
+        /** if next row is the parent, assign to nextValue */
         if (slicedData[counter].depth === nextDepth) {
           nextValue = slicedData[counter].value[0];
         }
         counter--;
       }
 
+      /** set row type as key and value as value in acc object */
       acc[originalArgs.rows[nextDepth]] = nextValue;
       nextDepth--;
     }
@@ -122,6 +136,11 @@ export default function onClick({
     return acc;
   }
 
+  /**
+   * groups column headers for a particular column index
+   * @params {number} columnIndex
+   * @returns {Object} acc
+  */
   function getColumnHeaders(columnIndex) {
     if (originalArgs.cols.length === 0) return {};
 
@@ -139,7 +158,7 @@ export default function onClick({
   /**
    * if there is no data
    * return empty array
-   * else recurse
+   * else recurse to group all children
  */
   const { children, childrenData } = data.length > 0 ?
     getChildren(rowIndex, {children: [], childrenData: []},
