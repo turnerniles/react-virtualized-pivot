@@ -21,11 +21,13 @@ class Checkboxes extends Component {
 
   handleChange = event => {
     const { labelKey, onChange } = this.props;
+
     onChange({ [labelKey]: event.target.value, checked: event.target.checked });
   };
 
   handleSelectAllChange = event => {
     const { onSelectAllChange } = this.props;
+
     onSelectAllChange(event.target.checked);
   };
   checkboxRenderer = ({ index, style }) => {
@@ -34,6 +36,7 @@ class Checkboxes extends Component {
     if (index === 0) {
       const label = filtered ? '(Select all search results)' : '(Select all)';
       const checked = items.filter(i => i.checked).length === items.length;
+
       return (
         <Checkbox
           style={style}
@@ -45,6 +48,7 @@ class Checkboxes extends Component {
       );
     }
     const item = items[index - 1];
+
     return (
       <Checkbox
         style={style}
@@ -58,6 +62,7 @@ class Checkboxes extends Component {
   render() {
     const { items, rowHeight, height, width } = this.props;
     const rowCount = items.length + 1;
+
     return (
       <List
         height={height}

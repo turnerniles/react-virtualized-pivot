@@ -5,7 +5,9 @@ import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
 import Button from 'react-md/lib/Buttons/Button';
 import SettingsIcon from '../../icons/SettingsIcon.jsx';
-
+import arrowStyle from './arrowStyle';
+import evenOddRowStyle from './evenOddRowStyle';
+import onClick from './onClick';
 import './styles.scss';
 
 const minColWidth = 20;
@@ -26,7 +28,6 @@ export default class Table extends PureComponent {
     this.onDrag = this.onDrag.bind(this);
     this.setSelectedColumn = this.setSelectedColumn.bind(this);
 
-    this.evenOddRowStyle = this.evenOddRowStyle.bind(this);
     this.renderBodyCell = this.renderBodyCell.bind(this);
     this.renderHeaderCell = this.renderHeaderCell.bind(this);
     this.renderLeftHeaderCell = this.renderLeftHeaderCell.bind(this);
@@ -87,37 +88,14 @@ export default class Table extends PureComponent {
     this.setState({ selectedColumn });
   }
 
-  evenOddRowStyle({ rowIndex = 0, columnIndex = 0 }) {
-    const {
-      colorPack: {
-        evenRowBackground,
-        oddRowBackground,
-      },
-    } = this.props;
-
-    if (rowIndex % 2 === 0) {
-      return columnIndex % 2 === 0 ?
-        {
-          backgroundColor: evenRowBackground,
-        } :
-        {
-          backgroundColor: oddRowBackground,
-        };
-    }
-
-    return columnIndex % 2 !== 0 ?
-      {
-        backgroundColor: evenRowBackground,
-      } :
-      {
-        backgroundColor: oddRowBackground,
-      };
-  }
-
   renderBodyCell({ columnIndex, key, rowIndex, style }) {
     const {
       bodyCellValueTransformation,
       collapsedRows,
+      colorPack: {
+        evenRowBackground,
+        oddRowBackground,
+      },
       data,
       headerCounter,
       onGridCellClick,
@@ -125,118 +103,17 @@ export default class Table extends PureComponent {
       rawData,
     } = this.props;
 
-    function getCollapsedRows(rowNum, dataStr) {
-      const rows = rowNum in collapsedRows ? collapsedRows[rowNum].table : [];
-      const collapsedData = rowNum in collapsedRows ?
-        collapsedRows[rowNum][dataStr] :
-        [];
-
-      return collapsedData.reduce((acc, { type, value }, index) => {
-        const row = rows[index].row;
-
-        if (type === 'data') {
-          return acc.concat([value.slice(0, 1)
-            .concat([value[columnIndex + 1]])]);
-        }
-
-        return acc.concat(getCollapsedRows(row, dataStr));
-      }, []);
-    }
-
-    function getChildren(rowIndex, acc, startingDepth) {
-      const dataRow = data.slice(headerCounter)[rowIndex];
-      const rawDataRow = rawData.slice(headerCounter)[rowIndex];
-
-      if (!dataRow ||
-        (acc.children.length > 0 && startingDepth >= dataRow.depth)) {
-        return acc;
-      }
-
-      if (dataRow.type === 'data') {
-        const obj = {
-          children: acc.children.concat([dataRow.value.slice(0, 1)
-            .concat([dataRow.value[columnIndex + 1]])]),
-          childrenData: acc.childrenData.concat([rawDataRow.value.slice(0, 1)
-            .concat([rawDataRow.value[columnIndex + 1]])]),
-        };
-
-        return getChildren(rowIndex + 1, obj, startingDepth);
-      }
-
-      const obj = {
-        children: acc.children.concat(getCollapsedRows(dataRow.row, 'table')),
-        childrenData: acc.childrenData
-          .concat(getCollapsedRows(dataRow.row, 'rawData')),
-      };
-
-      return getChildren(rowIndex + 1, obj, startingDepth);
-    }
-
-    function getRowHeaders(rowIndex) {
-      if (originalArgs.rows.length === 0) return {};
-
-      const slicedData = data.slice(headerCounter);
-      const { value, depth } = slicedData[rowIndex];
-      const acc = { [originalArgs.rows[depth]]: value[0] };
-      let nextDepth = depth - 1;
-      let counter = rowIndex - 1;
-
-      while (nextDepth >= 0) {
-        let nextValue = null;
-
-        while (nextValue === null) {
-          if (slicedData[counter].depth === nextDepth) {
-            nextValue = slicedData[counter].value[0];
-          }
-          counter--;
-        }
-
-        acc[originalArgs.rows[nextDepth]] = nextValue;
-        nextDepth--;
-      }
-
-      return acc;
-    }
-
-    function getColumnHeaders(columnIndex) {
-      if (originalArgs.cols.length === 0) return {};
-
-      let currRow = 0;
-      const acc = {};
-
-      while (data[currRow].type === 'colHeader') {
-        acc[originalArgs.cols[currRow]] = data[currRow].value[columnIndex];
-        currRow++;
-      }
-
-      return acc;
-    }
-
-    function onClick() {
-      const { children, childrenData } = data.length > 0 ?
-        getChildren(rowIndex, {children: [], childrenData: []},
-          data[headerCounter + rowIndex].depth) :
-        [];
-
-      const rowHeaders = getRowHeaders(rowIndex);
-      const columnHeaders = getColumnHeaders(columnIndex + 1);
-
-      onGridCellClick({
-        children,
-        childrenData,
-        columnHeaders,
-        columnIndex,
-        rowHeaders,
-        rowIndex,
-      });
-    }
-
     return (
       <div
         className="cell"
         key={key}
         style={{
-          ...this.evenOddRowStyle({ rowIndex, columnIndex }),
+          ...evenOddRowStyle({
+            rowIndex,
+            columnIndex,
+            evenRowBackground,
+            oddRowBackground,
+          }),
           ...style,
           borderRight: `1px solid ${this.props.colorPack.gridBorders}`,
           borderBottom: `1px solid ${this.props.colorPack.gridBorders}`,
@@ -248,7 +125,16 @@ export default class Table extends PureComponent {
           textOverflow: 'ellipsis',
           direction: 'ltr',
         }}
-        onClick={onClick}
+        onClick={onClick.bind(this, {
+          collapsedRows,
+          columnIndex,
+          data,
+          headerCounter,
+          onGridCellClick,
+          originalArgs,
+          rawData,
+          rowIndex,
+        })}
       >
         {
           data.length > 0 ?
@@ -385,7 +271,12 @@ export default class Table extends PureComponent {
   renderLeftSideCell({ columnIndex, key, rowIndex, style }) {
     const {
       checkIfInCollapsed,
+      colFields,
       collapsedRows,
+      colorPack: {
+        evenRowBackground,
+        oddRowBackground,
+      },
       data,
       headerCounter,
       onLeftGridCellClick,
@@ -393,7 +284,6 @@ export default class Table extends PureComponent {
       originalArgs,
       rawData,
       rowFields,
-      colFields,
     } = this.props;
 
     function getCollapsedRows(rowNum, dataStr) {
@@ -493,27 +383,18 @@ export default class Table extends PureComponent {
       }
     }
 
-    const arrowStyle = (rowIndex) => {
-      if (checkIfInCollapsed(rowIndex)) {
-        return '►';
-      }
-      if (rowFields.length === 0 &&
-        data[headerCounter + rowIndex].depth < colFields.length - 1) {
-        return '▼';
-      }
-      if (data[headerCounter + rowIndex].depth < rowFields.length - 1) {
-        return '▼';
-      }
-      return '';
-    };
-
     return (
       <div
         className="cell"
         key={key}
         style={{
           ...firstColumnStyle,
-          ...this.evenOddRowStyle({ rowIndex, columnIndex }),
+          ...evenOddRowStyle({
+            columnIndex,
+            evenRowBackground,
+            oddRowBackground,
+            rowIndex,
+          }),
           ...style,
           borderLeft: `1px solid ${this.props.colorPack.gridBorders}`,
           borderRight: `1px solid ${this.props.colorPack.gridBorders}`,
@@ -523,7 +404,18 @@ export default class Table extends PureComponent {
       >
         <div className="cell-text-container">
           <div className="arrow">
-            {columnIndex === 0 ? arrowStyle(rowIndex) : ''}
+            {
+              columnIndex === 0 ?
+                arrowStyle({
+                  checkIfInCollapsed,
+                  colFields,
+                  rowFields,
+                  data,
+                  headerCounter,
+                  rowIndex,
+                }) :
+                ''
+            }
           </div>
           <div className="cell-data">
             {
