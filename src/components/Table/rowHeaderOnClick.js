@@ -25,28 +25,28 @@ export default function onClick({
   }
 
   function getChildren(rowIndex, acc, startingDepth) {
-    const dataRow = data.slice(headerCounter)[rowIndex];
-    const rawDataRow = rawData.slice(headerCounter)[rowIndex];
+    const dataRow = data[headerCounter + rowIndex];
+    const rawDataRow = rawData[headerCounter + rowIndex];
 
     if (!dataRow ||
       (acc.children.length > 0 && startingDepth >= dataRow.depth)) {
       return acc;
     }
 
+    let obj;
+
     if (dataRow.type === 'data') {
-      const obj = {
+      obj = {
         children: acc.children.concat([dataRow.value]),
         childrenData: acc.childrenData.concat([rawDataRow.value]),
       };
-
-      return getChildren(rowIndex + 1, obj, startingDepth);
+    } else {
+      obj = {
+        children: acc.children.concat(getCollapsedRows(dataRow.row, 'table')),
+        childrenData: acc.childrenData
+          .concat(getCollapsedRows(dataRow.row, 'rawData')),
+      };
     }
-
-    const obj = {
-      children: acc.children.concat(getCollapsedRows(dataRow.row, 'table')),
-      childrenData: acc.children
-        .concat(getCollapsedRows(dataRow.row, 'rawData')),
-    };
 
     return getChildren(rowIndex + 1, obj, startingDepth);
   }
