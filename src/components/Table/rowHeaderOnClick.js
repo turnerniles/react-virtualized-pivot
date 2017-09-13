@@ -1,3 +1,18 @@
+/**
+ * Return children and children data comprising a row when clicked
+ * @params {
+    collapsedRows: Array,
+    columnIndex: number,
+    data: Array,
+    headerCounter: number,
+    onLeftGridCellClick: function,
+    originalArgs: Object,
+    rawData: Array,
+    rowIndex: number,
+    onToggleRow: function
+  }
+ * @returns {Object}
+*/
 export default function onClick({
   collapsedRows,
   columnIndex,
@@ -9,7 +24,11 @@ export default function onClick({
   rowIndex,
   onToggleRow,
 }) {
-
+  /**
+   * @params {number} rowNum
+   * @params {string} dataStr The data type to retrieve (rawData or table)
+   * @returns {Array}
+  */
   function getCollapsedRows(rowNum, dataStr) {
     const rows = rowNum in collapsedRows ? collapsedRows[rowNum].table : [];
     const collapsedData = rowNum in collapsedRows ?
@@ -24,6 +43,12 @@ export default function onClick({
     }, []);
   }
 
+  /**
+   * @params {number} rowIndex
+   * @params {Object} acc
+   * @params {number} startingDepth
+   * @returns {Object}
+  */
   function getChildren(rowIndex, acc, startingDepth) {
     const dataRow = data[headerCounter + rowIndex];
     const rawDataRow = rawData[headerCounter + rowIndex];
@@ -51,6 +76,11 @@ export default function onClick({
     return getChildren(rowIndex + 1, obj, startingDepth);
   }
 
+  /**
+   * groups all parent row headers for a particular row index
+   * @params {number} rowIndex
+   * @returns {Object}
+  */
   function getRowHeaders(rowIndex) {
     if (originalArgs.rows.length === 0) return {};
 
