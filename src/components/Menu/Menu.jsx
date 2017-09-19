@@ -339,10 +339,21 @@ export default class Menu extends PureComponent {
         className="react-virtualized-pivot-module-menu"
         isDrawerOpen={isDrawerOpen}
         handleRightClose={handleRightClose}
-        style={{ zIndex: 100 }}
       >
         {menuItems}
       </Drawer>
+      // <Drawer
+      //   className="react-virtualized-pivot-module-menu"
+      //   header={header}
+      //   onVisibilityToggle={handleRightClose}
+      //   overlay={true}
+      //   position={'right'}
+      //   style={{ zIndex: 100 }}
+      //   type={Drawer.DrawerTypes.TEMPORARY}
+      //   visible={isDrawerOpen}
+      // >
+      //   {menuItems}
+      // </Drawer>
     );
   }
 }
