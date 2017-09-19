@@ -107,8 +107,6 @@ export default function onClick({
     return acc;
   }
 
-  if (columnIndex === 0) onToggleRow(rowIndex);
-
   const { children, childrenData } = data.length > 0 ?
     getChildren(rowIndex, {children: [], childrenData: []},
       data[headerCounter + rowIndex].depth) :
@@ -123,4 +121,7 @@ export default function onClick({
     rowHeaders,
     rowIndex,
   });
+
+  /** need to toggle row after recursing children to prevent race condition */
+  if (columnIndex === 0) onToggleRow(rowIndex);
 }
