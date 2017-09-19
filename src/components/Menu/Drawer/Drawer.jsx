@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import './styles.scss';
 
 export default class Drawer extends PureComponent {
   constructor(props) {
