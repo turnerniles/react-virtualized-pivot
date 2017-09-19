@@ -47,8 +47,10 @@
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
+    "material-ui": "next",
     "quick-pivot": "^2.2.6",
     "react-draggable": "^2.2.6",
+    "react-drawer": "^1.2.5",
     "react-md": "^1.0.19",
     "react-select": "^1.0.0-rc.5",
     "react-virtualized": "^9.9.0"

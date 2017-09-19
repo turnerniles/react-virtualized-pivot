@@ -1,0 +1,121 @@
+html, body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  --color: black;
+  * {
+    box-sizing: border-box;
+  }
+}
+
+/**
+ * Copied from http://www.antimath.info/css/sass-sqrt-function/
+ */
+@function sqrt($r) {
+  $x0: 1;
+  $x1: $x0;
+
+  @for $i from 1 through 10 {
+    $x1: $x0 - ($x0 * $x0 - abs($r)) / (2 * $x0);
+    $x0: $x1;
+  }
+
+  @return $x1;
+}
+
+$side-space: 0;
+$color: black;
+$hamburger-width: 40;
+$hamburger-padding: 10;
+$hamburger-slice-height: 1;
+$hamburger-slice-width: ($hamburger-width - 2 * $hamburger-padding);
+$hamburger-slice-move: ($hamburger-slice-width - sqrt($hamburger-slice-width * $hamburger-slice-width / 2)) / 2;
+$hamburger-margin-top: 10;
+$hamburger-margin-left: 10;
+
+.container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+
+  .content {
+    width: calc(100% - #{2 * $side-space * 1%});
+    min-height: 200%;
+    background: linear-gradient(#cdcdcd, #efefef);
+  }
+
+  .hamburger {
+    position: absolute;
+    left: $side-space * 1%;
+    padding: $hamburger-padding * 1px;
+    z-index: 1;
+    width: $hamburger-width * 1px;
+    background-color: #eef;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    border: 0;
+    justify-content: center;
+    align-items: stretch;
+    margin: ($hamburger-margin-top * 1px) ($hamburger-margin-left * 1px);
+
+    .hamburger__slice {
+      display: block;
+      height: 0;
+      width: 100%;
+      border: #{$hamburger-slice-height}px solid currentColor;
+      transition: transform .3s ease-out, opacity .4s ease-out;
+      transform-origin: left;
+
+      &:not(:last-child) {
+        margin-bottom: 5px;
+      }
+    }
+  }
+  .drawer,
+  .drawer-overlay {
+    z-index: 6;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  .drawer {
+    background-color: #cec;
+    width: 50vw;
+    transition: transform .3s ease-out;
+    transform: translateX(100vw);
+  }
+  .drawer-overlay {
+    width: 100vw;
+    background-color: rgba(0, 0, 0, .4);
+    transition: opacity .3s ease-out;
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.nav-drawer_open {
+  .drawer {
+    transform: translate(50vw);
+    box-shadow: 2px 0 20px 6px rgba(0, 0, 0, 0.3);
+  }
+  .drawer-overlay {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .hamburger {
+    position: fixed;
+    .mock { pading: $hamburger-slice-width; }
+    .hamburger__slice:first-child {
+      transform: translateX(#{$hamburger-slice-move}px) rotate(45deg);
+    }
+    .hamburger__slice:last-child {
+      transform: translateX(#{$hamburger-slice-move}px) rotate(-45deg);
+    }
+    .hamburger__slice:not(:first-child):not(:last-child) {
+      opacity: 0;
+    }
+  }
+}

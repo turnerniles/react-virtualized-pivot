@@ -190,12 +190,12 @@ export default class App extends React.Component {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
+          {/* <img
             className={styles['github-fork']}
             // eslint-disable-next-line
             src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
             alt="Fork me on GitHub"
-          />
+          /> */}
         </a>
         <div
           className={styles['loader']}

@@ -1,50 +1,4 @@
-@import '~react-md/src/scss/react-md';
-
-$md-font-icon-size: 20px;
-
-@media screen and (max-width: 1024px) and (min-width: 320px){
-  .md-drawer--right {
-      width: 310px;
-      left: inherit !important;
-  }
-}
-
-@media screen and (max-width: 768px) and (min-width: 320px){
-  .md-drawer--right {
-      width: 100%;
-  }
-}
-
-.md-icon.fa {
-  height: 20px;
-  width: $md-font-icon-size;
-}
-
-  @include react-md-everything;
-
 .react-virtualized-pivot-module-menu {
-
-  header.md-paper {
-    height: 30px;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 10px 0px;
-
-    @media (min-width: 769px) {
-      display: none;
-    }
-  }
-
-  aside.md-paper {
-    @media (max-width: 768px) {
-      display: flex;
-      justify-content: flex-start;
-      flex-direction: column;
-      align-items: center;
-    }
-  }
-
   .pivot-options{
     margin-right: 10px;
     @media (min-width: 769px) {
@@ -53,6 +7,9 @@ $md-font-icon-size: 20px;
       display: inline-block;
     }
     @media (max-width: 768px) {
+    }
+    .dog{
+      color: red;
     }
 
     .Select{
@@ -86,6 +43,10 @@ $md-font-icon-size: 20px;
         width: 100%;
         display: inline-block;
       }
+    }
+    .dog{
+      height: 500px;
+      color: red;
     }
     .block__list {
   		height: 119px;

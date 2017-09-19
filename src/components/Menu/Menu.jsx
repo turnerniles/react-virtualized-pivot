@@ -2,12 +2,15 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
-import Drawer from 'react-md/lib/Drawers';
-import Toolbar from 'react-md/lib/Toolbars';
-import Button from 'react-md/lib/Buttons';
+// import Drawer from 'react-md/lib/Drawers';
+// import ReactDrawer from 'react-drawer';
+// import Toolbar from 'react-md/lib/Toolbars';
 import OverlayContent from './OverlayContent/OverlayContent.jsx';
-import RightArrowIcon from '../../icons/RightArrowIcon.jsx';
+// import RightArrowIcon from '../../icons/RightArrowIcon.jsx';
+import Drawer from './Drawer/Drawer.jsx';
 
+// import './react-md.scss';
+// import 'react-drawer/lib/react-drawer.css';
 import styles from './styles.scss';
 
 export default class Menu extends PureComponent {
@@ -261,25 +264,40 @@ export default class Menu extends PureComponent {
             >
                 Fields
             </div>
-            <ReactSortable
+            <div
               className={[
+                styles['dog'],
                 styles['sortable-container'],
                 styles['block__list'],
                 styles['block__list_tags'],
               ].join(' ')}
-              style={{
-                backgroundColor: colorPack.sortableContainerBackground,
-                borderColor: colorPack.sortableContainerBorderColor,
-              }}
-              onChange={fields => setFields(fields)}
-              options={{
-                group: 'shared',
-                onAdd: onAddUpdateField,
-              }}
-              tag="ul"
             >
-              {fieldsRenderer}
-            </ReactSortable>
+              <ReactSortable
+                className={[
+                  styles['dog'],
+                  styles['sortable-container'],
+                  styles['block__list'],
+                  styles['block__list_tags'],
+                ].join(' ')}
+                style={{
+                  backgroundColor: colorPack.sortableContainerBackground,
+                  borderColor: colorPack.sortableContainerBorderColor,
+                  height: '119px',
+                  marginTop: '-8px',
+                  marginLeft: '10px',
+                  overflowY: 'auto',
+                  overflowX: 'hidden',
+                }}
+                onChange={fields => setFields(fields)}
+                options={{
+                  group: 'shared',
+                  onAdd: onAddUpdateField,
+                }}
+                tag="ul"
+              >
+                {fieldsRenderer}
+              </ReactSortable>
+            </div>
           </div>
 
           <div className={styles['rows']}>
@@ -294,6 +312,7 @@ export default class Menu extends PureComponent {
             </div>
             <ReactSortable
               className={[
+                styles['dog'],
                 styles['sortable-container'],
                 styles['block__list'],
                 styles['block__list_tags'],
@@ -349,34 +368,28 @@ export default class Menu extends PureComponent {
       </div>
     );
 
-    const close = (
-      <Button icon onClick={handleRightClose}>
-        <RightArrowIcon
-          color={colorPack.icons}
-        />
-      </Button>
-    );
-    const header = (
-      <Toolbar
-        nav={null}
-        actions={close}
-        className={[
-          styles['md-divider-border'],
-          styles['md-divider-border--bottom'],
-        ].join(' ')}
-      />
-    );
+    // const close = (
+    //   <Button icon onClick={handleRightClose}>
+    //     <RightArrowIcon
+    //       color={colorPack.icons}
+    //     />
+    //   </Button>
+    // );
+    // const header = (
+    //   <Toolbar
+    //     nav={null}
+    //     actions={close}
+    //     className={[
+    //       styles['md-divider-border'],
+    //       styles['md-divider-border--bottom'],
+    //     ].join(' ')}
+    //   />
+    // );
 
     return (
       <Drawer
-        className={styles['react-virtualized-pivot-module-menu']}
-        header={header}
-        onVisibilityToggle={handleRightClose}
-        overlay={true}
-        position={'right'}
-        style={{ zIndex: 100 }}
-        type={Drawer.DrawerTypes.TEMPORARY}
-        visible={isDrawerOpen}
+        isDrawerOpen={isDrawerOpen}
+        handleRightClose={handleRightClose}
       >
         {menuItems}
       </Drawer>

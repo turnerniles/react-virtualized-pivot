@@ -17,7 +17,10 @@ loaders.push({
 
 loaders.push({
   test: /\.scss$/,
-  loaders: ['style-loader', 'css-loader?modules=true?importLoaders=1',
+  loaders: [
+    'style-loader',
+    'css-loader?importLoaders=1&modules&localIdentName=[local]___[hash:base64:5]',
+    'postcss-loader',
     'sass-loader',
   ],
   exclude: ['node_modules'],
