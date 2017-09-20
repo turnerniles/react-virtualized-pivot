@@ -25,15 +25,7 @@ export default class Drawer extends PureComponent {
         <section
           className="drawer"
         >
-          <main
-            className="content"
-          >
-            <header>
-              <nav>
-                {this.props.children}
-              </nav>
-            </header>
-          </main>
+          {this.props.children}
         </section>
       </div>
     );

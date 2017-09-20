@@ -230,19 +230,19 @@ export default class Table extends PureComponent {
       >
         <div className="header-cell">
           { rowIndex === 0 &&
-            <Button
-              icon
+            <div
               onClick={handleRightOpen}
               style={{
                 height: '40px',
                 padding: '8px',
                 width: '40px',
+                cursor: 'pointer',
               }}
             >
               <SettingsIcon
                 color={colorPack.icons}
               />
-            </Button>
+            </div>
           }
           {
             data.length ?
