@@ -4,6 +4,7 @@ import Select from 'react-select';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
 import Drawer from './Drawer/Drawer.jsx';
 import OverlayContent from './OverlayContent/OverlayContent.jsx';
+import RightArrowIcon from '../../icons/RightArrowIcon.jsx';
 
 import './styles.scss';
 
@@ -203,8 +204,20 @@ export default class Menu extends PureComponent {
         </li>
       ));
 
+    const close = (
+      <div
+        onClick={handleRightClose}
+        className="closeBar"
+      >
+        <RightArrowIcon
+          color={colorPack.icons}
+        />
+      </div>
+    );
+
     const menuItems = (
       <div className="pivot-options">
+        {close}
         <div className="selectors-container">
           <div className="select-container">
             <div
