@@ -1,6 +1,6 @@
 Changelog
 ------------
 
-##### 0.1.0-beta
+##### 0.1.1-beta
 * Removes react-md
 * Adds jest and some tests
