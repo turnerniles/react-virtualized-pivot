@@ -1,64 +1,16 @@
-@import '~react-md/src/scss/react-md';
-
-$md-font-icon-size: 20px;
-
-@media screen and (max-width: 1024px) and (min-width: 320px){
-  .md-drawer--right {
-      width: 310px;
-      left: inherit !important;
-  }
-}
-
-@media screen and (max-width: 768px) and (min-width: 320px){
-  .md-drawer--right {
-      width: 100%;
-  }
-}
-
-.md-icon.fa {
-  height: 20px;
-  width: $md-font-icon-size;
-}
-
-  @include react-md-everything;
-
 .react-virtualized-pivot-module-menu {
-
-  header.md-paper {
-    height: 30px;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 10px 0px;
-
-    @media (min-width: 769px) {
-      display: none;
-    }
-  }
-
-  aside.md-paper {
-    @media (max-width: 768px) {
-      display: flex;
-      justify-content: flex-start;
-      flex-direction: column;
-      align-items: center;
-    }
-  }
-
   .pivot-options{
     margin-right: 10px;
     @media (min-width: 769px) {
       height: 150px;
-      width: 300px;
+      width: 100%;
       display: inline-block;
     }
     @media (max-width: 768px) {
     }
 
     .Select{
-  		margin-top: -8px;
-  		margin-left: 10px;
-  		margin-bottom: 8px;
+  		margin: -8px 10px 8px 10px;
   	}
 
     .selectors-container{
@@ -92,6 +44,7 @@ $md-font-icon-size: 20px;
   		height: 119px;
   	  margin-top: -8px;
   	  margin-left: 10px;
+      margin-right: 10px;
   	  background-color: #fff;
   		overflow-y: auto;
       overflow-x: hidden;
@@ -180,5 +133,10 @@ $md-font-icon-size: 20px;
   			right: 1px;
   		}
   	}
+
+  }
+  .closeBar{
+    display: none;
+    @media (max-width: 768px){display: block;}
   }
 }

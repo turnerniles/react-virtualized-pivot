@@ -2,9 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import ReactSortable from '../CustomReactSortable/CustomReactSortable.jsx';
-import Drawer from 'react-md/lib/Drawers';
-import Toolbar from 'react-md/lib/Toolbars';
-import Button from 'react-md/lib/Buttons';
+import Drawer from './Drawer/Drawer.jsx';
 import OverlayContent from './OverlayContent/OverlayContent.jsx';
 import RightArrowIcon from '../../icons/RightArrowIcon.jsx';
 
@@ -206,8 +204,20 @@ export default class Menu extends PureComponent {
         </li>
       ));
 
+    const close = (
+      <div
+        onClick={handleRightClose}
+        className="closeBar"
+      >
+        <RightArrowIcon
+          color={colorPack.icons}
+        />
+      </div>
+    );
+
     const menuItems = (
       <div className="pivot-options">
+        {close}
         <div className="selectors-container">
           <div className="select-container">
             <div
@@ -337,31 +347,11 @@ export default class Menu extends PureComponent {
       </div>
     );
 
-    const close = (
-      <Button icon onClick={handleRightClose}>
-        <RightArrowIcon
-          color={colorPack.icons}
-        />
-      </Button>
-    );
-    const header = (
-      <Toolbar
-        nav={null}
-        actions={close}
-        className="md-divider-border md-divider-border--bottom"
-      />
-    );
-
     return (
       <Drawer
         className="react-virtualized-pivot-module-menu"
-        header={header}
-        onVisibilityToggle={handleRightClose}
-        overlay={true}
-        position={'right'}
-        style={{ zIndex: 100 }}
-        type={Drawer.DrawerTypes.TEMPORARY}
-        visible={isDrawerOpen}
+        isDrawerOpen={isDrawerOpen}
+        handleRightClose={handleRightClose}
       >
         {menuItems}
       </Drawer>

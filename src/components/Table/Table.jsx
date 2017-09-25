@@ -3,7 +3,6 @@ import { Grid, AutoSizer, ScrollSync } from 'react-virtualized';
 import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
-import Button from 'react-md/lib/Buttons/Button';
 import SettingsIcon from '../../icons/SettingsIcon.jsx';
 import arrowStyle from './arrowStyle';
 import evenOddRowStyle from './evenOddRowStyle';
@@ -230,19 +229,19 @@ export default class Table extends PureComponent {
       >
         <div className="header-cell">
           { rowIndex === 0 &&
-            <Button
-              icon
+            <div
               onClick={handleRightOpen}
               style={{
                 height: '40px',
                 padding: '8px',
                 width: '40px',
+                cursor: 'pointer',
               }}
             >
               <SettingsIcon
                 color={colorPack.icons}
               />
-            </Button>
+            </div>
           }
           {
             data.length ?

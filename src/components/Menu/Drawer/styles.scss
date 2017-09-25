@@ -1,0 +1,52 @@
+.drawer-container {
+  height: 100%;
+
+  .drawer,
+  .drawer-overlay {
+    z-index: 6;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  .drawer {
+    background-color: rgb(255, 255, 255);
+    transition: transform .3s ease-out;
+    width: 300px;
+    transform: translateX(calc(100vw + 300px));
+
+    @media screen and (max-width: 1024px) and (min-width: 320px){
+      width: 300px;
+      transform: translateX(calc(100vw + 300px));
+    }
+    @media screen and (max-width: 768px) and (min-width: 320px){
+      width: 100%;
+      transform: translateX(calc(0));
+    }
+  }
+  .drawer-overlay {
+    width: 100%;
+    background-color: rgba(0, 0, 0, .4);
+    transition: opacity .3s ease-out;
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.nav-drawer_open {
+  .drawer {
+    box-shadow: 2px 0 20px 6px rgba(0, 0, 0, 0.3);
+    transform: translate(calc(100vw - 300px));
+
+    @media screen and (max-width: 1024px) and (min-width: 320px){
+      transform: translate(calc(100vw - 300px));
+    }
+    @media screen and (max-width: 768px) and (min-width: 320px){
+      transform: translate(0);
+    }
+  }
+  .drawer-overlay {
+    opacity: 1;
+    pointer-events: all;
+  }
+}

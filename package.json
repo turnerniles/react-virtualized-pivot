@@ -1,6 +1,6 @@
 {
   "name": "react-virtualized-pivot",
-  "version": "0.0.1-beta",
+  "version": "0.1.0-beta",
   "description": "React Virtualized Pivot",
   "main": "dist/es/index.js",
   "module": "dist/es/index.js",
@@ -36,6 +36,9 @@
   "license": "MIT",
   "homepage": "https://github.com/turnerniles/react-virtualized-pivot#readme",
   "jest": {
+    "moduleNameMapper": {
+      "^.+\\.scss$": "<rootDir>/src/__mocks__/style-mock.js"
+    },
     "setupFiles": [
       "./src/jest-setup.js"
     ],
@@ -49,7 +52,6 @@
     "babel-runtime": "^6.26.0",
     "quick-pivot": "^2.2.6",
     "react-draggable": "^2.2.6",
-    "react-md": "^1.0.19",
     "react-select": "^1.0.0-rc.5",
     "react-virtualized": "^9.9.0"
   },
