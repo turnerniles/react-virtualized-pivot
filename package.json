@@ -36,6 +36,9 @@
   "license": "MIT",
   "homepage": "https://github.com/turnerniles/react-virtualized-pivot#readme",
   "jest": {
+    "moduleNameMapper": {
+      "^.+\\.scss$": "<rootDir>/src/__mocks__/style-mock.js"
+    },
     "setupFiles": [
       "./src/jest-setup.js"
     ],

@@ -14,7 +14,7 @@ export default class Drawer extends PureComponent {
 
     return (
       <div
-        className={['container', isDrawerOpen ? 'nav-drawer_open' : '',
+        className={['drawer-container', isDrawerOpen ? 'nav-drawer_open' : '',
           'react-virtualized-pivot-module-menu'].join(' ')}
       >
         <div
