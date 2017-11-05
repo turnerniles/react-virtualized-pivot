@@ -286,6 +286,8 @@ export default class Table extends PureComponent {
       rowFields,
     } = this.props;
 
+    console.log('hello in the table', headerCounter, rowIndex, data)
+
     const firstColumnStyle = {};
 
     if (columnIndex === 0) {

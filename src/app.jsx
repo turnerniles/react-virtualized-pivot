@@ -39,11 +39,15 @@ export default class App extends React.Component {
         gridBorders: '#e0e0e0',
         icons: '#ccc',
       },
+      colFields: ['name'],
+      rowFields: ['gender'],
+      onLeftGridCellClick: () => console.log('clicking leftHeader')
     };
 
     this.handleFileSelect = this.handleFileSelect.bind(this);
     this.onSelectData = this.onSelectData.bind(this);
     this.onSelectColorPack = this.onSelectColorPack.bind(this);
+    this.onButtonClick = this.onButtonClick.bind(this);
   }
 
   handleFileSelect(evt) {
@@ -63,6 +67,8 @@ export default class App extends React.Component {
         data: data.smallData,
         isLoaded: true,
         selectedAggregationDimension: 'age',
+        colFields: [],
+        rowFields: [],
       });
     }
     if (dataSize.value === 'medium') {
@@ -71,6 +77,8 @@ export default class App extends React.Component {
         data: data.mediumData,
         isLoaded: true,
         selectedAggregationDimension: 'Quantity',
+        colFields: [],
+        rowFields: [],
       });
     }
     if (dataSize.value === 'large') {
@@ -86,10 +94,18 @@ export default class App extends React.Component {
             data: results.data,
             selectedAggregationDimension: 'Amount Requested',
             isLoaded: true,
+            colFields: [],
+            rowFields: [],
           });
         },
       });
     }
+  }
+
+  onButtonClick() {
+    this.setState({
+      onLeftHeaderCellClick: function(){},
+    });
   }
 
   onSelectColorPack(colorPack) {
@@ -206,6 +222,7 @@ export default class App extends React.Component {
           <div className="inner three"></div>
         </div>
         <div className="app-menu" style={{ 'width': '100%' }}>
+          <button onClick={this.onButtonClick}>donkey</button>
           <div className='select-container'>
             <div
               className="title"
@@ -266,6 +283,37 @@ export default class App extends React.Component {
           </div>
         </div>
         <Pivot
+          onChange={ (prevState) => {
+            console.log('got the state', prevState);
+            /* eslint-disable */
+            var save = {"aggregationDimensions":
+              [{"value":"name","label":"name"},{"value":"gender","label":"gender"},{"value":"house","label":"house"},{"value":"age","label":"age"}],
+              "dataArray":null,
+              "fields":["name","gender","house","age"],
+              "pivot":null,
+              "colFields":["name"],
+              "rowFields": ["house"],
+              "selectedAggregationType":"sum",
+              "selectedAggregationDimension":"age",
+              "currentFilter":"",
+              "currentValues":[],
+              "filters":{},
+              "columnWidth":100,
+              "columnCount":0,
+              "overscanColumnCount":5,
+              "overscanRowCount":5,
+              "headerHeight":40,
+              "rowHeight":30,
+              "rowCount":0,
+              "data":null,
+              "header":{},
+              "headerCounter":0,
+              "isDrawerOpen":false}
+            this.setState({
+              colFields: save.colFields,
+              rowFields: save.rowFields,
+            });
+          }}
           colorPack={colorPack}
           data={data}
           onGridCellClick={({
@@ -304,7 +352,7 @@ export default class App extends React.Component {
             console.log('childrenData', childrenData); // eslint-disable-line no-console
             console.log('rowHeaders', rowHeaders); // eslint-disable-line no-console
           }}
-          onLeftHeaderCellClick={() => console.log('clicking leftHeader')} // eslint-disable-line no-console
+          onLeftHeaderCellClick={this.state.onLeftHeaderCellClick} // eslint-disable-line no-console
           selectedAggregationDimension={selectedAggregationDimension}
         />
       </section>
