@@ -45,7 +45,7 @@ export default class App extends React.Component {
       pivotOnChangeFunction: (prevState) => {
         /* eslint-disable */
         const newState = prevState;
-        prevState.colFields=["name","house"];
+        newState.colFields=["name","house"];
         console.log('new state', newState)
         return newState
       }
