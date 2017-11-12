@@ -64,8 +64,6 @@ export default class Pivot extends PureComponent {
       isDrawerOpen: false,
     };
 
-    console.log(this.state.data)
-
     this.onSelectAggregationDimension =
     this.onSelectAggregationDimension.bind(this);
     this.onSelectAggregationType = this.onSelectAggregationType.bind(this);
@@ -84,73 +82,95 @@ export default class Pivot extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('nextProps.colFields', nextProps.colFields)
-    console.log('nextProps.rowFields', nextProps.rowFields)
 
     if (this.props.colorPack !== nextProps.colorPack) {
       console.log('in here');
       return;
     }
-    console.log('reached here');
 
-    const aggregationDimensions = nextProps.data !== undefined ?
-      nextProps.data[0].map((item, index) => {
-        return {value: item, label: item};
-      }) :
-      [];
-    const dataArray = nextProps.data !== undefined ? nextProps.data : [];
-    const fields = nextProps.data !== undefined ? nextProps.data[0] : [];
+    console.log('got the onChange Function', nextProps.onChange);
 
-    const pivot = nextProps.data !== undefined ?
-      new QuickPivot(nextProps.data, nextProps.rowFields || [],
-        nextProps.colFields || [], nextProps.selectedAggregationDimension ||
-        '', 'sum', '') : {};
+    if (nextProps.onChange !== undefined) {
+      const newState = this.props.onChange(this.state);
 
-    console.log('new Pivot', pivot);
+      this.setState({
+        aggregationDimensions: newState.aggregationDimensions,
+        dataArray: newState.dataArray,
+        fields: newState.fields,
+        pivot: newState.pivot,
+        colFields: newState.colFields,
+        rowFields: newState.rowFields,
+        selectedAggregationType: newState.selectedAggregationType,
+        selectedAggregationDimension: newState.selectedAggregationDimension,
+        currentFilter: newState.currentFilter,
+        currentValues: newState.currentValues,
+        filters: newState.filters,
+        columnWidth: newState.columnWidth,
+        columnCount:
+          newState.columnCount,
+        overscanColumnCount: newState.overscanColumnCount,
+        overscanRowCount: newState.overscanRowCount,
+        headerHeight: newState.headerHeight,
+        rowHeight: newState.rowHeight,
+        rowCount: newState.rowCount,
+        data: newState.data,
+        header: newState.header,
+        headerCounter: newState.headerCounter,
+        isDrawerOpen: newState.isDrawerOpen,
+      });
+    } else {
+      const aggregationDimensions = nextProps.data !== undefined ?
+        nextProps.data[0].map((item, index) => {
+          return {value: item, label: item};
+        }) :
+        [];
+      const dataArray = nextProps.data !== undefined ? nextProps.data : [];
+      const fields = nextProps.data !== undefined ? nextProps.data[0] : [];
 
-    let headerCounter = 0;
+      const pivot = nextProps.data !== undefined ?
+        new QuickPivot(nextProps.data, nextProps.rowFields || [],
+          nextProps.colFields || [], nextProps.selectedAggregationDimension ||
+          '', 'sum', '') : {};
 
-    if (pivot.data) {
-      while (true) {
-        if (pivot.data.table[headerCounter].type === 'colHeader') {
-          headerCounter += 1;
-        } else {
-          break;
+      let headerCounter = 0;
+
+      if (pivot.data) {
+        while (true) {
+          if (pivot.data.table[headerCounter].type === 'colHeader') {
+            headerCounter += 1;
+          } else {
+            break;
+          }
         }
       }
+
+      // Reset entire state execpt selectedAggregationType
+      this.setState({
+        aggregationDimensions,
+        dataArray,
+        fields,
+        pivot,
+        colFields: nextProps.colFields || [],
+        rowFields: nextProps.rowFields || [],
+        selectedAggregationDimension: nextProps.selectedAggregationDimension ||
+          '',
+        currentFilter: '',
+        currentValues: [],
+        filters: {},
+        columnWidth: 100,
+        columnCount:
+        (pivot !== undefined && pivot.data.table.length &&
+          pivot.data.table[0].value.length) ?
+          pivot.data.table[0].value.length : 0,
+        overscanColumnCount: 0,
+        overscanRowCount: 5,
+        rowHeight: 30,
+        rowCount: pivot !== undefined ? pivot.data.table.length : 0,
+        data: pivot !== undefined ? pivot.data.table : [],
+        header: {},
+        headerCounter,
+      });
     }
-
-    console.log('headerCounter', headerCounter);
-
-    // Reset entire state execpt selectedAggregationType
-    this.setState({
-      aggregationDimensions,
-      dataArray,
-      fields,
-      pivot,
-      colFields: nextProps.colFields || [],
-      rowFields: nextProps.rowFields || [],
-      selectedAggregationDimension: nextProps.selectedAggregationDimension ||
-        '',
-      currentFilter: '',
-      currentValues: [],
-      filters: {},
-      columnWidth: 100,
-      columnCount:
-      (pivot !== undefined && pivot.data.table.length &&
-        pivot.data.table[0].value.length) ?
-        pivot.data.table[0].value.length : 0,
-      overscanColumnCount: 0,
-      overscanRowCount: 5,
-      rowHeight: 30,
-      rowCount: pivot !== undefined ? pivot.data.table.length : 0,
-      data: [],
-      header: {},
-      headerCounter,
-    });
-
-    // this.props.onChange(this.state);
-    console.log('final state', this.state);
   }
 
   onSelectAggregationType(selectedAggregationType) {
@@ -489,8 +509,6 @@ export default class Pivot extends PureComponent {
       { value: 'average', label: 'average' },
     ];
 
-    console.log('jesus im in the table render with data', data)
-
     return (
       <section className="react-virtualized-pivot-module">
         <Menu
@@ -556,6 +574,7 @@ Pivot.propTypes = {
   bodyCellValueTransformation: PropTypes.func,
   colorPack: PropTypes.object,
   data: PropTypes.array.isRequired,
+  onChange: PropTypes.func,
   onGridCellClick: PropTypes.func,
   onGridHeaderCellClick: PropTypes.func,
   onLeftGridCellClick: PropTypes.func,

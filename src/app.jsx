@@ -41,7 +41,14 @@ export default class App extends React.Component {
       },
       colFields: ['name'],
       rowFields: ['gender'],
-      onLeftGridCellClick: () => console.log('clicking leftHeader')
+      onLeftGridCellClick: () => console.log('clicking leftHeader'),
+      pivotOnChangeFunction: (prevState) => {
+        /* eslint-disable */
+        const newState = prevState;
+        prevState.colFields=["name","house"];
+        console.log('new state', newState)
+        return newState
+      }
     };
 
     this.handleFileSelect = this.handleFileSelect.bind(this);
@@ -79,6 +86,7 @@ export default class App extends React.Component {
         selectedAggregationDimension: 'Quantity',
         colFields: [],
         rowFields: [],
+        pivotOnChangeFunction: undefined,
       });
     }
     if (dataSize.value === 'large') {
@@ -96,6 +104,7 @@ export default class App extends React.Component {
             isLoaded: true,
             colFields: [],
             rowFields: [],
+            pivotOnChangeFunction: undefined,
           });
         },
       });
@@ -104,7 +113,7 @@ export default class App extends React.Component {
 
   onButtonClick() {
     this.setState({
-      onLeftHeaderCellClick: function(){},
+      onLeftHeaderCellClick: function(){console.log('Changes OnClick')},
     });
   }
 
@@ -283,37 +292,9 @@ export default class App extends React.Component {
           </div>
         </div>
         <Pivot
-          onChange={ (prevState) => {
-            console.log('got the state', prevState);
-            /* eslint-disable */
-            var save = {"aggregationDimensions":
-              [{"value":"name","label":"name"},{"value":"gender","label":"gender"},{"value":"house","label":"house"},{"value":"age","label":"age"}],
-              "dataArray":null,
-              "fields":["name","gender","house","age"],
-              "pivot":null,
-              "colFields":["name"],
-              "rowFields": ["house"],
-              "selectedAggregationType":"sum",
-              "selectedAggregationDimension":"age",
-              "currentFilter":"",
-              "currentValues":[],
-              "filters":{},
-              "columnWidth":100,
-              "columnCount":0,
-              "overscanColumnCount":5,
-              "overscanRowCount":5,
-              "headerHeight":40,
-              "rowHeight":30,
-              "rowCount":0,
-              "data":null,
-              "header":{},
-              "headerCounter":0,
-              "isDrawerOpen":false}
-            this.setState({
-              colFields: save.colFields,
-              rowFields: save.rowFields,
-            });
-          }}
+          colFields={this.state.colFields}
+          rowFields={this.state.rowFields}
+          onChange={this.state.pivotOnChangeFunction}
           colorPack={colorPack}
           data={data}
           onGridCellClick={({
