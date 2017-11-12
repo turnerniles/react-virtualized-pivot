@@ -82,42 +82,61 @@ export default class Pivot extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-
-    if (this.props.colorPack !== nextProps.colorPack) {
-      console.log('in here');
-      return;
-    }
-
-    console.log('got the onChange Function', nextProps.onChange);
-
     if (nextProps.onChange !== undefined) {
       const newState = this.props.onChange(this.state);
+      const aggregationDimensions = nextProps.data !== undefined ?
+        nextProps.data[0].map((item, index) => {
+          return {value: item, label: item};
+        }) :
+        [];
+      const dataArray = nextProps.data !== undefined ? nextProps.data : [];
+      const fields = nextProps.data !== undefined ? nextProps.data[0] : [];
+
+      const pivot = nextProps.data !== undefined ?
+        new QuickPivot(nextProps.data, newState.rowFields || [],
+          newState.colFields || [], newState.selectedAggregationDimension ||
+          '', 'sum', '') : {};
+
+      let headerCounter = 0;
+
+      if (pivot.data) {
+        while (true) {
+          if (pivot.data.table[headerCounter].type === 'colHeader') {
+            headerCounter += 1;
+          } else {
+            break;
+          }
+        }
+      }
 
       this.setState({
-        aggregationDimensions: newState.aggregationDimensions,
-        dataArray: newState.dataArray,
-        fields: newState.fields,
-        pivot: newState.pivot,
+        aggregationDimensions,
+        dataArray: dataArray,
+        fields,
+        pivot,
         colFields: newState.colFields,
         rowFields: newState.rowFields,
-        selectedAggregationType: newState.selectedAggregationType,
-        selectedAggregationDimension: newState.selectedAggregationDimension,
-        currentFilter: newState.currentFilter,
-        currentValues: newState.currentValues,
-        filters: newState.filters,
-        columnWidth: newState.columnWidth,
+        selectedAggregationDimension: newState.selectedAggregationDimension ||
+          '',
+        currentFilter: '',
+        currentValues: [],
+        filters: {},
+        columnWidth: 100,
         columnCount:
-          newState.columnCount,
+        (pivot !== undefined && pivot.data.table.length &&
+          pivot.data.table[0].value.length) ?
+          pivot.data.table[0].value.length : 0,
         overscanColumnCount: newState.overscanColumnCount,
         overscanRowCount: newState.overscanRowCount,
         headerHeight: newState.headerHeight,
         rowHeight: newState.rowHeight,
-        rowCount: newState.rowCount,
-        data: newState.data,
-        header: newState.header,
-        headerCounter: newState.headerCounter,
+        rowCount: pivot !== undefined ? pivot.data.table.length : 0,
+        data: pivot !== undefined ? pivot.data.table : [],
+        header: {},
+        headerCounter: headerCounter,
         isDrawerOpen: newState.isDrawerOpen,
       });
+
     } else {
       const aggregationDimensions = nextProps.data !== undefined ?
         nextProps.data[0].map((item, index) => {

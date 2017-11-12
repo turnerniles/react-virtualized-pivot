@@ -231,7 +231,7 @@ export default class App extends React.Component {
           <div className="inner three"></div>
         </div>
         <div className="app-menu" style={{ 'width': '100%' }}>
-          <button onClick={this.onButtonClick}>donkey</button>
+          <button onClick={this.onButtonClick}>Pass</button>
           <div className='select-container'>
             <div
               className="title"
