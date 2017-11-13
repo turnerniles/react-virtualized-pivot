@@ -5417,9 +5417,9 @@ querystringify@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-1.0.0.tgz#6286242112c5b712fa654e526652bf6a13ff05cb"
 
-quick-pivot@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/quick-pivot/-/quick-pivot-2.3.0.tgz#96cffd87536ee6bcdf649f7fd6b826efe12aa718"
+quick-pivot@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/quick-pivot/-/quick-pivot-2.3.1.tgz#4cc86f7de64de8c336b5b019e3f82b710aafeea1"
 
 raf@^3.3.2:
   version "3.3.2"
