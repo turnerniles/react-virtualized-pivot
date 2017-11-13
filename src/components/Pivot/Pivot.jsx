@@ -227,6 +227,8 @@ export default class Pivot extends PureComponent {
       '',
     );
 
+    console.log('pivotedData', pivotedData);
+
     Object.keys(filters).forEach((filter) => {
       pivotedData.filter((elem, index, array) => {
         return filters[filter].findIndex((field) => {
