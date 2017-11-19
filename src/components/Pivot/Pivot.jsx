@@ -336,8 +336,6 @@ export default class Pivot extends PureComponent {
       }
     }
 
-    console.log('pivotedData', pivotedData);
-
     this.setState({
       filters,
       headerCounter,
