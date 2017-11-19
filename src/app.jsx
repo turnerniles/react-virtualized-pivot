@@ -334,6 +334,7 @@ export default class App extends React.Component {
             console.log('rowHeaders', rowHeaders); // eslint-disable-line no-console
           }}
           onLeftHeaderCellClick={this.state.onLeftHeaderCellClick} // eslint-disable-line no-console
+          rowTotals={true}
           selectedAggregationDimension={selectedAggregationDimension}
         />
       </section>
