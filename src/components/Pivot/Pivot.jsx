@@ -227,8 +227,6 @@ export default class Pivot extends PureComponent {
       '',
     );
 
-    console.log('pivotedData', pivotedData);
-
     Object.keys(filters).forEach((filter) => {
       pivotedData.filter((elem, index, array) => {
         return filters[filter].findIndex((field) => {
@@ -413,7 +411,6 @@ export default class Pivot extends PureComponent {
       columnWidth,
       currentFilter,
       currentValues,
-      data,
       fields,
       filters,
       headerCounter,
@@ -421,12 +418,16 @@ export default class Pivot extends PureComponent {
       overscanColumnCount,
       overscanRowCount,
       pivot,
-      rowCount,
       rowFields,
       rowHeight,
       selectedAggregationDimension,
       selectedAggregationType,
       isDrawerOpen,
+    } = this.state;
+
+    let {
+      data,
+      rowCount,
     } = this.state;
 
     const {
@@ -436,6 +437,7 @@ export default class Pivot extends PureComponent {
       onGridHeaderCellClick,
       onLeftGridCellClick,
       onLeftHeaderCellClick,
+      rowTotals,
     } = this.props;
 
     const aggregationTypes = [
@@ -445,6 +447,11 @@ export default class Pivot extends PureComponent {
       { value: 'max', label: 'max' },
       { value: 'average', label: 'average' },
     ];
+
+    if (data !== undefined && data.length && !rowTotals) {
+      rowCount = rowCount - 1;
+      data = data.slice(0, rowCount);
+    }
 
     return (
       <section className="react-virtualized-pivot-module">
@@ -515,6 +522,7 @@ Pivot.propTypes = {
   onGridHeaderCellClick: PropTypes.func,
   onLeftGridCellClick: PropTypes.func,
   onLeftHeaderCellClick: PropTypes.func,
+  rowTotals: PropTypes.bool,
   selectedAggregationDimension: PropTypes.string,
 };
 
@@ -545,4 +553,5 @@ Pivot.defaultProps = {
   onGridHeaderCellClick: () => {},
   onLeftGridCellClick: () => {},
   onLeftHeaderCellClick: () => {},
+  rowTotals: true,
 };
