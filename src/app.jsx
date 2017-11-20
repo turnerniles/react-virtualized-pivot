@@ -41,7 +41,7 @@ export default class App extends React.Component {
       },
       colFields: ['name'],
       rowFields: ['gender'],
-      onLeftGridCellClick: () => console.log('clicking leftHeader'),
+      onLeftGridCellClick: () => console.log('clicking leftHeader'), // eslint-disable-line no-console
       pivotOnChangeFunction: (prevState) => {
         /* eslint-disable */
         const newState = prevState;

@@ -17,7 +17,25 @@ export default class Pivot extends PureComponent {
       }) :
       [];
     const dataArray = this.props.data !== undefined ? this.props.data : [];
-    const fields = this.props.data !== undefined ? this.props.data[0] : [];
+    let fields = this.props.data !== undefined ? this.props.data[0] : [];
+    const colFields = this.props.colFields || [];
+    const rowFields = this.props.rowFields || [];
+
+    console.log('fields before colfields', fields)
+    if (fields.length) {
+      colFields.forEach((field) => {
+        console.log('in here', field)
+        if (fields.indexOf(field) > -1) {
+        fields = [].concat(fields.slice(0, fields.indexOf(field)), fields.slice(fields.indexOf(field)+1));
+        }
+      })
+      rowFields.forEach((field) => {
+        if (fields.indexOf(field) > -1) {
+        fields = [].concat(fields.slice(0, fields.indexOf(field)), fields.slice(fields.indexOf(field)+1));
+        }
+      })
+    }
+
     const pivot = this.props.data !== undefined ?
       new QuickPivot(this.props.data, this.props.rowFields || [],
         this.props.colFields || [], this.props.selectedAggregationDimension ||
@@ -40,8 +58,8 @@ export default class Pivot extends PureComponent {
       dataArray,
       fields,
       pivot,
-      colFields: this.props.colFields || [],
-      rowFields: this.props.rowFields || [],
+      colFields,
+      rowFields,
       selectedAggregationType: 'sum',
       selectedAggregationDimension: this.props.selectedAggregationDimension ||
         '',
