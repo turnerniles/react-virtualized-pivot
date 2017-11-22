@@ -1715,7 +1715,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-create-react-class@^15.5.2:
+create-react-class@^15.5.2, create-react-class@^15.6.0:
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.0.tgz#ab448497c26566e1e29413e883207d57cfe7bed4"
   dependencies:
@@ -5333,20 +5333,20 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@>=15.0.0, prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.6.0:
+prop-types@>=15.0.0, prop-types@^15.5.10, prop-types@^15.5.8:
+  version "15.5.10"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
+  dependencies:
+    fbjs "^0.8.9"
+    loose-envify "^1.3.1"
+
+prop-types@^15.5.4, prop-types@^15.6.0:
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.0.tgz#ceaf083022fc46b4a35f69e13ef75aed0d639856"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
-
-prop-types@^15.5.10:
-  version "15.5.10"
-  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
-  dependencies:
-    fbjs "^0.8.9"
-    loose-envify "^1.3.1"
 
 proxy-addr@~1.1.5:
   version "1.1.5"
@@ -5473,14 +5473,14 @@ react-deep-force-update@^2.0.1:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-2.1.0.tgz#1c5f36ea96bcbf411605ec063f36c568ea4df86c"
 
-react-dom@^16.1.0:
-  version "16.1.0"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.1.0.tgz#ab6fd2a285096f388aeba51919a573d06c9bdde4"
+react-dom@15.6.1:
+  version "15.6.1"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.6.1.tgz#2cb0ed4191038e53c209eb3a79a23e2a4cf99470"
   dependencies:
-    fbjs "^0.8.16"
+    fbjs "^0.8.9"
     loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.0"
+    object-assign "^4.1.0"
+    prop-types "^15.5.10"
 
 react-draggable@^3.0.3:
   version "3.0.3"
@@ -5545,14 +5545,15 @@ react-virtualized@^9.12.0:
     loose-envify "^1.3.0"
     prop-types "^15.5.4"
 
-react@^16.1.0:
-  version "16.1.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.1.0.tgz#1c2bdac3c17fe7ee9282fa35aca6cc36387903e1"
+react@15.6.1:
+  version "15.6.1"
+  resolved "https://registry.yarnpkg.com/react/-/react-15.6.1.tgz#baa8434ec6780bde997cdc380b79cd33b96393df"
   dependencies:
-    fbjs "^0.8.16"
+    create-react-class "^15.6.0"
+    fbjs "^0.8.9"
     loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.0"
+    object-assign "^4.1.0"
+    prop-types "^15.5.10"
 
 read-cache@^1.0.0:
   version "1.0.0"
