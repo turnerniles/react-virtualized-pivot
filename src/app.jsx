@@ -46,6 +46,7 @@ export default class App extends React.Component {
         /* eslint-disable */
         const newState = prevState;
         newState.colFields=["name","house"];
+        newState.filters={name: ["Cersei"]};
         console.log('new state', newState)
         return newState
       }
@@ -76,6 +77,14 @@ export default class App extends React.Component {
         selectedAggregationDimension: 'age',
         colFields: [],
         rowFields: [],
+        pivotOnChangeFunction: (prevState) => {
+          /* eslint-disable */
+          const newState = prevState;
+          newState.colFields=["name","house"];
+          newState.filters={name: ["Cersei"]};
+          console.log('new state', newState)
+          return newState
+        },
       });
     }
     if (dataSize.value === 'medium') {
@@ -297,6 +306,7 @@ export default class App extends React.Component {
           onChange={this.state.pivotOnChangeFunction}
           colorPack={colorPack}
           data={data}
+          filters={{name: ['Arya', 'Jon']}}
           onGridCellClick={({
             rowIndex,
             columnIndex,

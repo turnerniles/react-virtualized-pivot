@@ -21,25 +21,33 @@ export default class Pivot extends PureComponent {
     const colFields = this.props.colFields || [];
     const rowFields = this.props.rowFields || [];
 
-    console.log('fields before colfields', fields)
     if (fields.length) {
       colFields.forEach((field) => {
-        console.log('in here', field)
         if (fields.indexOf(field) > -1) {
-        fields = [].concat(fields.slice(0, fields.indexOf(field)), fields.slice(fields.indexOf(field)+1));
+          fields = [].concat(fields.slice(0, fields.indexOf(field)),
+            fields.slice(fields.indexOf(field) + 1));
         }
-      })
+      });
       rowFields.forEach((field) => {
         if (fields.indexOf(field) > -1) {
-        fields = [].concat(fields.slice(0, fields.indexOf(field)), fields.slice(fields.indexOf(field)+1));
+          fields = [].concat(fields.slice(0, fields.indexOf(field)),
+            fields.slice(fields.indexOf(field) + 1));
         }
-      })
+      });
     }
 
     const pivot = this.props.data !== undefined ?
       new QuickPivot(this.props.data, this.props.rowFields || [],
         this.props.colFields || [], this.props.selectedAggregationDimension ||
         '', 'sum', '') : {};
+
+    Object.keys(this.props.filters).forEach((filter) => {
+      pivot.filter((elem, index, array) => {
+        return this.props.filters[filter].findIndex((field) => {
+          return field === elem[filter];
+        }) === -1;
+      });
+    });
 
     let headerCounter = 0;
 
@@ -65,7 +73,7 @@ export default class Pivot extends PureComponent {
         '',
       currentFilter: '',
       currentValues: [],
-      filters: {},
+      filters: this.props.filters,
       columnWidth: 100,
       columnCount:
       (pivot !== undefined && pivot.data.table.length &&
@@ -101,19 +109,42 @@ export default class Pivot extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.onChange !== undefined) {
-      const newState = this.props.onChange(this.state);
+      const newState = nextProps.onChange(this.state);
       const aggregationDimensions = nextProps.data !== undefined ?
         nextProps.data[0].map((item, index) => {
           return {value: item, label: item};
         }) :
         [];
       const dataArray = nextProps.data !== undefined ? nextProps.data : [];
-      const fields = nextProps.data !== undefined ? nextProps.data[0] : [];
+      let fields = nextProps.data !== undefined ? nextProps.data[0] : [];
+
+      if (fields.length) {
+        newState.colFields.forEach((field) => {
+          if (fields.indexOf(field) > -1) {
+            fields = [].concat(fields.slice(0, fields.indexOf(field)),
+              fields.slice(fields.indexOf(field) + 1));
+          }
+        });
+        newState.rowFields.forEach((field) => {
+          if (fields.indexOf(field) > -1) {
+            fields = [].concat(fields.slice(0, fields.indexOf(field)),
+              fields.slice(fields.indexOf(field) + 1));
+          }
+        });
+      }
 
       const pivot = nextProps.data !== undefined ?
         new QuickPivot(nextProps.data, newState.rowFields || [],
           newState.colFields || [], newState.selectedAggregationDimension ||
           '', 'sum', '') : {};
+
+      Object.keys(newState.filters).forEach((filter) => {
+        pivot.filter((elem, index, array) => {
+          return newState.filters[filter].findIndex((field) => {
+            return field === elem[filter];
+          }) === -1;
+        });
+      });
 
       let headerCounter = 0;
 
@@ -138,7 +169,7 @@ export default class Pivot extends PureComponent {
           '',
         currentFilter: '',
         currentValues: [],
-        filters: {},
+        filters: newState.filters,
         columnWidth: 100,
         columnCount:
         (pivot !== undefined && pivot.data.table.length &&
@@ -162,12 +193,35 @@ export default class Pivot extends PureComponent {
         }) :
         [];
       const dataArray = nextProps.data !== undefined ? nextProps.data : [];
-      const fields = nextProps.data !== undefined ? nextProps.data[0] : [];
+      let fields = nextProps.data !== undefined ? nextProps.data[0] : [];
+
+      if (fields.length) {
+        nextProps.colFields.forEach((field) => {
+          if (fields.indexOf(field) > -1) {
+            fields = [].concat(fields.slice(0, fields.indexOf(field)),
+              fields.slice(fields.indexOf(field) + 1));
+          }
+        });
+        nextProps.rowFields.forEach((field) => {
+          if (fields.indexOf(field) > -1) {
+            fields = [].concat(fields.slice(0, fields.indexOf(field)),
+              fields.slice(fields.indexOf(field) + 1));
+          }
+        });
+      }
 
       const pivot = nextProps.data !== undefined ?
         new QuickPivot(nextProps.data, nextProps.rowFields || [],
           nextProps.colFields || [], nextProps.selectedAggregationDimension ||
           '', 'sum', '') : {};
+
+      Object.keys(nextProps.filters).forEach((filter) => {
+        pivot.filter((elem, index, array) => {
+          return nextProps.filters[filter].findIndex((field) => {
+            return field === elem[filter];
+          }) === -1;
+        });
+      });
 
       let headerCounter = 0;
 
@@ -193,7 +247,7 @@ export default class Pivot extends PureComponent {
           '',
         currentFilter: '',
         currentValues: [],
-        filters: {},
+        filters: nextProps.filters,
         columnWidth: 100,
         columnCount:
         (pivot !== undefined && pivot.data.table.length &&
@@ -620,6 +674,7 @@ Pivot.propTypes = {
   bodyCellValueTransformation: PropTypes.func,
   colorPack: PropTypes.object,
   data: PropTypes.array.isRequired,
+  filters: PropTypes.object,
   onChange: PropTypes.func,
   onGridCellClick: PropTypes.func,
   onGridHeaderCellClick: PropTypes.func,
@@ -652,6 +707,7 @@ Pivot.defaultProps = {
     sortableFieldBackground: '#fafafa',
     sortableFieldText: '#000',
   },
+  filters: {},
   onGridCellClick: () => {},
   onGridHeaderCellClick: () => {},
   onLeftGridCellClick: () => {},
