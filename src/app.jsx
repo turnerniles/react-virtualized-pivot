@@ -39,11 +39,23 @@ export default class App extends React.Component {
         gridBorders: '#e0e0e0',
         icons: '#ccc',
       },
+      colFields: ['name'],
+      rowFields: ['gender'],
+      onLeftGridCellClick: () => console.log('clicking leftHeader'), // eslint-disable-line no-console
+      pivotOnChangeFunction: (prevState) => {
+        /* eslint-disable */
+        const newState = prevState;
+        newState.colFields=["name","house"];
+        newState.filters={name: ["Cersei"]};
+        console.log('new state', newState)
+        return newState
+      }
     };
 
     this.handleFileSelect = this.handleFileSelect.bind(this);
     this.onSelectData = this.onSelectData.bind(this);
     this.onSelectColorPack = this.onSelectColorPack.bind(this);
+    this.onButtonClick = this.onButtonClick.bind(this);
   }
 
   handleFileSelect(evt) {
@@ -63,6 +75,16 @@ export default class App extends React.Component {
         data: data.smallData,
         isLoaded: true,
         selectedAggregationDimension: 'age',
+        colFields: [],
+        rowFields: [],
+        pivotOnChangeFunction: (prevState) => {
+          /* eslint-disable */
+          const newState = prevState;
+          newState.colFields=["name","house"];
+          newState.filters={name: ["Cersei"]};
+          console.log('new state', newState)
+          return newState
+        },
       });
     }
     if (dataSize.value === 'medium') {
@@ -71,6 +93,9 @@ export default class App extends React.Component {
         data: data.mediumData,
         isLoaded: true,
         selectedAggregationDimension: 'Quantity',
+        colFields: [],
+        rowFields: [],
+        pivotOnChangeFunction: undefined,
       });
     }
     if (dataSize.value === 'large') {
@@ -86,10 +111,19 @@ export default class App extends React.Component {
             data: results.data,
             selectedAggregationDimension: 'Amount Requested',
             isLoaded: true,
+            colFields: [],
+            rowFields: [],
+            pivotOnChangeFunction: undefined,
           });
         },
       });
     }
+  }
+
+  onButtonClick() {
+    this.setState({
+      onLeftHeaderCellClick: function(){console.log('Changes OnClick')},
+    });
   }
 
   onSelectColorPack(colorPack) {
@@ -206,6 +240,7 @@ export default class App extends React.Component {
           <div className="inner three"></div>
         </div>
         <div className="app-menu" style={{ 'width': '100%' }}>
+          <button onClick={this.onButtonClick}>Pass</button>
           <div className='select-container'>
             <div
               className="title"
@@ -266,8 +301,12 @@ export default class App extends React.Component {
           </div>
         </div>
         <Pivot
+          colFields={this.state.colFields}
+          rowFields={this.state.rowFields}
+          onChange={this.state.pivotOnChangeFunction}
           colorPack={colorPack}
           data={data}
+          filters={{name: ['Arya', 'Jon']}}
           onGridCellClick={({
             rowIndex,
             columnIndex,
@@ -304,7 +343,8 @@ export default class App extends React.Component {
             console.log('childrenData', childrenData); // eslint-disable-line no-console
             console.log('rowHeaders', rowHeaders); // eslint-disable-line no-console
           }}
-          onLeftHeaderCellClick={() => console.log('clicking leftHeader')} // eslint-disable-line no-console
+          onLeftHeaderCellClick={this.state.onLeftHeaderCellClick} // eslint-disable-line no-console
+          rowTotals={true}
           selectedAggregationDimension={selectedAggregationDimension}
         />
       </section>

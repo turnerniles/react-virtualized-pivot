@@ -17,35 +17,76 @@ export default class Pivot extends PureComponent {
       }) :
       [];
     const dataArray = this.props.data !== undefined ? this.props.data : [];
-    const fields = this.props.data !== undefined ? this.props.data[0] : [];
+    let fields = this.props.data !== undefined ? this.props.data[0] : [];
+    const colFields = this.props.colFields || [];
+    const rowFields = this.props.rowFields || [];
+
+    if (fields.length) {
+      colFields.forEach((field) => {
+        if (fields.indexOf(field) > -1) {
+          fields = [].concat(fields.slice(0, fields.indexOf(field)),
+            fields.slice(fields.indexOf(field) + 1));
+        }
+      });
+      rowFields.forEach((field) => {
+        if (fields.indexOf(field) > -1) {
+          fields = [].concat(fields.slice(0, fields.indexOf(field)),
+            fields.slice(fields.indexOf(field) + 1));
+        }
+      });
+    }
+
     const pivot = this.props.data !== undefined ?
-      new QuickPivot(this.props.data, [], [],
-        this.props.selectedAggregationDimension || '', 'sum', '') :
-      {};
+      new QuickPivot(this.props.data, this.props.rowFields || [],
+        this.props.colFields || [], this.props.selectedAggregationDimension ||
+        '', 'sum', '') : {};
+
+    Object.keys(this.props.filters).forEach((filter) => {
+      pivot.filter((elem, index, array) => {
+        return this.props.filters[filter].findIndex((field) => {
+          return field === elem[filter];
+        }) === -1;
+      });
+    });
+
+    let headerCounter = 0;
+
+    if (pivot.data) {
+      while (true) {
+        if (pivot.data.table[headerCounter].type === 'colHeader') {
+          headerCounter += 1;
+        } else {
+          break;
+        }
+      }
+    }
 
     this.state = {
       aggregationDimensions,
       dataArray,
       fields,
       pivot,
-      colFields: [],
-      rowFields: [],
+      colFields,
+      rowFields,
       selectedAggregationType: 'sum',
       selectedAggregationDimension: this.props.selectedAggregationDimension ||
         '',
       currentFilter: '',
       currentValues: [],
-      filters: {},
+      filters: this.props.filters,
       columnWidth: 100,
-      columnCount: 0,
+      columnCount:
+      (pivot !== undefined && pivot.data.table.length &&
+        pivot.data.table[0].value.length) ?
+        pivot.data.table[0].value.length : 0,
       overscanColumnCount: 5,
       overscanRowCount: 5,
       headerHeight: 40,
       rowHeight: 30,
-      rowCount: 0,
-      data: [],
+      rowCount: pivot !== undefined ? pivot.data.table.length : 0,
+      data: pivot !== undefined ? pivot.data.table : [],
       header: {},
-      headerCounter: 0,
+      headerCounter,
       isDrawerOpen: false,
     };
 
@@ -67,43 +108,160 @@ export default class Pivot extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.colorPack !== nextProps.colorPack) {
-      return;
-    }
-    const aggregationDimensions = nextProps.data !== undefined ?
-      nextProps.data[0].map((item, index) => {
-        return {value: item, label: item};
-      }) :
-      [];
-    const dataArray = nextProps.data !== undefined ? nextProps.data : [];
-    const fields = nextProps.data !== undefined ? nextProps.data[0] : [];
-    const pivot = nextProps.data !== undefined ?
-      new QuickPivot(nextProps.data, [], [],
-        nextProps.selectedAggregationDimension || '', 'sum', '') : {};
+    if (nextProps.onChange !== undefined) {
+      const newState = nextProps.onChange(this.state);
+      const aggregationDimensions = nextProps.data !== undefined ?
+        nextProps.data[0].map((item, index) => {
+          return {value: item, label: item};
+        }) :
+        [];
+      const dataArray = nextProps.data !== undefined ? nextProps.data : [];
+      let fields = nextProps.data !== undefined ? nextProps.data[0] : [];
 
-    // Reset entire state execpt selectedAggregationType
-    this.setState({
-      aggregationDimensions,
-      dataArray,
-      fields,
-      pivot,
-      colFields: [],
-      rowFields: [],
-      selectedAggregationDimension: nextProps.selectedAggregationDimension ||
-        '',
-      currentFilter: '',
-      currentValues: [],
-      filters: {},
-      columnWidth: 100,
-      columnCount: 0,
-      overscanColumnCount: 0,
-      overscanRowCount: 5,
-      rowHeight: 30,
-      rowCount: 0,
-      data: [],
-      header: {},
-      headerCounter: 0,
-    });
+      if (fields.length) {
+        newState.colFields.forEach((field) => {
+          if (fields.indexOf(field) > -1) {
+            fields = [].concat(fields.slice(0, fields.indexOf(field)),
+              fields.slice(fields.indexOf(field) + 1));
+          }
+        });
+        newState.rowFields.forEach((field) => {
+          if (fields.indexOf(field) > -1) {
+            fields = [].concat(fields.slice(0, fields.indexOf(field)),
+              fields.slice(fields.indexOf(field) + 1));
+          }
+        });
+      }
+
+      const pivot = nextProps.data !== undefined ?
+        new QuickPivot(nextProps.data, newState.rowFields || [],
+          newState.colFields || [], newState.selectedAggregationDimension ||
+          '', 'sum', '') : {};
+
+      Object.keys(newState.filters).forEach((filter) => {
+        pivot.filter((elem, index, array) => {
+          return newState.filters[filter].findIndex((field) => {
+            return field === elem[filter];
+          }) === -1;
+        });
+      });
+
+      let headerCounter = 0;
+
+      if (pivot.data) {
+        while (true) {
+          if (pivot.data.table[headerCounter].type === 'colHeader') {
+            headerCounter += 1;
+          } else {
+            break;
+          }
+        }
+      }
+
+      this.setState({
+        aggregationDimensions,
+        dataArray: dataArray,
+        fields,
+        pivot,
+        colFields: newState.colFields,
+        rowFields: newState.rowFields,
+        selectedAggregationDimension: newState.selectedAggregationDimension ||
+          '',
+        currentFilter: '',
+        currentValues: [],
+        filters: newState.filters,
+        columnWidth: 100,
+        columnCount:
+        (pivot !== undefined && pivot.data.table.length &&
+          pivot.data.table[0].value.length) ?
+          pivot.data.table[0].value.length : 0,
+        overscanColumnCount: newState.overscanColumnCount,
+        overscanRowCount: newState.overscanRowCount,
+        headerHeight: newState.headerHeight,
+        rowHeight: newState.rowHeight,
+        rowCount: pivot !== undefined ? pivot.data.table.length : 0,
+        data: pivot !== undefined ? pivot.data.table : [],
+        header: {},
+        headerCounter: headerCounter,
+        isDrawerOpen: newState.isDrawerOpen,
+      });
+
+    } else {
+      const aggregationDimensions = nextProps.data !== undefined ?
+        nextProps.data[0].map((item, index) => {
+          return {value: item, label: item};
+        }) :
+        [];
+      const dataArray = nextProps.data !== undefined ? nextProps.data : [];
+      let fields = nextProps.data !== undefined ? nextProps.data[0] : [];
+
+      if (fields.length) {
+        nextProps.colFields.forEach((field) => {
+          if (fields.indexOf(field) > -1) {
+            fields = [].concat(fields.slice(0, fields.indexOf(field)),
+              fields.slice(fields.indexOf(field) + 1));
+          }
+        });
+        nextProps.rowFields.forEach((field) => {
+          if (fields.indexOf(field) > -1) {
+            fields = [].concat(fields.slice(0, fields.indexOf(field)),
+              fields.slice(fields.indexOf(field) + 1));
+          }
+        });
+      }
+
+      const pivot = nextProps.data !== undefined ?
+        new QuickPivot(nextProps.data, nextProps.rowFields || [],
+          nextProps.colFields || [], nextProps.selectedAggregationDimension ||
+          '', 'sum', '') : {};
+
+      Object.keys(nextProps.filters).forEach((filter) => {
+        pivot.filter((elem, index, array) => {
+          return nextProps.filters[filter].findIndex((field) => {
+            return field === elem[filter];
+          }) === -1;
+        });
+      });
+
+      let headerCounter = 0;
+
+      if (pivot.data) {
+        while (true) {
+          if (pivot.data.table[headerCounter].type === 'colHeader') {
+            headerCounter += 1;
+          } else {
+            break;
+          }
+        }
+      }
+
+      // Reset entire state execpt selectedAggregationType
+      this.setState({
+        aggregationDimensions,
+        dataArray,
+        fields,
+        pivot,
+        colFields: nextProps.colFields || [],
+        rowFields: nextProps.rowFields || [],
+        selectedAggregationDimension: nextProps.selectedAggregationDimension ||
+          '',
+        currentFilter: '',
+        currentValues: [],
+        filters: nextProps.filters,
+        columnWidth: 100,
+        columnCount:
+        (pivot !== undefined && pivot.data.table.length &&
+          pivot.data.table[0].value.length) ?
+          pivot.data.table[0].value.length : 0,
+        overscanColumnCount: 0,
+        overscanRowCount: 5,
+        rowHeight: 30,
+        rowCount: pivot !== undefined ? pivot.data.table.length : 0,
+        data: pivot !== undefined ? pivot.data.table : [],
+        header: {},
+        headerCounter,
+      });
+    }
   }
 
   onSelectAggregationType(selectedAggregationType) {
@@ -409,7 +567,6 @@ export default class Pivot extends PureComponent {
       columnWidth,
       currentFilter,
       currentValues,
-      data,
       fields,
       filters,
       headerCounter,
@@ -417,12 +574,16 @@ export default class Pivot extends PureComponent {
       overscanColumnCount,
       overscanRowCount,
       pivot,
-      rowCount,
       rowFields,
       rowHeight,
       selectedAggregationDimension,
       selectedAggregationType,
       isDrawerOpen,
+    } = this.state;
+
+    let {
+      data,
+      rowCount,
     } = this.state;
 
     const {
@@ -432,6 +593,7 @@ export default class Pivot extends PureComponent {
       onGridHeaderCellClick,
       onLeftGridCellClick,
       onLeftHeaderCellClick,
+      rowTotals,
     } = this.props;
 
     const aggregationTypes = [
@@ -441,6 +603,11 @@ export default class Pivot extends PureComponent {
       { value: 'max', label: 'max' },
       { value: 'average', label: 'average' },
     ];
+
+    if (data !== undefined && data.length && !rowTotals) {
+      rowCount = rowCount - 1;
+      data = data.slice(0, rowCount);
+    }
 
     return (
       <section className="react-virtualized-pivot-module">
@@ -507,10 +674,13 @@ Pivot.propTypes = {
   bodyCellValueTransformation: PropTypes.func,
   colorPack: PropTypes.object,
   data: PropTypes.array.isRequired,
+  filters: PropTypes.object,
+  onChange: PropTypes.func,
   onGridCellClick: PropTypes.func,
   onGridHeaderCellClick: PropTypes.func,
   onLeftGridCellClick: PropTypes.func,
   onLeftHeaderCellClick: PropTypes.func,
+  rowTotals: PropTypes.bool,
   selectedAggregationDimension: PropTypes.string,
 };
 
@@ -537,8 +707,10 @@ Pivot.defaultProps = {
     sortableFieldBackground: '#fafafa',
     sortableFieldText: '#000',
   },
+  filters: {},
   onGridCellClick: () => {},
   onGridHeaderCellClick: () => {},
   onLeftGridCellClick: () => {},
   onLeftHeaderCellClick: () => {},
+  rowTotals: true,
 };
