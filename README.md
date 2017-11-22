@@ -101,6 +101,10 @@ You can also use a global-friendly UMD build:
     * rowHeaders: all the parent row headers above the current clicked row header cell and at the current cell
 * `onLeftHeaderCellClick`
   * A function that is fired when clicking on the top left most cell (above the row headers and to the left of the column headers)
+* `rowTotals`
+  * A boolean that when false will not display row totals in the table. Totals are turned on by default.
+* `selectedAggregationDimension`
+  * Sets the default aggregation dimension in the Drawer.
 
 ## Example usage with optional props
 ```js
@@ -185,6 +189,8 @@ function onLeftHeaderCellClick() {
   onLeftGridCellClick={onLeftGridCellClick}
   onGridHeaderCellClick={onGridHeaderCellClick}
   onLeftHeaderCellClick={onLeftHeaderCellClick}
+  rowTotals={true}
+  selectedAggregationDimension={'age'}  
 />
 ```
 
