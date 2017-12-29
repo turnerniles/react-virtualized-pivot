@@ -404,8 +404,8 @@ export default class Pivot extends PureComponent {
   render() {
     const {
       aggregationDimensions,
-      colFields,
       columnCount,
+      colFields,
       columnWidth,
       currentFilter,
       currentValues,
@@ -431,12 +431,15 @@ export default class Pivot extends PureComponent {
     const {
       bodyCellValueTransformation,
       colorPack,
+      colTotals,
       onGridCellClick,
       onGridHeaderCellClick,
       onLeftGridCellClick,
       onLeftHeaderCellClick,
       rowTotals,
     } = this.props;
+
+    let newColumnCount = columnCount;
 
     const aggregationTypes = [
       { value: 'sum', label: 'sum' },
@@ -449,6 +452,10 @@ export default class Pivot extends PureComponent {
     if (data !== undefined && data.length && !rowTotals) {
       rowCount = rowCount - 1;
       data = data.slice(0, rowCount);
+    }
+
+    if (data !== undefined && data.length && !colTotals) {
+      newColumnCount = newColumnCount - 1;
     }
 
     return (
@@ -485,7 +492,7 @@ export default class Pivot extends PureComponent {
               checkIfInCollapsed={this.checkIfInCollapsed}
               collapsedRows={pivot.collapsedRows}
               colorPack={colorPack}
-              columnCount={columnCount}
+              columnCount={newColumnCount}
               columnWidth={columnWidth}
               data={data !== undefined ? data : [[]]}
               headerCounter={headerCounter}
@@ -515,6 +522,7 @@ export default class Pivot extends PureComponent {
 Pivot.propTypes = {
   bodyCellValueTransformation: PropTypes.func,
   colorPack: PropTypes.object,
+  colTotals: PropTypes.bool,
   data: PropTypes.array.isRequired,
   onGridCellClick: PropTypes.func,
   onGridHeaderCellClick: PropTypes.func,
@@ -547,6 +555,7 @@ Pivot.defaultProps = {
     sortableFieldBackground: '#fafafa',
     sortableFieldText: '#000',
   },
+  colTotals: true,
   onGridCellClick: () => {},
   onGridHeaderCellClick: () => {},
   onLeftGridCellClick: () => {},

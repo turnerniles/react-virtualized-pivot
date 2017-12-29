@@ -59,6 +59,8 @@ You can also use a global-friendly UMD build:
     * rowIndex: the row index of the cell
     * columnIndex: the column index of the cell
     * value: the original value of the cell
+* `colTotals`
+    * A boolean that when false will not display column totals in the table. Column totals are turned on by default.    
 * `colorPack`
   * An object with components to adjust colors of as keys and the corresponding color as a string. The following components are available for color selection (shown with their default selection):
     * bodyGridBackground: '#fff'
