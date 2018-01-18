@@ -35,6 +35,10 @@ export default class Table extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps.rawData === this.props.rawData)
+    console.log(nextProps.rawData)
+    console.log(this.props.rawData)
+    console.log('hi', nextProps)
     if (nextProps.columnCount !== this.props.columnCount) {
       this.setState({
         columnWidths: Array(nextProps.columnCount > 1 ?

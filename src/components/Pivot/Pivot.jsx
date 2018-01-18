@@ -108,7 +108,9 @@ export default class Pivot extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps)
     if (nextProps.onChange !== undefined) {
+      console.log('in the onchange')
       const newState = nextProps.onChange(this.state);
       const aggregationDimensions = nextProps.data !== undefined ?
         nextProps.data[0].map((item, index) => {
