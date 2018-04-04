@@ -49,7 +49,7 @@
     "verbose": true
   },
   "dependencies": {
-    "enzyme-adapter-react-16": "^1.1.0",
+    "enzyme-adapter-react-16": "1.1.0",
     "quick-pivot": "^2.4.0",
     "react": ">=15.6.1",
     "react-dom": ">=15.6.1",
