@@ -278,14 +278,13 @@ export default class App extends React.Component {
           <div className="inner three"></div>
         </div>
         <div className='toggle-user-data'>
-          {this.state.useSampleData}
-          <div onChange={this.toggleUserData.bind(this)}>
-            <input type="radio" value="true"
-              defaultChecked name="dataUsed"/> Use Sample Dataset
-            <br/>
-            <input type="radio" value="false"
-              name="dataUsed"/> Use My Own Dataset
-          </div>
+          <input type="radio" value="true" id="default"
+            onChange={this.toggleUserData.bind(this)}
+            defaultChecked name="dataUsed"/> Use Sample Dataset
+          <br/>
+          <input type="radio" value="false" id="custom"
+            onChange={this.toggleUserData.bind(this)}
+            name="dataUsed"/> Use My Own Dataset
         </div>
         <div className="app-menu" style={{ 'width': '100%' }}>
           <div className='select-container'>
