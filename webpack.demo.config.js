@@ -47,10 +47,10 @@ module.exports = {
     }),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
-        warnings: false,
+        warnings: true, // change back
         screw_ie8: true,
-        drop_console: true,
-        drop_debugger: true,
+        drop_console: false, // need to change back when finished --CS
+        drop_debugger: false, // change back
       },
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
