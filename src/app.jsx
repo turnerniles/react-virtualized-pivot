@@ -20,6 +20,7 @@ export default class App extends React.Component {
       useSampleData: true,
       showEditHeaderForm: false,
       showAddHeaderForm: false,
+      validationMessage: null,
       selectedAggregationDimension: 'age',
       isLoaded: true,
       selectedColorPack: 'standard',
@@ -67,10 +68,6 @@ export default class App extends React.Component {
     });
   }
 
-  testFunc() {
-    return true;
-  }
-
   toggleUserData(evt) {
     if (evt.target.value === 'true') {
       this.setState({useSampleData: true, data: data.smallData});
@@ -85,15 +82,20 @@ export default class App extends React.Component {
     if (editType === 'editHeaders') {
       this.setState({showEditHeaderForm: true, showAddHeaderForm: false,
         headerRow: this.state.data[0]});
-    } else {
+    } else if (editType === 'addHeaders') {
+      const blankHeaderRow = [];
+
+      this.state.data[0].forEach(header => {
+        blankHeaderRow.push(null);
+      });
       this.setState({showAddHeaderForm: true, showEditHeaderForm: false,
-        headerRow: this.state.data[0]});
+        headerRow: blankHeaderRow});
     }
   }
 
   cancelEditDialog() {
     this.setState({showEditHeaderForm: false, showAddHeaderForm: false,
-      headerRow: this.state.data[0]});
+      headerRow: this.state.data[0], validationMessage: null});
   }
 
   saveEditedHeaders() {
@@ -106,8 +108,20 @@ export default class App extends React.Component {
   addHeaders() {
     const newDataSet = this.state.data.slice();
 
-    newDataSet.unshift(this.state.headerRow);
-    this.setState({data: newDataSet, showAddHeaderForm: false});
+    let validHeaders = true;
+
+    this.state.headerRow.forEach(header => {
+      if (header === null || header === '') {
+        validHeaders = false;
+      }
+    });
+    if (validHeaders === false) {
+      this.setState({validationMessage: 'Headers cannot be blank.'});
+    } else {
+      newDataSet.unshift(this.state.headerRow);
+      this.setState({data: newDataSet, showAddHeaderForm: false,
+        validationMessage: null});
+    }
   }
 
   editHeader(evt) {
@@ -350,19 +364,19 @@ export default class App extends React.Component {
         <ToggleDisplay if = {!this.state.useSampleData}>
           <div className = "input-dialog">
             Dataset Headers ({data[0].length}):
+            <br />
+            {data[0].join(', ')}
             <ToggleDisplay if={(this.state.showEditHeaderForm === false) &&
               (data.length > 1) &&
               (this.state.showAddHeaderForm === false)}>
-              <br />
-              {data[0].join(', ')}
               <button className="button" style={{marginLeft: '15px'}}
                 value="editHeaders" onClick={this.showHeaderDialog}>
-                Edit
+                Edit Headers
               </button>
               <button value="addHeaders"
-                style={{cursor: 'hover', fontSize: 'small', border: '0'}}
+                className="button"
                 onClick={this.showHeaderDialog}>
-                Are these not Headers? Create Header row
+                Oops, I Need To Add My Headers!
               </button>
             </ToggleDisplay>
             <div>
@@ -377,14 +391,14 @@ export default class App extends React.Component {
                     </span>
                   );
                 }, this)}
-                <button className = "button"
+                <button className = "button" value="cancelEditDialog"
                   onClick={this.cancelEditDialog}> Cancel </button>
-                <button className = "button"
+                <button className = "button" value="saveEditedHeaders"
                   onClick={this.saveEditedHeaders}> Save </button>
               </ToggleDisplay>
               <ToggleDisplay if={this.state.showAddHeaderForm === true}>
                 <span style={{fontSize: 'small'}}>
-                  <span style={{color: 'red'}}>Important! </span>
+                  <span className = "important-message">Important! </span>
                   This will append a new Header row to the top of your dataset.
                 </span>
                 <br/>
@@ -398,13 +412,18 @@ export default class App extends React.Component {
                     </span>
                   );
                 }, this)}
-                <button className = "button" onClick={this.cancelEditDialog}>
+                <button className = "button" value="cancelAddDialog"
+                  onClick={this.cancelEditDialog}>
                   Cancel
                 </button>
-                <button className = "button" onClick={this.addHeaders}>
+                <button className = "button" value="saveAddedHeaders"
+                  onClick={this.addHeaders}>
                   Create New Header Row
                 </button>
               </ToggleDisplay>
+              <span className = "important-message">
+                {this.state.validationMessage}
+              </span>
             </div>
           </div>
         </ToggleDisplay>
