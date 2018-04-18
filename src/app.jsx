@@ -107,7 +107,6 @@ export default class App extends React.Component {
         validHeaders = false;
       }
     });
-
     if (validHeaders === false) {
       this.setState({validationMessage: 'Headers cannot be blank.'});
     } else {
