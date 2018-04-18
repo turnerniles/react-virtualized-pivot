@@ -52,8 +52,7 @@ export default class App extends React.Component {
     this.onSelectColorPack = this.onSelectColorPack.bind(this);
     this.toggleUserData = this.toggleUserData.bind(this);
     this.editHeader = this.editHeader.bind(this);
-    this.saveEditedHeaders = this.saveEditedHeaders.bind(this);
-    this.addHeaders = this.addHeaders.bind(this);
+    this.saveNewHeaders = this.saveNewHeaders.bind(this);
     this.showHeaderDialog = this.showHeaderDialog.bind(this);
     this.cancelEditDialog = this.cancelEditDialog.bind(this);
   }
@@ -98,14 +97,7 @@ export default class App extends React.Component {
       headerRow: this.state.data[0], validationMessage: null});
   }
 
-  saveEditedHeaders() {
-    const newDataSet = this.state.data.slice();
-
-    newDataSet[0] = this.state.headerRow;
-    this.setState({data: newDataSet, showEditHeaderForm: false});
-  }
-
-  addHeaders() {
+  saveNewHeaders() {
     const newDataSet = this.state.data.slice();
 
     let validHeaders = true;
@@ -115,28 +107,30 @@ export default class App extends React.Component {
         validHeaders = false;
       }
     });
+
     if (validHeaders === false) {
       this.setState({validationMessage: 'Headers cannot be blank.'});
     } else {
-      newDataSet.unshift(this.state.headerRow);
-      this.setState({data: newDataSet, showAddHeaderForm: false,
-        validationMessage: null});
+      if (this.state.showAddHeaderForm === true) {
+        newDataSet.unshift(this.state.headerRow);
+        this.setState({data: newDataSet, showAddHeaderForm: false,
+          validationMessage: null});
+      } else {
+        newDataSet[0] = this.state.headerRow;
+        this.setState({data: newDataSet, showEditHeaderForm: false,
+          validationMessage: null});
+      }
     }
   }
 
   editHeader(evt) {
     const id = evt.target.id;
-
     const value = evt.target.value;
+    const newHeaderRow = this.state.headerRow.slice();
 
-    if (value) {
-      const newHeaderRow = this.state.headerRow.slice();
+    newHeaderRow[id] = value;
 
-      newHeaderRow[id] = value;
-      this.setState({headerRow: newHeaderRow});
-    } else {
-      throw Error('null value');
-    }
+    this.setState({headerRow: newHeaderRow});
   }
 
   onSelectData(dataSize) {
@@ -293,11 +287,11 @@ export default class App extends React.Component {
         </div>
         <div className='toggle-user-data'>
           <input type="radio" value="true" id="default"
-            onChange={this.toggleUserData.bind(this)}
+            onChange={this.toggleUserData}
             defaultChecked name="dataUsed"/> Use Sample Dataset
           <br/>
           <input type="radio" value="false" id="custom"
-            onChange={this.toggleUserData.bind(this)}
+            onChange={this.toggleUserData}
             name="dataUsed"/> Use My Own Dataset
         </div>
         <div className="app-menu" style={{ 'width': '100%' }}>
@@ -394,7 +388,7 @@ export default class App extends React.Component {
                 <button className = "button" value="cancelEditDialog"
                   onClick={this.cancelEditDialog}> Cancel </button>
                 <button className = "button" value="saveEditedHeaders"
-                  onClick={this.saveEditedHeaders}> Save </button>
+                  onClick={this.saveNewHeaders}> Save </button>
               </ToggleDisplay>
               <ToggleDisplay if={this.state.showAddHeaderForm === true}>
                 <span style={{fontSize: 'small'}}>
@@ -417,7 +411,7 @@ export default class App extends React.Component {
                   Cancel
                 </button>
                 <button className = "button" value="saveAddedHeaders"
-                  onClick={this.addHeaders}>
+                  onClick={this.saveNewHeaders}>
                   Create New Header Row
                 </button>
               </ToggleDisplay>
