@@ -2,6 +2,7 @@ import React from 'react';
 import Pivot from './components/Pivot/Pivot.jsx';
 import Select from 'react-select';
 import Papa from 'papaparse/papaparse.js';
+import ToggleDisplay from 'react-toggle-display';
 
 import 'react-select/dist/react-select.css';
 import '../styles/index.scss';
@@ -14,7 +15,12 @@ export default class App extends React.Component {
 
     this.state = {
       data: data.smallData,
+      headerRow: data.smallData[0],
       dataSize: 'small',
+      useSampleData: true,
+      showEditHeaderForm: false,
+      showAddHeaderForm: false,
+      validationMessage: null,
       selectedAggregationDimension: 'age',
       isLoaded: true,
       selectedColorPack: 'standard',
@@ -44,6 +50,11 @@ export default class App extends React.Component {
     this.handleFileSelect = this.handleFileSelect.bind(this);
     this.onSelectData = this.onSelectData.bind(this);
     this.onSelectColorPack = this.onSelectColorPack.bind(this);
+    this.toggleUserData = this.toggleUserData.bind(this);
+    this.editHeader = this.editHeader.bind(this);
+    this.saveNewHeaders = this.saveNewHeaders.bind(this);
+    this.showHeaderDialog = this.showHeaderDialog.bind(this);
+    this.cancelEditDialog = this.cancelEditDialog.bind(this);
   }
 
   handleFileSelect(evt) {
@@ -51,9 +62,74 @@ export default class App extends React.Component {
 
     Papa.parse(file, {
       complete: (results) => {
-        this.setState({data: results.data});
+        this.setState({data: results.data, headerRow: results.data[0]});
       },
     });
+  }
+
+  toggleUserData(evt) {
+    if (evt.target.value === 'true') {
+      this.setState({useSampleData: true, data: data.smallData});
+    } else {
+      this.setState({useSampleData: false, data: [[]]});
+    }
+  }
+
+  showHeaderDialog(e) {
+    const editType = e.target.value;
+
+    if (editType === 'editHeaders') {
+      this.setState({showEditHeaderForm: true, showAddHeaderForm: false,
+        headerRow: this.state.data[0]});
+    } else if (editType === 'addHeaders') {
+      const blankHeaderRow = [];
+
+      this.state.data[0].forEach(header => {
+        blankHeaderRow.push(null);
+      });
+      this.setState({showAddHeaderForm: true, showEditHeaderForm: false,
+        headerRow: blankHeaderRow});
+    }
+  }
+
+  cancelEditDialog() {
+    this.setState({showEditHeaderForm: false, showAddHeaderForm: false,
+      headerRow: this.state.data[0], validationMessage: null});
+  }
+
+  saveNewHeaders() {
+    const newDataSet = this.state.data.slice();
+
+    let validHeaders = true;
+
+    this.state.headerRow.forEach(header => {
+      if (header === null || header === '') {
+        validHeaders = false;
+      }
+    });
+    if (validHeaders === false) {
+      this.setState({validationMessage: 'Headers cannot be blank.'});
+    } else {
+      if (this.state.showAddHeaderForm === true) {
+        newDataSet.unshift(this.state.headerRow);
+        this.setState({data: newDataSet, showAddHeaderForm: false,
+          validationMessage: null});
+      } else {
+        newDataSet[0] = this.state.headerRow;
+        this.setState({data: newDataSet, showEditHeaderForm: false,
+          validationMessage: null});
+      }
+    }
+  }
+
+  editHeader(evt) {
+    const id = evt.target.id;
+    const value = evt.target.value;
+    const newHeaderRow = this.state.headerRow.slice();
+
+    newHeaderRow[id] = value;
+
+    this.setState({headerRow: newHeaderRow});
   }
 
   onSelectData(dataSize) {
@@ -61,6 +137,7 @@ export default class App extends React.Component {
       this.setState({
         dataSize: dataSize.value,
         data: data.smallData,
+        headerRow: data.smallData[0],
         isLoaded: true,
         selectedAggregationDimension: 'age',
       });
@@ -69,6 +146,7 @@ export default class App extends React.Component {
       this.setState({
         dataSize: dataSize.value,
         data: data.mediumData,
+        headerRow: data.mediumData[0],
         isLoaded: true,
         selectedAggregationDimension: 'Quantity',
       });
@@ -84,6 +162,7 @@ export default class App extends React.Component {
         complete: (results) => {
           this.setState({
             data: results.data,
+            headerRow: results.data[0],
             selectedAggregationDimension: 'Amount Requested',
             isLoaded: true,
           });
@@ -205,32 +284,16 @@ export default class App extends React.Component {
           <div className="inner two"></div>
           <div className="inner three"></div>
         </div>
+        <div className='toggle-user-data'>
+          <input type="radio" value="true" id="default"
+            onChange={this.toggleUserData}
+            defaultChecked name="dataUsed"/> Use Sample Dataset
+          <br/>
+          <input type="radio" value="false" id="custom"
+            onChange={this.toggleUserData}
+            name="dataUsed"/> Use My Own Dataset
+        </div>
         <div className="app-menu" style={{ 'width': '100%' }}>
-          <div className='select-container'>
-            <div
-              className="title"
-              style={{
-                'backgroundColor': colorPack.selectorContainerTitleBackground,
-                'color': colorPack.selectorContainerTitleText,
-              }}
-            >
-              Dataset Select
-            </div>
-            <Select
-              name="Dataset"
-              value={dataSize}
-              options={[
-                { value: 'small', label: 'small' },
-                { value: 'medium', label: 'medium' },
-                { value: 'large', label: 'large' },
-              ]}
-              onChange={this.onSelectData}
-              menuContainerStyle={{
-                zIndex: 2,
-              }}
-              clearable={false}
-            />
-          </div>
           <div className='select-container'>
             <div
               className="title"
@@ -242,7 +305,7 @@ export default class App extends React.Component {
               Color Pack
             </div>
             <Select
-              name="Dataset"
+              name="ColorPack"
               value={selectedColorPack}
               options={[
                 { value: 'standard', label: 'standard' },
@@ -256,15 +319,107 @@ export default class App extends React.Component {
               clearable={false}
             />
           </div>
-          <div className="input">
-            <input
-              type="file"
-              onChange={this.handleFileSelect}
-              style={{padding: '5px', width: '200px',
-                display: 'inline-block'}}
-            />
-          </div>
+          <ToggleDisplay if = {this.state.useSampleData}>
+            <div className='select-container'>
+              <div className="title"
+                style={{
+                  'backgroundColor': colorPack.selectorContainerTitleBackground,
+                  'color': colorPack.selectorContainerTitleText,
+                }}
+              >
+                Dataset Select
+              </div>
+              <Select
+                name="Dataset"
+                value={dataSize}
+                options={[
+                  { value: 'small', label: 'small' },
+                  { value: 'medium', label: 'medium' },
+                  { value: 'large', label: 'large' },
+                ]}
+                onChange={this.onSelectData}
+                menuContainerStyle={{
+                  zIndex: 2,
+                }}
+                clearable={false}
+              />
+            </div>
+          </ToggleDisplay>
+          <ToggleDisplay if = {!this.state.useSampleData}>
+            <div className = "input-dialog">
+              <input type="file"
+                onChange={this.handleFileSelect}
+                accept=".csv, .tsv"
+              />
+            </div>
+          </ToggleDisplay>
         </div>
+        <ToggleDisplay if = {!this.state.useSampleData}>
+          <div className = "input-dialog">
+            Dataset Headers ({data[0].length}):
+            <br />
+            {data[0].join(', ')}
+            <ToggleDisplay if={(this.state.showEditHeaderForm === false) &&
+              (data.length > 1) &&
+              (this.state.showAddHeaderForm === false)}>
+              <button className="button" style={{marginLeft: '15px'}}
+                value="editHeaders" onClick={this.showHeaderDialog}>
+                Edit Headers
+              </button>
+              <button value="addHeaders"
+                className="button"
+                onClick={this.showHeaderDialog}>
+                Oops, I Need To Add My Headers!
+              </button>
+            </ToggleDisplay>
+            <div>
+              <ToggleDisplay if={this.state.showEditHeaderForm === true}>
+                {this.state.headerRow.map(function(headerName, index) {
+                  return (
+                    <span key = {index}>
+                      <input id = {index} value = {headerName}
+                        className="input-text"
+                        onChange={this.editHeader}
+                        type = "text"/>
+                    </span>
+                  );
+                }, this)}
+                <button className = "button" value="cancelEditDialog"
+                  onClick={this.cancelEditDialog}> Cancel </button>
+                <button className = "button" value="saveEditedHeaders"
+                  onClick={this.saveNewHeaders}> Save </button>
+              </ToggleDisplay>
+              <ToggleDisplay if={this.state.showAddHeaderForm === true}>
+                <span style={{fontSize: 'small'}}>
+                  <span className = "important-message">Important! </span>
+                  This will append a new Header row to the top of your dataset.
+                </span>
+                <br/>
+                {this.state.headerRow.map(function(headerName, index) {
+                  return (
+                    <span key = {index}>
+                      <input id = {index}
+                        className="input-text"
+                        onChange={this.editHeader}
+                        type = "text"/>
+                    </span>
+                  );
+                }, this)}
+                <button className = "button" value="cancelAddDialog"
+                  onClick={this.cancelEditDialog}>
+                  Cancel
+                </button>
+                <button className = "button" value="saveAddedHeaders"
+                  onClick={this.saveNewHeaders}>
+                  Create New Header Row
+                </button>
+              </ToggleDisplay>
+              <span className = "important-message">
+                {this.state.validationMessage}
+              </span>
+            </div>
+          </div>
+        </ToggleDisplay>
         <Pivot
           colorPack={colorPack}
           colTotals={false}
