@@ -10,14 +10,35 @@ import './styles.scss';
 export default class Pivot extends PureComponent {
   constructor(props) {
     super(props);
+    let aggregationDimensions;
 
-    const aggregationDimensions = this.props.data !== undefined ?
-      this.props.data[0].map((item, index) => {
-        return {value: item, label: item};
-      }) :
-      [];
+    if (Array.isArray(this.props.data[0])) {
+      aggregationDimensions = this.props.data !== undefined ?
+        this.props.data[0].map((item, index) => {
+          return {value: item, label: item};
+        }) : [];
+    } else {
+      if (this.props.data !== undefined) {
+        const firstEl = this.props.data[0];
+        const headers = Object.keys(firstEl);
+
+        aggregationDimensions = headers.map(header => {
+          return {value: header, label: header};
+        });
+      } else {
+        aggregationDimensions = [];
+      }
+    }
+    let fields;
+
+    if (Array.isArray(this.props.data[0])) {
+      fields = this.props.data !== undefined ? this.props.data[0] : [];
+    } else {
+      fields = this.props.data !== undefined ?
+        Object.keys(this.props.data[0]) : [];
+    }
+
     const dataArray = this.props.data !== undefined ? this.props.data : [];
-    const fields = this.props.data !== undefined ? this.props.data[0] : [];
     const pivot = this.props.data !== undefined ?
       new QuickPivot(this.props.data, [], [],
         this.props.selectedAggregationDimension || '', 'sum', '') :
